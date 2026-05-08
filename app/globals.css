@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0d2233;
+  --muted: #5e7384;
+  --line: #dce9ec;
+  --paper: #fbfefd;
+  --mist: #f2f8f7;
+  --teal: #0a8f9c;
+  --teal-deep: #06646f;
+  --coral: #e76f51;
+  --gold: #c8943c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+::selection {
+  background: rgba(10, 143, 156, 0.2);
+}
+
+a,
+button,
+input,
+textarea {
+  outline-color: var(--teal);
+}
+
+.section-pad {
+  padding-block: clamp(4.5rem, 8vw, 8.5rem);
+}
+
+.container-page {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.surface {
+  border: 1px solid rgba(13, 34, 51, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 22px 70px rgba(13, 34, 51, 0.08);
+  backdrop-filter: blur(20px);
+}
+
+.soft-grid {
+  background-image:
+    linear-gradient(rgba(10, 143, 156, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 143, 156, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.aurora {
+  background:
+    radial-gradient(circle at 20% 15%, rgba(10, 143, 156, 0.16), transparent 30%),
+    radial-gradient(circle at 72% 22%, rgba(231, 111, 81, 0.12), transparent 24%),
+    linear-gradient(180deg, #fbfefd 0%, #f2f8f7 100%);
+}
+
+/* ── No-JS / pre-hydration safety net ── */
+/* Before JS hydrates, .no-js is on <html>. Make all motion elements visible. */
+html.no-js .reveal-motion,
+html.no-js .stagger-motion,
+html.no-js .stagger-item-motion {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal-motion,
+  .stagger-motion,
+  .stagger-item-motion {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
