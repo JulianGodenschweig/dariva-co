@@ -37,7 +37,7 @@ export default function ProgramPage() {
           </div>
         </div>
       </section>
-      <section className="section-pad bg-[#f2f8f7]">
+      <section className="section-pad bg-[#e9f3f1]">
         <div className="container-page grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
           <SectionHeading
             eyebrow="The 3 phases"
@@ -56,14 +56,14 @@ export default function ProgramPage() {
           />
           <Stagger className="grid gap-4 sm:grid-cols-2">
             {benefits.map((benefit) => (
-              <StaggerItem key={benefit} className="rounded-2xl border border-[#dce9ec] bg-[#fbfefd] p-5">
-                <p className="font-semibold text-[#0d2233]">{benefit}</p>
+              <StaggerItem key={benefit} className="rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-5">
+                <p className="font-semibold text-[#071822]">{benefit}</p>
               </StaggerItem>
             ))}
           </Stagger>
         </div>
       </section>
-      <section className="section-pad bg-[#0d2233] text-white">
+      <section className="section-pad bg-[#071822] text-white">
         <div className="container-page grid gap-6 md:grid-cols-3">
           {[
             { title: "Training", icon: Route, text: "Structured learning with practical community application." },
@@ -73,7 +73,7 @@ export default function ProgramPage() {
             const Icon = item.icon;
             return (
               <div key={item.title} className="rounded-2xl border border-white/10 bg-white/6 p-6">
-                <Icon className="mb-6 text-[#77d2d8]" size={28} />
+                <Icon className="mb-6 text-[#4db6ac]" size={28} />
                 <h2 className="text-2xl font-semibold">{item.title}</h2>
                 <p className="mt-3 text-sm leading-7 text-white/68">{item.text}</p>
               </div>

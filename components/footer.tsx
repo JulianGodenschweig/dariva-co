@@ -4,7 +4,7 @@ import { contact, navItems } from "@/lib/content";
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#dce9ec] bg-[#0d2233] text-white">
+    <footer className="border-t border-[#004d40]/30 bg-gradient-to-b from-[#071822] to-[#004d40] text-white">
       <div className="container-page grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <Image src="/logo.png" alt="Dariva.co logo" width={441} height={132} className="mb-5 h-auto w-[142px] rounded bg-white px-3 py-2" />

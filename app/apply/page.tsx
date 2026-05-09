@@ -32,14 +32,14 @@ export default function ApplyPage() {
                 "Applicants seeking purpose-led income opportunities",
                 "Partners nominating trusted community members"
               ].map((item) => (
-                <StaggerItem key={item} className="rounded-2xl border border-[#dce9ec] bg-[#fbfefd] p-4 text-sm font-semibold text-[#0d2233]">
+                <StaggerItem key={item} className="rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-4 text-sm font-semibold text-[#071822]">
                   {item}
                 </StaggerItem>
               ))}
             </Stagger>
-            <Reveal className="mt-8 rounded-2xl border border-[#dce9ec] bg-[#f2f8f7] p-6">
-              <h2 className="text-lg font-semibold text-[#0d2233]">Privacy reassurance</h2>
-              <p className="mt-3 text-sm leading-7 text-[#5e7384]">
+            <Reveal className="mt-8 rounded-2xl border border-[#b8d4d8] bg-[#e9f3f1] p-6">
+              <h2 className="text-lg font-semibold text-[#071822]">Privacy reassurance</h2>
+              <p className="mt-3 text-sm leading-7 text-[#4e6878]">
                 Dariva.co treats application information with care. Your details are used for programme review and follow-up only.
               </p>
             </Reveal>

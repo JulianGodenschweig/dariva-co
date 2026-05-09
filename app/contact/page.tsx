@@ -34,10 +34,10 @@ export default function ContactPage() {
             ].map((item) => {
               const Icon = item.icon;
               const content = (
-                <StaggerItem className="h-full rounded-2xl border border-[#dce9ec] bg-[#fbfefd] p-6 transition hover:bg-[#f2f8f7]">
-                  <Icon className="mb-7 text-[#0a8f9c]" size={26} />
-                  <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#5e7384]">{item.label}</p>
-                  <p className="mt-2 text-lg font-semibold text-[#0d2233]">{item.value}</p>
+                <StaggerItem className="h-full rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-6 transition hover:bg-[#e9f3f1]">
+                  <Icon className="mb-7 text-[#00897b]" size={26} />
+                  <p className="text-sm font-bold uppercase tracking-[0.16em] text-[#4e6878]">{item.label}</p>
+                  <p className="mt-2 text-lg font-semibold text-[#071822]">{item.value}</p>
                 </StaggerItem>
               );
               return item.href === "#" ? <div key={item.label}>{content}</div> : <Link key={item.label} href={item.href}>{content}</Link>;
@@ -45,12 +45,12 @@ export default function ContactPage() {
           </Stagger>
         </div>
       </section>
-      <section className="section-pad bg-[#f2f8f7]">
-        <Reveal className="container-page rounded-2xl border border-[#dce9ec] bg-white p-8 text-center shadow-sm">
-          <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-[#0d2233] sm:text-5xl">
+      <section className="section-pad bg-[#e9f3f1]">
+        <Reveal className="container-page rounded-2xl border border-[#b8d4d8] bg-white p-8 text-center shadow-sm">
+          <h2 className="mx-auto max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-[#071822] sm:text-5xl">
             Dariva.co is built for people who want prevention to become practical.
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#5e7384]">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#4e6878]">
             Tell us what you are building, who you serve, and where community mental wellness could create lasting change.
           </p>
         </Reveal>

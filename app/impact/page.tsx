@@ -30,7 +30,7 @@ export default function ImpactPage() {
           </div>
         </div>
       </section>
-      <section className="section-pad bg-[#f2f8f7]">
+      <section className="section-pad bg-[#e9f3f1]">
         <div className="container-page">
           <SectionHeading align="center" eyebrow="Measurement" title="A serious movement needs a serious learning loop." />
           <div className="mt-12">
@@ -42,9 +42,9 @@ export default function ImpactPage() {
               ["Partner reporting", "Implementation partners can see activity, reach, outcomes, and learning in a credible format."],
               ["Adaptive delivery", "The model is built to refine training, referral pathways, and digital access over time."]
             ].map(([title, text]) => (
-              <Reveal key={title} className="rounded-2xl border border-[#dce9ec] bg-white p-6">
-                <h2 className="text-xl font-semibold text-[#0d2233]">{title}</h2>
-                <p className="mt-3 text-sm leading-7 text-[#5e7384]">{text}</p>
+              <Reveal key={title} className="rounded-2xl border border-[#b8d4d8] bg-white p-6">
+                <h2 className="text-xl font-semibold text-[#071822]">{title}</h2>
+                <p className="mt-3 text-sm leading-7 text-[#4e6878]">{text}</p>
               </Reveal>
             ))}
           </div>
@@ -59,15 +59,15 @@ export default function ImpactPage() {
           />
           <Stagger className="grid gap-4">
             {["Pilot communities", "Regional partner network", "Counsellor economy", "National prevention infrastructure"].map((step, index) => (
-              <StaggerItem key={step} className="rounded-2xl border border-[#dce9ec] bg-[#fbfefd] p-6">
-                <p className="text-sm font-bold text-[#0a8f9c]">0{index + 1}</p>
-                <h2 className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#0d2233]">{step}</h2>
+              <StaggerItem key={step} className="rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-6">
+                <p className="text-sm font-bold text-[#00897b]">0{index + 1}</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#071822]">{step}</h2>
               </StaggerItem>
             ))}
           </Stagger>
         </div>
       </section>
-      <section className="section-pad bg-[#0d2233] text-white">
+      <section className="section-pad bg-[#071822] text-white">
         <Reveal className="container-page text-center">
           <p className="mx-auto max-w-3xl text-3xl font-semibold leading-tight tracking-[-0.03em] sm:text-5xl">
             “A community that can speak about pain early is a community with more room for dignity, leadership, and safety.”

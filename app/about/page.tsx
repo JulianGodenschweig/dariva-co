@@ -30,15 +30,15 @@ export default function AboutPage() {
               ["Vision", "Emotionally resilient, self-sustaining communities across Namibia."],
               ["Difference", "Dariva.co combines prevention, economic opportunity, digital health integration, and monitoring into one ecosystem."]
             ].map(([title, text]) => (
-              <div key={title} className="rounded-2xl border border-[#dce9ec] bg-[#fbfefd] p-6">
-                <h2 className="text-xl font-semibold text-[#0d2233]">{title}</h2>
-                <p className="mt-3 text-sm leading-7 text-[#5e7384]">{text}</p>
+              <div key={title} className="rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-6">
+                <h2 className="text-xl font-semibold text-[#071822]">{title}</h2>
+                <p className="mt-3 text-sm leading-7 text-[#4e6878]">{text}</p>
               </div>
             ))}
           </Reveal>
         </div>
       </section>
-      <section className="section-pad bg-[#f2f8f7]">
+      <section className="section-pad bg-[#e9f3f1]">
         <div className="container-page">
           <SectionHeading
             align="center"

@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #0d2233;
-  --muted: #5e7384;
-  --line: #dce9ec;
-  --paper: #fbfefd;
-  --mist: #f2f8f7;
-  --teal: #0a8f9c;
-  --teal-deep: #06646f;
-  --coral: #e76f51;
-  --gold: #c8943c;
+  /* ── Deepened river palette ── */
+  --ink: #071822;          /* was #0d2233 — deeper midnight ocean */
+  --ink-mid: #0b2a3c;      /* NEW — mid-depth for cards/CTA */
+  --muted: #4e6878;        /* was #5e7384 — richer slate */
+  --muted-light: #6b8a9e;  /* NEW — lighter muted for secondary text */
+  --line: #b8d4d8;         /* was #dce9ec — more teal-tinted */
+  --paper: #f6faf9;        /* was #fbfefd — slightly cooler */
+  --mist: #e9f3f1;         /* was #f2f8f7 — richer mist */
+  --teal: #00897b;         /* was #0a8f9c — deeper, more river-earth teal */
+  --teal-vivid: #00a693;   /* NEW — vivid accent for hovers/highlights */
+  --teal-deep: #004d40;    /* was #06646f — deep forest river */
+  --coral: #d84315;        /* was #e76f51 — deeper, more grounded terracotta */
+  --coral-light: #ff7043;  /* NEW — lighter coral for accents */
+  --gold: #b8860b;         /* was #c8943c — richer, more golden */
+  --gold-light: #daa520;   /* NEW — lighter gold */
+  --river-glow: rgba(0, 137, 123, 0.18);  /* NEW — for glows */
+  --river-deep-glow: rgba(0, 77, 64, 0.12); /* NEW — deep river glow */
 }
 
 * {
@@ -28,7 +36,7 @@ body {
 }
 
 ::selection {
-  background: rgba(10, 143, 156, 0.2);
+  background: rgba(0, 137, 123, 0.25);
 }
 
 a,
@@ -52,28 +60,136 @@ textarea {
 }
 
 .surface {
-  border: 1px solid rgba(13, 34, 51, 0.08);
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 22px 70px rgba(13, 34, 51, 0.08);
+  border: 1px solid rgba(7, 24, 34, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 22px 70px rgba(7, 24, 34, 0.1);
   backdrop-filter: blur(20px);
 }
 
 .soft-grid {
   background-image:
-    linear-gradient(rgba(10, 143, 156, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(10, 143, 156, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(0, 137, 123, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 137, 123, 0.07) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
+/* ── Aurora with deeper river vibes ── */
 .aurora {
   background:
-    radial-gradient(circle at 20% 15%, rgba(10, 143, 156, 0.16), transparent 30%),
-    radial-gradient(circle at 72% 22%, rgba(231, 111, 81, 0.12), transparent 24%),
-    linear-gradient(180deg, #fbfefd 0%, #f2f8f7 100%);
+    radial-gradient(circle at 20% 15%, rgba(0, 137, 123, 0.18), transparent 32%),
+    radial-gradient(circle at 72% 22%, rgba(216, 67, 21, 0.1), transparent 26%),
+    radial-gradient(circle at 50% 80%, rgba(0, 77, 64, 0.08), transparent 30%),
+    linear-gradient(180deg, #f6faf9 0%, #e9f3f1 100%);
+}
+
+/* ── River flow keyframes ── */
+@keyframes river-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes river-drift {
+  0% { transform: translateX(-3%); }
+  50% { transform: translateX(3%); }
+  100% { transform: translateX(-3%); }
+}
+
+@keyframes river-ripple {
+  0%, 100% { opacity: 0.3; transform: scaleX(1); }
+  50% { opacity: 0.6; transform: scaleX(1.03); }
+}
+
+@keyframes river-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes river-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 137, 123, 0); }
+  50% { box-shadow: 0 0 30px 4px rgba(0, 137, 123, 0.08); }
+}
+
+/* ── River flow utilities ── */
+.river-flow {
+  background-size: 200% 200%;
+  animation: river-flow 12s ease-in-out infinite;
+}
+
+.river-drift {
+  animation: river-drift 8s ease-in-out infinite;
+}
+
+.river-ripple {
+  animation: river-ripple 6s ease-in-out infinite;
+}
+
+.river-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 137, 123, 0.04) 25%,
+    rgba(0, 137, 123, 0.08) 50%,
+    rgba(0, 137, 123, 0.04) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: river-shimmer 8s ease-in-out infinite;
+}
+
+.river-pulse {
+  animation: river-pulse 4s ease-in-out infinite;
+}
+
+/* ── River gradient surfaces ── */
+.river-surface {
+  border: 1px solid rgba(0, 137, 123, 0.12);
+  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(0,137,123,0.03) 100%);
+  box-shadow: 0 22px 70px rgba(7, 24, 34, 0.08);
+  backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.river-surface:hover {
+  border-color: rgba(0, 137, 123, 0.25);
+  box-shadow: 0 28px 80px rgba(0, 137, 123, 0.12), 0 0 40px rgba(0, 137, 123, 0.06);
+  transform: translateY(-2px);
+}
+
+/* ── Deep CTA section with river animation ── */
+.river-cta {
+  background: linear-gradient(135deg, #071822 0%, #0b2a3c 40%, #004d40 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.river-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 137, 123, 0.06),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: river-shimmer 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── Wave divider ── */
+.river-divider {
+  position: relative;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--teal), var(--teal-deep), var(--teal), transparent);
+  background-size: 200% 100%;
+  animation: river-shimmer 6s ease-in-out infinite;
+  border-radius: 2px;
+  opacity: 0.4;
 }
 
 /* ── No-JS / pre-hydration safety net ── */
-/* Before JS hydrates, .no-js is on <html>. Make all motion elements visible. */
 html.no-js .reveal-motion,
 html.no-js .stagger-motion,
 html.no-js .stagger-item-motion {
