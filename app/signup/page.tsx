@@ -40,8 +40,9 @@ export default function SignupPage() {
       return;
     }
 
-    // Email confirmation OFF → signed in immediately.
-    router.push("/account");
+    // Email confirmation OFF → signed in immediately. New accounts are
+    // unapproved, so land them on the pending-approval page.
+    router.push("/pending");
     router.refresh();
   }
 
