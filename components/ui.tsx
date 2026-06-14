@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-[#00897b]">{children}</p>;
+  return <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-[#10B981]">{children}</p>;
 }
 
 export function SectionHeading({
@@ -21,42 +21,34 @@ export function SectionHeading({
   return (
     <Reveal className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
       {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
-      <h2 className="text-balance text-3xl font-semibold tracking-[-0.02em] text-[#071822] sm:text-4xl lg:text-5xl">{title}</h2>
+      <h2 className="text-balance text-3xl font-semibold tracking-[-0.02em] text-[#1A237E] sm:text-4xl lg:text-5xl">{title}</h2>
       {text ? <p className="mt-5 text-base leading-8 text-[#4e6878] sm:text-lg">{text}</p> : null}
     </Reveal>
   );
 }
 
 export function PageHero({
-  eyebrow,
-  title,
-  text,
-  primary
+ eyebrow,
+ title,
+ text
 }: {
-  eyebrow: string;
-  title: string;
-  text: string;
-  primary?: { href: string; label: string };
+ eyebrow: string;
+ title: string;
+ text: string;
 }) {
-  return (
+ return (
 <section className="aurora river-flow relative overflow-hidden">
 <div className="absolute inset-0 soft-grid opacity-45" />
 <div className="absolute inset-0 river-shimmer pointer-events-none" />
-      <div className="container-page relative grid min-h-[62vh] items-center gap-12 py-20 lg:grid-cols-[1.05fr_0.95fr]">
-        <Reveal>
-          <Eyebrow>{eyebrow}</Eyebrow>
-          <h1 className="text-balance text-5xl font-semibold tracking-[-0.035em] text-[#071822] sm:text-6xl lg:text-7xl">{title}</h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4e6878] sm:text-xl">{text}</p>
-          {primary ? (
-            <Link href={primary.href} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#071822] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#00897b]">
-              {primary.label}
-              <ArrowRight size={17} />
-            </Link>
-          ) : null}
-        </Reveal>
-        <Reveal delay={0.15} className="hidden lg:block">
-          <AbstractSystem />
-        </Reveal>
+ <div className="container-page relative grid min-h-[52vh] items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr]">
+ <Reveal>
+ <Eyebrow>{eyebrow}</Eyebrow>
+ <h1 className="text-balance text-5xl font-semibold tracking-[-0.035em] text-[#071822] sm:text-6xl lg:text-7xl">{title}</h1>
+ <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4e6878] sm:text-xl">{text}</p>
+ </Reveal>
+ <Reveal delay={0.2} className="hidden lg:block">
+ <AbstractSystem />
+ </Reveal>
       </div>
     </section>
   );
@@ -74,12 +66,12 @@ export function FeatureGrid({
       {items.map((item) => {
         const Icon = item.icon;
         return (
-          <StaggerItem key={item.title} className="river-surface rounded-2xl p-6">
-            <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e0f2f1] text-[#00897b]">
+          <StaggerItem key={item.title} className="river-surface rounded-2xl p-6 card-lift">
+            <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A237E]/10 text-[#1A237E]">
               <Icon size={23} />
             </div>
-            <h3 className="text-xl font-semibold tracking-[-0.01em] text-[#071822]">{item.title}</h3>
-            <p className="mt-3 text-sm leading-7 text-[#4e6878]">{item.description ?? item.text}</p>
+            <h3 className="text-xl font-semibold tracking-[-0.01em] text-[#1A237E]">{item.title}</h3>
+            {(item.description || item.text) ? <p className="mt-3 text-sm leading-7 text-[#4e6878]">{item.description ?? item.text}</p> : null}
           </StaggerItem>
         );
       })}
@@ -97,7 +89,7 @@ export function Timeline({ items }: { items: { kicker: string; title: string; te
             <span className="absolute left-5 top-8 hidden h-3 w-3 rounded-full bg-[#d84315] ring-8 ring-[#f6faf9] md:block" />
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#00897b]">{item.kicker}</p>
             <div>
-              <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#071822]">{item.title}</h3>
+              <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#1A237E]">{item.title}</h3>
               <p className="mt-3 max-w-3xl text-base leading-8 text-[#4e6878]">{item.text}</p>
             </div>
           </Reveal>
@@ -111,19 +103,34 @@ export function StatBand() {
   const stats = [
     { value: "3", label: "programme phases" },
     { value: "6", label: "outcome areas tracked" },
-    { value: "24/7", label: "digital access ambition" },
-    { value: "1", label: "community-owned system" }
+    { value: "24/7", label: "digital access ambition" }
+  ];
+
+  // Add real live stats below the original stats
+  const liveStats = [
+    { value: "2300+", label: "Trainees targeted by 2027" },
+    { value: "1", label: "Community Counselling Centre Built in Each Community" }
   ];
 
   return (
+    <>
     <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <StaggerItem key={stat.label} className="rounded-2xl border border-[#b8d4d8] bg-white p-6 shadow-sm">
-          <p className="text-4xl font-semibold tracking-[-0.04em] text-[#071822] sm:text-5xl">{stat.value}</p>
+        <StaggerItem key={stat.label} className="card-lift rounded-2xl border border-[#b8d4d8] bg-white p-6 shadow-sm">
+          <p className="text-4xl font-semibold tracking-[-0.04em] text-[#1A237E] sm:text-5xl">{stat.value}</p>
           <p className="mt-3 text-sm font-medium text-[#4e6878]">{stat.label}</p>
         </StaggerItem>
       ))}
     </Stagger>
+    <Stagger className="mt-4 grid gap-4 sm:grid-cols-2">
+      {liveStats.map((stat) => (
+        <StaggerItem key={stat.label} className="card-lift rounded-2xl border border-[#b8d4d8] p-6 shadow-sm text-center bg-gradient-to-br from-[#EFF8FD] to-white">
+          <p className="text-4xl font-semibold tracking-[-0.04em] sm:text-5xl text-[#1A237E]">{stat.value}</p>
+          <p className="mt-3 text-sm font-medium text-[#4e6878]">{stat.label}</p>
+        </StaggerItem>
+      ))}
+    </Stagger>
+    </>
   );
 }
 
@@ -144,7 +151,7 @@ export function CTA({
         <h2 className="text-balance mx-auto max-w-3xl text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">{title}</h2>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/70 sm:text-lg">{text}</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link href={primary.href} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#071822] transition hover:bg-[#e0f2f1]">
+          <Link href={primary.href} className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold !text-[#1A237E] transition hover:bg-[#e0f2f1]">
             {primary.label}
             <ArrowRight size={17} />
           </Link>
@@ -187,19 +194,19 @@ export function PricingCards({
               Featured
             </span>
           )}
-          <h3 className={`text-2xl font-semibold tracking-[-0.02em] ${card.featured ? "text-white" : "text-[#071822]"}`}>
+          <h3 className={`text-2xl font-semibold tracking-[-0.02em] ${card.featured ? "text-white" : "text-[#1A237E]"}`}>
             {card.name}
           </h3>
           <p className={`mt-2 text-sm ${card.featured ? "text-white/60" : "text-[#4e6878]"}`}>
             {card.duration}
           </p>
-          <p className={`mt-5 text-3xl font-semibold tracking-[-0.03em] ${card.featured ? "text-white" : "text-[#071822]"}`}>
+          <p className={`mt-5 text-3xl font-semibold tracking-[-0.03em] ${card.featured ? "text-white" : "text-[#1A237E]"}`}>
             {card.price}
           </p>
           <ul className="mt-6 grid gap-3">
             {card.features.map((feature) => (
               <li key={feature} className={`flex items-start gap-2 text-sm ${card.featured ? "text-white/80" : "text-[#4e6878]"}`}>
-                <svg className={`mt-0.5 h-4 w-4 shrink-0 ${card.featured ? "text-[#4db6ac]" : "text-[#00897b]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="mt-0.5 h-4 w-4 shrink-0 text-[#1A237E]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
                 {feature}
@@ -240,7 +247,7 @@ export function AbstractSystem() {
       ].map(([label, position, color]) => (
         <div key={label} className={`absolute ${position} rounded-2xl border border-white/80 bg-white/88 px-5 py-4 shadow-xl backdrop-blur`}>
           <div className="mb-2 h-2 w-10 rounded-full" style={{ backgroundColor: color }} />
-          <p className="text-sm font-semibold text-[#071822]">{label}</p>
+          <p className="text-sm font-semibold text-[#1A237E]">{label}</p>
         </div>
       ))}
     </div>

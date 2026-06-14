@@ -1,27 +1,21 @@
 @import "tailwindcss";
 
-:root {
-  /* ── Deepened river palette ── */
-  --ink: #071822;          /* was #0d2233 — deeper midnight ocean */
-  --ink-mid: #0b2a3c;      /* NEW — mid-depth for cards/CTA */
-  --muted: #4e6878;        /* was #5e7384 — richer slate */
-  --muted-light: #6b8a9e;  /* NEW — lighter muted for secondary text */
-  --line: #b8d4d8;         /* was #dce9ec — more teal-tinted */
-  --paper: #f6faf9;        /* was #fbfefd — slightly cooler */
-  --mist: #e9f3f1;         /* was #f2f8f7 — richer mist */
-  --teal: #00897b;         /* was #0a8f9c — deeper, more river-earth teal */
-  --teal-vivid: #00a693;   /* NEW — vivid accent for hovers/highlights */
-  --teal-deep: #004d40;    /* was #06646f — deep forest river */
-  --coral: #d84315;        /* was #e76f51 — deeper, more grounded terracotta */
-  --coral-light: #ff7043;  /* NEW — lighter coral for accents */
-  --gold: #b8860b;         /* was #c8943c — richer, more golden */
-  --gold-light: #daa520;   /* NEW — lighter gold */
-  --river-glow: rgba(0, 137, 123, 0.18);  /* NEW — for glows */
-  --river-deep-glow: rgba(0, 77, 64, 0.12); /* NEW — deep river glow */
-}
-
-* {
-  box-sizing: border-box;
+@theme {
+  --color-primary: #1A237E;
+  --color-primary-deep: #0D1B2A;
+  --color-primary-light: #1B9AD6;
+  --color-primary-lighter: #4FC3F7;
+  --color-secondary: #10B981;
+  --color-secondary-light: #34D399;
+  --color-bg: #F8F6F3;
+  --color-bg-warm: #FAF9F7;
+  --color-text: #1A1A2E;
+  --color-text-muted: #6B7280;
+  --color-text-light: #9CA3AF;
+  --color-card: #FFFFFF;
+  --color-success: #10B981;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Sora", ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -29,25 +23,77 @@ html {
 }
 
 body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: rgba(0, 137, 123, 0.25);
+  background: rgba(26, 35, 126, 0.15);
 }
 
-a,
-button,
-input,
-textarea {
-  outline-color: var(--teal);
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-12px) rotate(1deg); }
+  66% { transform: translateY(6px) rotate(-0.5deg); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes counter-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 12s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 12s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 8s ease-in-out infinite;
+}
+
+.animate-counter-pulse {
+  animation: counter-pulse 0.3s ease;
 }
 
 .section-pad {
-  padding-block: clamp(4.5rem, 8vw, 8.5rem);
+  padding-block: clamp(4rem, 7vw, 7rem);
 }
 
 .container-page {
@@ -59,145 +105,32 @@ textarea {
   text-wrap: balance;
 }
 
-.surface {
-  border: 1px solid rgba(7, 24, 34, 0.1);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 22px 70px rgba(7, 24, 34, 0.1);
-  backdrop-filter: blur(20px);
-}
-
-.soft-grid {
-  background-image:
-    linear-gradient(rgba(0, 137, 123, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 137, 123, 0.07) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* ── Aurora with deeper river vibes ── */
-.aurora {
+.gradient-mesh {
   background:
-    radial-gradient(circle at 20% 15%, rgba(0, 137, 123, 0.18), transparent 32%),
-    radial-gradient(circle at 72% 22%, rgba(216, 67, 21, 0.1), transparent 26%),
-    radial-gradient(circle at 50% 80%, rgba(0, 77, 64, 0.08), transparent 30%),
-    linear-gradient(180deg, #f6faf9 0%, #e9f3f1 100%);
+    radial-gradient(ellipse at 20% 20%, rgba(26, 35, 126, 0.12), transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(27, 154, 214, 0.08), transparent 40%),
+    radial-gradient(ellipse at 40% 80%, rgba(16, 185, 129, 0.06), transparent 45%),
+    radial-gradient(ellipse at 70% 70%, rgba(26, 35, 126, 0.05), transparent 35%);
 }
 
-/* ── River flow keyframes ── */
-@keyframes river-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.gradient-text {
+  background: linear-gradient(135deg, #1A237E, #1B9AD6, #4FC3F7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@keyframes river-drift {
-  0% { transform: translateX(-3%); }
-  50% { transform: translateX(3%); }
-  100% { transform: translateX(-3%); }
+.gradient-gold {
+  background: linear-gradient(135deg, #D4A853, #F5C542);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-@keyframes river-ripple {
-  0%, 100% { opacity: 0.3; transform: scaleX(1); }
-  50% { opacity: 0.6; transform: scaleX(1.03); }
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
 }
 
-@keyframes river-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes river-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 137, 123, 0); }
-  50% { box-shadow: 0 0 30px 4px rgba(0, 137, 123, 0.08); }
-}
-
-/* ── River flow utilities ── */
-.river-flow {
-  background-size: 200% 200%;
-  animation: river-flow 12s ease-in-out infinite;
-}
-
-.river-drift {
-  animation: river-drift 8s ease-in-out infinite;
-}
-
-.river-ripple {
-  animation: river-ripple 6s ease-in-out infinite;
-}
-
-.river-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(0, 137, 123, 0.04) 25%,
-    rgba(0, 137, 123, 0.08) 50%,
-    rgba(0, 137, 123, 0.04) 75%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
-  animation: river-shimmer 8s ease-in-out infinite;
-}
-
-.river-pulse {
-  animation: river-pulse 4s ease-in-out infinite;
-}
-
-/* ── River gradient surfaces ── */
-.river-surface {
-  border: 1px solid rgba(0, 137, 123, 0.12);
-  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(0,137,123,0.03) 100%);
-  box-shadow: 0 22px 70px rgba(7, 24, 34, 0.08);
-  backdrop-filter: blur(20px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.river-surface:hover {
-  border-color: rgba(0, 137, 123, 0.25);
-  box-shadow: 0 28px 80px rgba(0, 137, 123, 0.12), 0 0 40px rgba(0, 137, 123, 0.06);
-  transform: translateY(-2px);
-}
-
-/* ── Deep CTA section with river animation ── */
-.river-cta {
-  background: linear-gradient(135deg, #071822 0%, #0b2a3c 40%, #004d40 100%);
-  position: relative;
-  overflow: hidden;
-}
-
-.river-cta::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(0, 137, 123, 0.06),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: river-shimmer 10s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* ── Wave divider ── */
-.river-divider {
-  position: relative;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, var(--teal), var(--teal-deep), var(--teal), transparent);
-  background-size: 200% 100%;
-  animation: river-shimmer 6s ease-in-out infinite;
-  border-radius: 2px;
-  opacity: 0.4;
-}
-
-/* ── No-JS / pre-hydration safety net ── */
-html.no-js .reveal-motion,
-html.no-js .stagger-motion,
-html.no-js .stagger-item-motion {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -207,11 +140,295 @@ html.no-js .stagger-item-motion {
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
   }
+}
 
-  .reveal-motion,
-  .stagger-motion,
-  .stagger-item-motion {
-    opacity: 1 !important;
-    transform: none !important;
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
   }
+}
+
+/* ============================================================
+   DARIVA.CO — RIVER THEME VISUAL SYSTEM
+   ============================================================ */
+
+/* --- Scroll-triggered entrance --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* --- River wave animation --- */
+@keyframes riverScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.river-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.river-svg {
+  display: block;
+  width: 200%;
+  height: 100%;
+  animation: riverScroll 14s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .river-wrap { height: 50px; }
+  .river-svg { animation-duration: 18s; }
+}
+
+/* --- Section background textures --- */
+.bg-river-light {
+  background: linear-gradient(180deg, #EFF8FD 0%, #dceef8 60%, #EFF8FD 100%);
+  position: relative;
+}
+
+.bg-deep {
+  background: linear-gradient(135deg, #0D1B2A 0%, #1A237E 100%);
+  color: white;
+  position: relative;
+}
+
+.bg-deep > * { color: inherit; }
+
+.river-cta {
+  background: linear-gradient(135deg, #1A237E 0%, #1B9AD6 100%);
+  color: white;
+  position: relative;
+}
+
+.river-cta > * { color: inherit; }
+
+.bg-mid {
+  background: linear-gradient(180deg, #f0f7ff 0%, #e8f4fd 100%);
+  position: relative;
+}
+
+.bg-warm-white {
+  background: linear-gradient(180deg, #ffffff 0%, #f5fbff 100%);
+}
+
+/* --- Card hover lift --- */
+.card-lift {
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(26, 35, 126, 0.18) !important;
+}
+
+/* --- Stat counter pulse --- */
+@keyframes statPop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  60%  { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+.stat-pop { animation: statPop 0.6s ease forwards; }
+
+/* --- Shimmer glow on hero headline --- */
+@keyframes shimmerText {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.hero-shimmer {
+  background: linear-gradient(-135deg, #1A237E 0%, #1B9AD6 40%, #10B981 100%);
+  background-size: 500% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerText 40s ease infinite;
+}
+
+/* --- Flowing dashed connector (phase section) --- */
+@keyframes dashFlow {
+  to { stroke-dashoffset: -24; }
+}
+.flow-line {
+  stroke-dasharray: 8 6;
+  animation: dashFlow 1.2s linear infinite;
+}
+
+/* --- Floating gentle bob --- */
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+.bob { animation: bob 4s ease-in-out infinite; }
+
+/* --- About page hero fix --- */
+.about-hero {
+  background: linear-gradient(135deg, #1A237E 0%, #1B9AD6 60%, #0D1B2A 100%);
+  color: white !important;
+  padding: 100px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero h1 { 
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+.about-hero p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* --- Section divider wave --- */
+.wave-divider {
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  margin: 0;
+  display: block;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+  height: 60px;
+}
+@media (max-width: 768px) {
+  .wave-divider svg { height: 36px; }
+}
+
+/* --- Global mobile tightening --- */
+html { scroll-behavior: smooth; }
+body { overflow-x: hidden; }
+@media (max-width: 768px) {
+  section { padding-left: 20px !important; padding-right: 20px !important; }
+}
+
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* ── RIVER BACKGROUND ── */
+.river-bg {
+  position: relative;
+  overflow: hidden;
+}
+.river-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 70px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 70'%3E%3Cpath fill='%231B9AD6' fill-opacity='0.07' d='M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 720px 70px;
+  animation: riverFlow 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes riverFlow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (max-width: 768px) {
+  .river-wave { height: 40px; animation-duration: 14s; }
+}
+
+/* ── WHATSAPP FLOAT ── */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.45);
+  z-index: 9998;
+  text-decoration: none;
+  animation: waPulse 2.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.wa-float:hover { transform: scale(1.1); }
+@keyframes waPulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.45); }
+  50%      { box-shadow: 0 4px 36px rgba(37,211,102,0.75); }
+}
+@media (max-width: 768px) {
+  .wa-float { width: 50px; height: 50px; bottom: 16px; right: 16px; }
+}
+
+/* ── GLOBAL MOBILE FIXES ── */
+html { scroll-behavior: smooth; box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+body { overflow-x: hidden; }
+@media (max-width: 768px) {
+  body { font-size: 16px; }
+  button, a[role="button"] { min-height: 44px; }
+  h1 { font-size: clamp(1.8rem, 6vw, 2.6rem) !important; }
+}
+
+/* ── CARD ANIMATIONS ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeSlideUp 0.7s ease-out forwards; }
+.fade-up-1 { animation: fadeSlideUp 0.7s ease-out 0.1s both; }
+.fade-up-2 { animation: fadeSlideUp 0.7s ease-out 0.2s both; }
+.fade-up-3 { animation: fadeSlideUp 0.7s ease-out 0.3s both; }
+
+/* ── RIVER WAVE KEYFRAMES (Hero background) ── */
+@keyframes river-scroll-slow {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes river-scroll-medium {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes river-scroll-fast {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes shimmer-move {
+  0%   { transform: translateX(-50%); }
+  50%  { transform: translateX(50%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-river-slow {
+  animation: river-scroll-slow 20s linear infinite;
+}
+.animate-river-medium {
+  animation: river-scroll-medium 15s linear infinite;
+}
+.animate-river-fast {
+  animation: river-scroll-fast 12s linear infinite;
+}
+.animate-shimmer {
+  animation: shimmer-move 10s ease-in-out infinite;
 }

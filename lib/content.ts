@@ -28,7 +28,7 @@ export const pillars = [
   {
     title: "Train community counsellors",
     description:
-      "Local leaders learn mental wellness foundations, facilitation, safeguarding, referral awareness, and practical care skills.",
+      "Local leaders learn mental wellness foundations, facilitation, safeguarding, and practical care skills.",
     icon: UsersRound
   },
   {
@@ -74,11 +74,11 @@ export const outcomes = [
 
 export const values = [
   { title: "Empathy", icon: HeartHandshake },
+  { title: "Confidentiality", icon: LockKeyhole },
   { title: "Integrity", icon: ShieldCheck },
   { title: "Empowerment", icon: Sparkles },
   { title: "Community Ownership", icon: Network },
   { title: "Accountability", icon: BadgeCheck },
-  { title: "Confidentiality", icon: LockKeyhole },
   { title: "Sustainability", icon: Sprout }
 ];
 
@@ -88,7 +88,6 @@ export const benefits = [
   "Leadership and facilitation",
   "Purpose-led community service",
   "Income opportunity",
-  "Referral awareness",
   "Measurable community impact"
 ];
 
@@ -99,8 +98,8 @@ export const impactCards = [
     icon: Brain
   },
   {
-    title: "GBV driver reduction",
-    text: "Emotional support, safer conversations, and early intervention help reduce pressures that feed violence.",
+    title: "GBV driver ending",
+    text: "Emotional support, safer conversations, and early intervention help end the pressures that feed violence.",
     icon: ShieldCheck
   },
   {
@@ -122,7 +121,7 @@ export const faqs = [
   },
   {
     q: "Who can apply?",
-    a: "Community-minded people in Namibia who want to learn, lead, support others responsibly, and grow through supervised mental wellness work."
+    a: "Community-minded people in Namibia, Africa who want to learn, lead, support others responsibly, and grow through supervised mental wellness work."
   },
   {
     q: "Does Dariva.co replace professional therapy?",
@@ -145,7 +144,7 @@ export const programmes = [
       "Ongoing mentorship support"
     ],
     cta: "Enroll Now",
-    href: "[STRIPE_PAYMENT_LINK]",
+    href: "/apply",
     featured: true
   },
   {
@@ -171,5 +170,5 @@ export const contact = {
   email: "dariva.co001@gmail.com",
   phone: "+264 81 340 4364",
   whatsapp: "+264 81 340 4364",
-  location: "Luderitz, Namibia"
+      location: "Namibia, Africa",
 };

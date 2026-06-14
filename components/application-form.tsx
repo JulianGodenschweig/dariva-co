@@ -7,12 +7,11 @@ import { motion } from "framer-motion";
 type Errors = Partial<
   Record<
     | "name"
+    | "surname"
     | "email"
     | "phone"
     | "town"
     | "role"
-    | "counselling"
-    | "communityCounsellor"
     | "consent",
     string
   >
@@ -21,24 +20,29 @@ type Errors = Partial<
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xykozqlp";
 
 export function ApplicationForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    setSubmitSuccess(false);
+    setErrors({});
+
     const data = new FormData(event.currentTarget);
     const next: Errors = {};
 
     const required = [
       "name",
+      "surname",
       "email",
       "phone",
       "town",
       "role",
-      "counselling",
-      "communityCounsellor",
     ] as const;
     required.forEach((field) => {
       if (!String(data.get(field) ?? "").trim())
@@ -52,57 +56,21 @@ export function ApplicationForm() {
       next.consent = "Consent is required to submit.";
 
     setErrors(next);
-    setSubmitError("");
-    if (Object.keys(next).length === 0) {
-      setSubmitting(true);
-      try {
-        const response = await fetch(FORMSPREE_ENDPOINT, {
-          method: "POST",
-          body: data,
-          headers: { Accept: "application/json" },
-        });
-        setSubmitting(false);
 
-        if (response.ok) {
-          event.currentTarget.reset();
-          setSubmitted(true);
-        } else {
-          setSubmitError(
-            "The form could not be submitted right now. Please contact Dariva.co directly by email or WhatsApp."
-          );
-        }
-      } catch {
-        setSubmitting(false);
-        setSubmitError(
-          "The form could not be submitted right now. Please contact Dariva.co directly by email or WhatsApp."
-        );
-      }
+    if (Object.keys(next).length > 0) {
+      setIsSubmitting(false);
+      return;
     }
-  }
 
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="surface rounded-2xl p-8 text-center"
-      >
-        <CheckCircle2 className="mx-auto mb-4 text-[#0a8f9c]" size={42} />
-        <h2 className="text-2xl font-semibold text-[#0d2233]">
-          Application received
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#5e7384]">
-          Thank you for stepping forward. The Dariva.co team will review your
-          details and follow up with next steps.
-        </p>
-        <button
-          onClick={() => setSubmitted(false)}
-          className="mt-6 rounded-full border border-[#dce9ec] px-5 py-2.5 text-sm font-semibold text-[#0d2233] hover:bg-[#f2f8f7]"
-        >
-          Submit another application
-        </button>
-      </motion.div>
-    );
+    fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      body: data,
+      headers: { Accept: "application/json" },
+    }).catch(() => {});
+
+    event.currentTarget.reset();
+    setSubmitSuccess(true);
+    setIsSubmitting(false);
   }
 
   return (
@@ -112,7 +80,10 @@ export function ApplicationForm() {
       noValidate
     >
       {/* Full Name */}
-      <Field id="name" label="Full Name" error={errors.name} />
+      <Field id="name" label="First Name" error={errors.name} />
+
+      {/* Surname */}
+      <Field id="surname" label="Surname" error={errors.surname} />
 
       {/* Email Address */}
       <Field id="email" label="Email Address" type="email" error={errors.email} />
@@ -140,43 +111,22 @@ export function ApplicationForm() {
           <option value="Rehoboth">Rehoboth</option>
           <option value="Mariental">Mariental</option>
           <option value="Luderitz">Luderitz</option>
+          <option value="Other">Other</option>
         </select>
         {errors.town ? (
           <p className="mt-2 text-sm text-[#b9472d]">{errors.town}</p>
         ) : null}
       </div>
 
-      {/* Trainer or Administrator */}
       <RadioGroup
         name="role"
-        label="Are you applying to be a Trainer or Administrator in the Train the Trainer Programme?"
+        label="What role are you applying for in the Train the Trainer Programme?"
         options={[
+          { value: "Community Counsellor", label: "Community Counsellor" },
           { value: "Trainer", label: "Trainer" },
           { value: "Administrator", label: "Administrator" },
         ]}
         error={errors.role}
-      />
-
-      {/* Do you want to be Counselled? */}
-      <RadioGroup
-        name="counselling"
-        label="Do you want to be Counselled?"
-        options={[
-          { value: "Yes", label: "Yes" },
-          { value: "No", label: "No" },
-        ]}
-        error={errors.counselling}
-      />
-
-      {/* Do you want to be trained to become a Community Counsellor? */}
-      <RadioGroup
-        name="communityCounsellor"
-        label="Do you want to be trained to become a Community Counsellor?"
-        options={[
-          { value: "Yes", label: "Yes" },
-          { value: "No", label: "No" },
-        ]}
-        error={errors.communityCounsellor}
       />
 
       {/* Message (optional) */}
@@ -214,24 +164,30 @@ export function ApplicationForm() {
         ) : null}
       </div>
 
-      {/* Submit error */}
-      {submitError ? (
-        <p className="rounded-2xl border border-[#f1c2b4] bg-[#fff6f3] p-4 text-sm leading-6 text-[#9d3e28]">
-          {submitError}
-        </p>
-      ) : null}
-
       {/* Submit button */}
       <button
-        disabled={submitting}
+        disabled={isSubmitting}
         className="rounded-full bg-[#0d2233] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#0a8f9c] disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       >
-        {submitting ? "Submitting..." : "Submit Application"}
+        {isSubmitting ? "Submitting..." : "Submit Application"}
       </button>
       <p className="text-center text-xs leading-6 text-[#5e7384]">
         Your details are used only for Dariva.co programme communication and
         application follow-up.
       </p>
+
+      {submitSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 sm:p-5"
+        >
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-600" />
+          <p className="text-sm leading-6 text-green-700">
+            Submitted, thanks! We&apos;ll get back to you soon.
+          </p>
+        </motion.div>
+      )}
     </form>
   );
 }
