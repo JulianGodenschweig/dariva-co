@@ -146,10 +146,28 @@ export default async function AccountPage() {
                 }}
               >
                 {approved
-                  ? "You're all set. Your course material will appear here once it's published."
+                  ? "You're approved — your course material is ready."
                   : "A lecturer will review and approve your account shortly. You'll get access to your course material once approved."}
               </p>
             </div>
+          )}
+          {!isLecturer && approved && (
+            <Link
+              href="/courses"
+              style={{
+                display: "inline-block",
+                marginTop: "16px",
+                background: "linear-gradient(135deg,#1B9AD6,#1A237E)",
+                color: "white",
+                padding: "12px 22px",
+                borderRadius: "10px",
+                textDecoration: "none",
+                fontSize: "15px",
+                fontWeight: 700,
+              }}
+            >
+              Go to my courses →
+            </Link>
           )}
         </div>
       </div>

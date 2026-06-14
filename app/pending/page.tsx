@@ -29,8 +29,9 @@ export default async function PendingPage() {
     .eq("id", user.id)
     .single();
 
-  // Already cleared → send them to their account.
-  if (profile?.approved || profile?.role === "lecturer") redirect("/account");
+  // Already cleared → send them to their home base.
+  if (profile?.role === "lecturer") redirect("/admin");
+  if (profile?.approved) redirect("/courses");
 
   const name = profile?.full_name || user.email;
 

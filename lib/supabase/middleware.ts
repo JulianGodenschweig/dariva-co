@@ -67,9 +67,9 @@ export async function updateSession(request: NextRequest) {
     return redirectTo(request, supabaseResponse, "/pending");
   }
 
-  // /pending → if already cleared, no reason to sit here.
+  // /pending → if already cleared, send them to their home base.
   if (isUnder(path, "/pending") && (isApproved || isLecturer)) {
-    return redirectTo(request, supabaseResponse, "/account");
+    return redirectTo(request, supabaseResponse, isLecturer ? "/admin" : "/courses");
   }
 
   return supabaseResponse;

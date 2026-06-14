@@ -40,6 +40,7 @@ export default function LoginPage() {
         .single();
       if (profile?.role === "lecturer") dest = "/admin";
       else if (!profile?.approved) dest = "/pending";
+      else dest = "/courses";
     }
 
     router.push(dest);
