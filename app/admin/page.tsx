@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 import { createClient } from "@/lib/supabase/server";
 
@@ -93,11 +94,16 @@ export default async function AdminPage() {
           }}
         >
           <Image src="/logo.png" alt="Dariva.co" width={120} height={32} style={{ objectFit: "contain" }} />
-          <form action={signOut}>
-            <button type="submit" style={signOutBtn}>
-              Sign out
-            </button>
-          </form>
+          <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
+            <Link href="/courses" style={{ color: "#1A237E", fontSize: "14px", fontWeight: 600, textDecoration: "none" }}>
+              Course materials
+            </Link>
+            <form action={signOut}>
+              <button type="submit" style={signOutBtn}>
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
 
         <p

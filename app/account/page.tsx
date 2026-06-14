@@ -116,6 +116,24 @@ export default async function AccountPage() {
               >
                 Open lecturer panel →
               </Link>
+              <Link
+                href="/courses"
+                style={{
+                  display: "inline-block",
+                  marginLeft: "10px",
+                  marginTop: "10px",
+                  background: "white",
+                  border: "1px solid #1B9AD6",
+                  color: "#1A237E",
+                  padding: "12px 22px",
+                  borderRadius: "10px",
+                  textDecoration: "none",
+                  fontSize: "15px",
+                  fontWeight: 700,
+                }}
+              >
+                Course materials →
+              </Link>
             </div>
           ) : (
             <div
