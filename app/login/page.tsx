@@ -19,7 +19,7 @@ export default function LoginPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password,
     });
@@ -30,7 +30,19 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/account");
+    // Route by role / approval.
+    let dest = "/account";
+    if (data.user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role, approved")
+        .eq("id", data.user.id)
+        .single();
+      if (profile?.role === "lecturer") dest = "/admin";
+      else if (!profile?.approved) dest = "/pending";
+    }
+
+    router.push(dest);
     router.refresh();
   }
 

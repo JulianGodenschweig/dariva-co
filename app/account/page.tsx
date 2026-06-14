@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -32,6 +33,7 @@ export default async function AccountPage() {
   const name = profile?.full_name || user.email;
   const role = profile?.role ?? "student";
   const approved = profile?.approved ?? false;
+  const isLecturer = role === "lecturer";
 
   return (
     <main style={{ minHeight: "100svh", background: "#F8F6F3", padding: "24px 20px" }}>
@@ -44,13 +46,7 @@ export default async function AccountPage() {
             marginBottom: "28px",
           }}
         >
-          <Image
-            src="/logo.png"
-            alt="Dariva.co"
-            width={120}
-            height={32}
-            style={{ objectFit: "contain" }}
-          />
+          <Image src="/logo.png" alt="Dariva.co" width={120} height={32} style={{ objectFit: "contain" }} />
           <form action={signOut}>
             <button
               type="submit"
@@ -100,38 +96,61 @@ export default async function AccountPage() {
             {role}
           </span>
 
-          <div
-            style={{
-              marginTop: "20px",
-              borderRadius: "12px",
-              padding: "16px 18px",
-              background: approved ? "#ECFDF5" : "#FFFBEB",
-              border: `1px solid ${approved ? "#A7F3D0" : "#FDE68A"}`,
-            }}
-          >
-            <p
+          {isLecturer ? (
+            <div style={{ marginTop: "20px" }}>
+              <p style={{ color: "#4B5563", fontSize: "14px", lineHeight: 1.6, margin: "0 0 14px" }}>
+                You have lecturer access — review and approve student registrations from your panel.
+              </p>
+              <Link
+                href="/admin"
+                style={{
+                  display: "inline-block",
+                  background: "linear-gradient(135deg,#1B9AD6,#1A237E)",
+                  color: "white",
+                  padding: "12px 22px",
+                  borderRadius: "10px",
+                  textDecoration: "none",
+                  fontSize: "15px",
+                  fontWeight: 700,
+                }}
+              >
+                Open lecturer panel →
+              </Link>
+            </div>
+          ) : (
+            <div
               style={{
-                margin: 0,
-                fontWeight: 700,
-                fontSize: "15px",
-                color: approved ? "#047857" : "#B45309",
+                marginTop: "20px",
+                borderRadius: "12px",
+                padding: "16px 18px",
+                background: approved ? "#ECFDF5" : "#FFFBEB",
+                border: `1px solid ${approved ? "#A7F3D0" : "#FDE68A"}`,
               }}
             >
-              {approved ? "Account approved" : "Pending approval"}
-            </p>
-            <p
-              style={{
-                margin: "6px 0 0",
-                fontSize: "14px",
-                lineHeight: 1.6,
-                color: approved ? "#065F46" : "#92400E",
-              }}
-            >
-              {approved
-                ? "You're all set. Your course material will appear here once it's published."
-                : "A lecturer will review and approve your account shortly. You'll get access to your course material once approved."}
-            </p>
-          </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: 700,
+                  fontSize: "15px",
+                  color: approved ? "#047857" : "#B45309",
+                }}
+              >
+                {approved ? "Account approved" : "Pending approval"}
+              </p>
+              <p
+                style={{
+                  margin: "6px 0 0",
+                  fontSize: "14px",
+                  lineHeight: 1.6,
+                  color: approved ? "#065F46" : "#92400E",
+                }}
+              >
+                {approved
+                  ? "You're all set. Your course material will appear here once it's published."
+                  : "A lecturer will review and approve your account shortly. You'll get access to your course material once approved."}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </main>
