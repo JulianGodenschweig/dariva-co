@@ -84,13 +84,15 @@ export default async function CoursesPage() {
             margin: "0 0 4px",
           }}
         >
-          Your courses
+          {isLecturer ? "Course management" : "Your courses"}
         </p>
         <h1 style={{ fontSize: "1.7rem", fontWeight: 800, color: "#1A237E", margin: "0 0 6px" }}>
-          Hi {firstName}, welcome to your training
+          {isLecturer ? "Manage course materials" : `Hi ${firstName}, welcome to your training`}
         </h1>
         <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 28px" }}>
-          Open a course to view and download its materials.
+          {isLecturer
+            ? "Open a course to upload materials and set its live class link."
+            : "Open a course to view and download its materials."}
         </p>
 
         <div

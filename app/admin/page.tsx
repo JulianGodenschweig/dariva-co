@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { sendEmail, escapeHtml, SITE_URL } from "@/lib/email";
+import { AddLecturer } from "@/components/admin/AddLecturer";
 
 export const metadata: Metadata = {
   title: "Lecturer panel",
@@ -96,9 +97,16 @@ export default async function AdminPage() {
     .eq("role", "student")
     .order("created_at", { ascending: true });
 
+  const { data: lecturers } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, approved, created_at")
+    .eq("role", "lecturer")
+    .order("created_at", { ascending: true });
+
   const rows = (students ?? []) as Row[];
   const pending = rows.filter((s) => !s.approved);
   const approved = rows.filter((s) => s.approved);
+  const lecturerRows = (lecturers ?? []) as Row[];
 
   return (
     <main style={{ minHeight: "100svh", background: "#F8F6F3", padding: "24px 20px 64px" }}>
@@ -192,6 +200,48 @@ export default async function AdminPage() {
               ))}
             </div>
           )}
+        </section>
+
+        <section style={{ marginTop: "36px" }}>
+          <h2 style={sectionH}>Lecturers ({lecturerRows.length})</h2>
+          {lecturerRows.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
+              {lecturerRows.map((l) => (
+                <div
+                  key={l.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    background: "white",
+                    border: "1px solid #E5F3FB",
+                    borderRadius: "12px",
+                    padding: "12px 16px",
+                  }}
+                >
+                  <div style={{ minWidth: 0 }}>
+                    <p style={nameText}>{l.full_name || "—"}</p>
+                    <p style={subText}>{l.email}</p>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: "12px",
+                      fontWeight: 700,
+                      color: "#1A237E",
+                      background: "#1A237E12",
+                      padding: "4px 10px",
+                      borderRadius: "999px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Lecturer
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          <AddLecturer />
         </section>
       </div>
     </main>
