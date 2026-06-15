@@ -33,6 +33,13 @@ export default function SignupPage() {
       return;
     }
 
+    // Notify the lecturer(s) that someone registered (fire-and-forget).
+    fetch("/api/notify-signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: fullName.trim(), email: email.trim() }),
+    }).catch(() => {});
+
     // Email confirmation ON → no session yet. Tell them to check their inbox.
     if (!data.session) {
       setCheckEmail(true);

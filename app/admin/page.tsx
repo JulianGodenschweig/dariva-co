@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { sendEmail, escapeHtml, SITE_URL } from "@/lib/email";
 
 export const metadata: Metadata = {
   title: "Lecturer panel",
@@ -39,6 +40,23 @@ async function setApproval(formData: FormData) {
   if (me?.role !== "lecturer") return;
 
   await supabase.from("profiles").update({ approved: approve }).eq("id", id);
+
+  // Let the student know they've been approved (no-op until the Resend domain is verified).
+  if (approve) {
+    const { data: student } = await supabase
+      .from("profiles")
+      .select("email, full_name")
+      .eq("id", id)
+      .single();
+    if (student?.email) {
+      await sendEmail({
+        to: student.email,
+        subject: "Your Dariva.co account is approved 🎉",
+        html: `<p>Hi ${escapeHtml(student.full_name ?? "")},</p><p>Good news — your Dariva.co account has been approved. You can now log in and access your course material.</p><p><a href="${SITE_URL}/login">Log in →</a></p>`,
+      });
+    }
+  }
+
   revalidatePath("/admin");
 }
 
