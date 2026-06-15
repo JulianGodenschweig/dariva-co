@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { courseBySlug, COURSE_BUCKET } from "@/lib/courses";
 import { CourseUpload } from "@/components/courses/CourseUpload";
+import { LiveClassLink } from "@/components/courses/LiveClassLink";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -20,6 +21,8 @@ function fmtSize(bytes?: number) {
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+const isVideo = (name: string) => /\.(mp4|webm|mov|m4v)$/i.test(name);
 
 export default async function CoursePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -40,6 +43,13 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   const isLecturer = profile?.role === "lecturer";
   if (!isLecturer && !profile?.approved) redirect("/pending");
 
+  const { data: setting } = await supabase
+    .from("course_settings")
+    .select("live_url")
+    .eq("slug", slug)
+    .maybeSingle();
+  const liveUrl = setting?.live_url ?? null;
+
   const { data: list } = await supabase.storage
     .from(COURSE_BUCKET)
     .list(slug, { sortBy: { column: "name", order: "asc" } });
@@ -58,6 +68,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
         size: f.metadata?.size as number | undefined,
         viewUrl: view?.signedUrl ?? "#",
         downloadUrl: dl?.signedUrl ?? "#",
+        video: isVideo(f.name),
       };
     }),
   );
@@ -100,8 +111,39 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
         <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#1A237E", margin: "12px 0 4px" }}>
           {course.title}
         </h1>
-        <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 24px" }}>{course.blurb}</p>
+        <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 20px" }}>{course.blurb}</p>
 
+        {/* Live class */}
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+              background: "#EF4444",
+              color: "white",
+              padding: "14px",
+              borderRadius: "12px",
+              fontSize: "16px",
+              fontWeight: 700,
+              textDecoration: "none",
+              marginBottom: "16px",
+              minHeight: "52px",
+            }}
+          >
+            🔴 Join live class
+          </a>
+        )}
+        {isLecturer && <LiveClassLink slug={slug} current={liveUrl} />}
+
+        {/* Materials */}
+        <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D1B2A", margin: "8px 0 12px" }}>
+          Course materials
+        </h2>
         {isLecturer && <CourseUpload slug={slug} />}
 
         {items.length === 0 ? (
@@ -117,89 +159,133 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
             }}
           >
             {isLecturer
-              ? "No materials yet — upload the first PowerPoint or PDF above."
+              ? "No materials yet — upload the first PowerPoint, PDF or video above."
               : "No materials have been added to this course yet. Check back soon."}
           </p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {items.map((f) => (
-              <div
-                key={f.name}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: "12px",
-                  background: "white",
-                  border: "1px solid #E5F3FB",
-                  borderRadius: "12px",
-                  padding: "14px 16px",
-                }}
-              >
-                <div style={{ minWidth: 0, display: "flex", gap: "12px", alignItems: "center" }}>
-                  <span style={{ fontSize: "22px" }}>
-                    {f.name.toLowerCase().endsWith(".pdf") ? "📄" : "📊"}
-                  </span>
-                  <div style={{ minWidth: 0 }}>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontWeight: 600,
-                        color: "#1A237E",
-                        fontSize: "14px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {f.name}
-                    </p>
-                    {f.size ? (
-                      <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "12px" }}>{fmtSize(f.size)}</p>
-                    ) : null}
-                  </div>
-                </div>
-                <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
-                  <a
-                    href={f.viewUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {items.map((f) =>
+              f.video ? (
+                <div
+                  key={f.name}
+                  style={{
+                    background: "white",
+                    border: "1px solid #E5F3FB",
+                    borderRadius: "12px",
+                    padding: "12px",
+                  }}
+                >
+                  <p
                     style={{
-                      color: "#1A237E",
-                      border: "1px solid #D1D5DB",
-                      background: "white",
-                      padding: "8px 12px",
-                      borderRadius: "8px",
-                      fontSize: "13px",
+                      margin: "0 0 8px",
                       fontWeight: 600,
-                      textDecoration: "none",
-                      minHeight: "40px",
-                      display: "inline-flex",
+                      color: "#1A237E",
+                      fontSize: "14px",
+                      display: "flex",
+                      gap: "8px",
                       alignItems: "center",
                     }}
                   >
-                    View
-                  </a>
+                    🎬 {f.name}
+                  </p>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <video
+                    controls
+                    preload="metadata"
+                    src={f.viewUrl}
+                    style={{ width: "100%", borderRadius: "8px", background: "#000", maxHeight: "420px" }}
+                  />
                   <a
                     href={f.downloadUrl}
                     style={{
-                      color: "white",
-                      background: "linear-gradient(135deg,#1B9AD6,#1A237E)",
-                      padding: "8px 14px",
-                      borderRadius: "8px",
+                      display: "inline-block",
+                      marginTop: "8px",
+                      color: "#1A237E",
                       fontSize: "13px",
-                      fontWeight: 700,
+                      fontWeight: 600,
                       textDecoration: "none",
-                      minHeight: "40px",
-                      display: "inline-flex",
-                      alignItems: "center",
                     }}
                   >
-                    Download
+                    ↓ Download {f.size ? `(${fmtSize(f.size)})` : ""}
                   </a>
                 </div>
-              </div>
-            ))}
+              ) : (
+                <div
+                  key={f.name}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "12px",
+                    background: "white",
+                    border: "1px solid #E5F3FB",
+                    borderRadius: "12px",
+                    padding: "14px 16px",
+                  }}
+                >
+                  <div style={{ minWidth: 0, display: "flex", gap: "12px", alignItems: "center" }}>
+                    <span style={{ fontSize: "22px" }}>{f.name.toLowerCase().endsWith(".pdf") ? "📄" : "📊"}</span>
+                    <div style={{ minWidth: 0 }}>
+                      <p
+                        style={{
+                          margin: 0,
+                          fontWeight: 600,
+                          color: "#1A237E",
+                          fontSize: "14px",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {f.name}
+                      </p>
+                      {f.size ? (
+                        <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "12px" }}>{fmtSize(f.size)}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                    <a
+                      href={f.viewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#1A237E",
+                        border: "1px solid #D1D5DB",
+                        background: "white",
+                        padding: "8px 12px",
+                        borderRadius: "8px",
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        minHeight: "40px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      View
+                    </a>
+                    <a
+                      href={f.downloadUrl}
+                      style={{
+                        color: "white",
+                        background: "linear-gradient(135deg,#1B9AD6,#1A237E)",
+                        padding: "8px 14px",
+                        borderRadius: "8px",
+                        fontSize: "13px",
+                        fontWeight: 700,
+                        textDecoration: "none",
+                        minHeight: "40px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      Download
+                    </a>
+                  </div>
+                </div>
+              ),
+            )}
           </div>
         )}
       </div>

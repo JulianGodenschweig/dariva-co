@@ -48,11 +48,11 @@ export function CourseUpload({ slug }: { slug: string }) {
           minHeight: "44px",
         }}
       >
-        {busy ? "Uploading…" : "+ Upload material (PPT or PDF)"}
+        {busy ? "Uploading…" : "+ Upload material (PPT, PDF or video)"}
         <input
           ref={inputRef}
           type="file"
-          accept=".pdf,.ppt,.pptx"
+          accept=".pdf,.ppt,.pptx,.mp4,.webm,.mov,.m4v"
           onChange={onChange}
           disabled={busy}
           style={{ display: "none" }}
