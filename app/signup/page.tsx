@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { AuthShell, authInputStyle } from "@/components/auth/AuthShell";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -114,15 +115,12 @@ export default function SignupPage() {
             required
             autoComplete="email"
           />
-          <input
-            style={authInputStyle}
-            type="password"
-            placeholder="Password (min 6 characters)"
+          <PasswordInput
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={6}
+            onChange={setPassword}
+            placeholder="Password (min 6 characters)"
             autoComplete="new-password"
+            minLength={6}
           />
           {error && <p style={{ color: "#dc2626", fontSize: "13px", margin: 0 }}>{error}</p>}
           <button

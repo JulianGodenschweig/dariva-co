@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { ChangePassword } from "@/components/auth/ChangePassword";
 
 export const metadata: Metadata = {
   title: "Account",
@@ -188,6 +189,8 @@ export default async function AccountPage() {
             </Link>
           )}
         </div>
+
+        <ChangePassword />
       </div>
     </main>
   );
