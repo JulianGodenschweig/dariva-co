@@ -9,6 +9,9 @@ create table if not exists public.course_settings (
   updated_at  timestamptz not null default now()
 );
 
+-- Embedded live class (Jitsi) room name. Migration `course_settings_live_room`.
+alter table public.course_settings add column if not exists live_room text;
+
 alter table public.course_settings enable row level security;
 grant select, insert, update on public.course_settings to authenticated;
 
