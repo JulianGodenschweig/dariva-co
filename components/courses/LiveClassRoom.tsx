@@ -2,33 +2,29 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
-
-function newRoom(slug: string) {
-  const bytes = new Uint8Array(6);
-  crypto.getRandomValues(bytes);
-  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-  return `Dariva-${slug}-${hex}`;
-}
 
 export function LiveClassRoom({ slug, current }: { slug: string; current: string | null }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function set(room: string | null) {
+  async function set(action: "start" | "end") {
     setBusy(true);
     setError(null);
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("course_settings")
-      .upsert({ slug, live_room: room, updated_at: new Date().toISOString() });
-    setBusy(false);
-    if (error) {
-      setError(error.message);
-      return;
+    try {
+      const res = await fetch("/api/live-class", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, action }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(data.error || "Something went wrong.");
+      router.refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong.");
+    } finally {
+      setBusy(false);
     }
-    router.refresh();
   }
 
   const on = !!current;
@@ -48,7 +44,7 @@ export function LiveClassRoom({ slug, current }: { slug: string; current: string
       </p>
       {on ? (
         <button
-          onClick={() => set(null)}
+          onClick={() => set("end")}
           disabled={busy}
           style={btn("#B91C1C", "white", "1px solid #FCA5A5", busy)}
         >
@@ -56,7 +52,7 @@ export function LiveClassRoom({ slug, current }: { slug: string; current: string
         </button>
       ) : (
         <button
-          onClick={() => set(newRoom(slug))}
+          onClick={() => set("start")}
           disabled={busy}
           style={btn("#1A237E", "white", "none", busy)}
         >

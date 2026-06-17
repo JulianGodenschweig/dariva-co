@@ -39,13 +39,11 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, approved")
+    .select("role, approved")
     .eq("id", user.id)
     .single();
   const isLecturer = profile?.role === "lecturer";
   if (!isLecturer && !profile?.approved) redirect("/pending");
-
-  const displayName = profile?.full_name || user.email || "Student";
 
   const { data: setting } = await supabase
     .from("course_settings")
@@ -118,7 +116,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
         <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 20px" }}>{course.blurb}</p>
 
         {/* Live class — embedded video, runs right on the page */}
-        {liveRoom && <LiveClass room={liveRoom} displayName={displayName} />}
+        {liveRoom && <LiveClass roomUrl={liveRoom} />}
         {!liveRoom && !isLecturer && (
           <p
             style={{
