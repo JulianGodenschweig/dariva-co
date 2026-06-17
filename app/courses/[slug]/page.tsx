@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { courseBySlug, COURSE_BUCKET } from "@/lib/courses";
 import { CourseUpload } from "@/components/courses/CourseUpload";
 import { LiveClassLink } from "@/components/courses/LiveClassLink";
+import { RemoveMaterial } from "@/components/courses/RemoveMaterial";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -199,19 +200,21 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                     src={f.viewUrl}
                     style={{ width: "100%", borderRadius: "8px", background: "#000", maxHeight: "420px" }}
                   />
-                  <a
-                    href={f.downloadUrl}
-                    style={{
-                      display: "inline-block",
-                      marginTop: "8px",
-                      color: "#1A237E",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      textDecoration: "none",
-                    }}
-                  >
-                    ↓ Download {f.size ? `(${fmtSize(f.size)})` : ""}
-                  </a>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", marginTop: "8px", flexWrap: "wrap" }}>
+                    <a
+                      href={f.downloadUrl}
+                      style={{
+                        display: "inline-block",
+                        color: "#1A237E",
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                      }}
+                    >
+                      ↓ Download {f.size ? `(${fmtSize(f.size)})` : ""}
+                    </a>
+                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} />}
+                  </div>
                 </div>
               ) : (
                 <div
@@ -248,7 +251,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                       ) : null}
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                  <div style={{ display: "flex", gap: "8px", flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
                     <a
                       href={f.viewUrl}
                       target="_blank"
@@ -286,6 +289,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                     >
                       Download
                     </a>
+                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} />}
                   </div>
                 </div>
               ),
