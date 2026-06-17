@@ -115,28 +115,32 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
         {/* Live class */}
         {liveUrl && (
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "10px",
-              background: "#EF4444",
-              color: "white",
-              padding: "14px",
-              borderRadius: "12px",
-              fontSize: "16px",
-              fontWeight: 700,
-              textDecoration: "none",
-              marginBottom: "16px",
-              minHeight: "52px",
-            }}
-          >
-            🔴 Join live class
-          </a>
+          <div style={{ marginBottom: "16px" }}>
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                background: "#EF4444",
+                color: "white",
+                padding: "14px",
+                borderRadius: "12px",
+                fontSize: "16px",
+                fontWeight: 700,
+                textDecoration: "none",
+                minHeight: "52px",
+              }}
+            >
+              🔴 Join live class <span aria-hidden="true">↗</span>
+            </a>
+            <p style={{ color: "#6B7280", fontSize: "13px", lineHeight: 1.5, margin: "8px 2px 0", textAlign: "center" }}>
+              Opens your live class in a new tab — keep this tab open to come back to your course materials.
+            </p>
+          </div>
         )}
         {isLecturer && <LiveClassLink slug={slug} current={liveUrl} />}
 
