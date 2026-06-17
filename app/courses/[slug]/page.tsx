@@ -5,8 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { courseBySlug, COURSE_BUCKET } from "@/lib/courses";
 import { CourseUpload } from "@/components/courses/CourseUpload";
-import { LiveClass } from "@/components/courses/LiveClass";
-import { LiveClassRoom } from "@/components/courses/LiveClassRoom";
+import { LiveClassLink } from "@/components/courses/LiveClassLink";
 import { RemoveMaterial } from "@/components/courses/RemoveMaterial";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -47,10 +46,10 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
   const { data: setting } = await supabase
     .from("course_settings")
-    .select("live_room")
+    .select("live_url")
     .eq("slug", slug)
     .maybeSingle();
-  const liveRoom = setting?.live_room ?? null;
+  const liveUrl = setting?.live_url ?? null;
 
   const { data: list } = await supabase.storage
     .from(COURSE_BUCKET)
@@ -115,25 +114,36 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
         </h1>
         <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 20px" }}>{course.blurb}</p>
 
-        {/* Live class — embedded video, runs right on the page */}
-        {liveRoom && <LiveClass roomUrl={liveRoom} />}
-        {!liveRoom && !isLecturer && (
-          <p
-            style={{
-              color: "#6B7280",
-              fontSize: "14px",
-              background: "white",
-              border: "1px dashed #E5E7EB",
-              borderRadius: "12px",
-              padding: "16px",
-              textAlign: "center",
-              marginBottom: "16px",
-            }}
-          >
-            No live class is running right now. You’ll see a “Join live class” button here when your lecturer starts one.
-          </p>
+        {/* Live class — Google Meet / Zoom link, opens in a new tab */}
+        {liveUrl && (
+          <div style={{ marginBottom: "16px" }}>
+            <a
+              href={liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                background: "#EF4444",
+                color: "white",
+                padding: "14px",
+                borderRadius: "12px",
+                fontSize: "16px",
+                fontWeight: 700,
+                textDecoration: "none",
+                minHeight: "52px",
+              }}
+            >
+              🔴 Join live class <span aria-hidden="true">↗</span>
+            </a>
+            <p style={{ color: "#6B7280", fontSize: "13px", lineHeight: 1.5, margin: "8px 2px 0", textAlign: "center" }}>
+              Opens your live class (Google Meet / Zoom) in a new tab — keep this tab open to come back to your course materials.
+            </p>
+          </div>
         )}
-        {isLecturer && <LiveClassRoom slug={slug} current={liveRoom} />}
+        {isLecturer && <LiveClassLink slug={slug} current={liveUrl} />}
 
         {/* Materials */}
         <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D1B2A", margin: "8px 0 12px" }}>
