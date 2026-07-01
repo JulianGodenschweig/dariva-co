@@ -19,6 +19,13 @@ export function LiveClassLink({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
+  function normalizeUrl(raw: string): string | null {
+    const s = raw.trim();
+    if (!s) return null;
+    if (s.startsWith("http://") || s.startsWith("https://")) return s;
+    return "https://" + s;
+  }
+
   async function save() {
     setBusy(true);
     setError(null);
@@ -28,7 +35,7 @@ export function LiveClassLink({
     const { error } = await supabase
       .from("course_settings")
       .upsert(
-        { slug, lecturer_id: lecturerId, live_url: url.trim() || null, updated_at: new Date().toISOString() },
+        { slug, lecturer_id: lecturerId, live_url: normalizeUrl(url), updated_at: new Date().toISOString() },
         { onConflict: "slug,lecturer_id" },
       );
 
