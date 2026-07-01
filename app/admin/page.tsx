@@ -120,6 +120,7 @@ type Row = {
   email: string | null;
   approved: boolean;
   created_at: string;
+  lecturer_id?: string | null;
 };
 
 function fmt(d: string) {
@@ -128,6 +129,45 @@ function fmt(d: string) {
     month: "short",
     year: "numeric",
   });
+}
+
+function StudentCard({
+  s,
+  isPending,
+}: {
+  s: Row;
+  isPending: boolean;
+}) {
+  return (
+    <div style={isPending ? card : cardApproved}>
+      <div style={{ minWidth: 0 }}>
+        <p style={nameText}>{s.full_name || "—"}</p>
+        <p style={subText}>{s.email}</p>
+        {isPending && <p style={dateText}>Registered {fmt(s.created_at)}</p>}
+      </div>
+      <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+        {isPending ? (
+          <>
+            <form action={setApproval}>
+              <input type="hidden" name="id" value={s.id} />
+              <input type="hidden" name="approve" value="true" />
+              <button type="submit" style={approveBtn}>Approve</button>
+            </form>
+            <form action={denyApplicant}>
+              <input type="hidden" name="id" value={s.id} />
+              <button type="submit" style={denyBtn}>Deny</button>
+            </form>
+          </>
+        ) : (
+          <form action={setApproval}>
+            <input type="hidden" name="id" value={s.id} />
+            <input type="hidden" name="approve" value="false" />
+            <button type="submit" style={revokeBtn}>Revoke</button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default async function AdminPage() {
@@ -139,97 +179,80 @@ export default async function AdminPage() {
 
   const { data: me } = await supabase
     .from("profiles")
-    .select("role")
+    .select("role, is_owner")
     .eq("id", user.id)
     .single();
   if (me?.role !== "lecturer") redirect("/account");
 
-  const { data: students } = await supabase
-    .from("profiles")
-    .select("id, full_name, email, approved, created_at")
-    .eq("role", "student")
-    .eq("lecturer_id", user.id)
-    .order("created_at", { ascending: true });
+  const isOwner = !!me?.is_owner;
 
+  // Owner fetches ALL students; lecturer fetches only their own.
+  const studentsQuery = supabase
+    .from("profiles")
+    .select("id, full_name, email, approved, created_at, lecturer_id")
+    .eq("role", "student")
+    .order("created_at", { ascending: true });
+  if (!isOwner) studentsQuery.eq("lecturer_id", user.id);
+
+  const { data: students } = await studentsQuery;
   const { data: lecturers } = await supabase
     .from("profiles")
-    .select("id, full_name, email, approved, created_at")
+    .select("id, full_name, email")
     .eq("role", "lecturer")
-    .order("created_at", { ascending: true });
+    .order("full_name", { ascending: true });
 
   const rows = (students ?? []) as Row[];
-  const pending = rows.filter((s) => !s.approved);
-  const approved = rows.filter((s) => s.approved);
-  const lecturerRows = (lecturers ?? []) as Row[];
+  const lecturerRows = (lecturers ?? []) as { id: string; full_name: string | null; email: string | null }[];
 
-  // Check if old-format files still exist (first segment = course slug, not a UUID).
+  // Check for legacy files to migrate (only relevant for lecturers/owners).
   let legacyFileCount = 0;
   for (const course of courses) {
     const { data: oldFiles } = await supabase.storage.from(COURSE_BUCKET).list(course.slug);
     legacyFileCount += (oldFiles ?? []).filter((f) => f.id !== null && f.name !== ".emptyFolderPlaceholder").length;
   }
 
+  // Group students by lecturer (for owner view).
+  const byLecturer: Record<string, Row[]> = {};
+  for (const row of rows) {
+    const key = row.lecturer_id ?? "__unassigned__";
+    if (!byLecturer[key]) byLecturer[key] = [];
+    byLecturer[key].push(row);
+  }
+
+  const totalPending = rows.filter((s) => !s.approved).length;
+  const totalApproved = rows.filter((s) => s.approved).length;
+
   return (
     <main style={{ minHeight: "100svh", background: "#F8F6F3", padding: "24px 20px 64px" }}>
       <LecturerTutorial />
       <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "28px",
-          }}
-        >
+
+        {/* Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "28px" }}>
           <Image src="/logo.png" alt="Dariva.co" width={120} height={32} style={{ objectFit: "contain" }} />
           <div style={{ display: "flex", gap: "14px", alignItems: "center" }}>
             <Link href="/courses" style={{ color: "#1A237E", fontSize: "14px", fontWeight: 600, textDecoration: "none" }}>
               Course materials
             </Link>
             <form action={signOut}>
-              <button type="submit" style={signOutBtn}>
-                Sign out
-              </button>
+              <button type="submit" style={signOutBtn}>Sign out</button>
             </form>
           </div>
         </div>
 
+        {/* File migration banner */}
         {legacyFileCount > 0 && (
-          <div
-            style={{
-              background: "#FFFBEB",
-              border: "1px solid #FDE68A",
-              borderRadius: "12px",
-              padding: "14px 16px",
-              marginBottom: "20px",
-              display: "flex",
-              gap: "12px",
-              alignItems: "flex-start",
-            }}
-          >
+          <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: "12px", padding: "14px 16px", marginBottom: "20px", display: "flex", gap: "12px", alignItems: "flex-start" }}>
             <span style={{ fontSize: "20px", flexShrink: 0 }}>📂</span>
             <div style={{ flex: 1 }}>
               <p style={{ margin: "0 0 4px", fontWeight: 700, color: "#92400E", fontSize: "14px" }}>
                 Your existing course files need to be moved
               </p>
               <p style={{ margin: "0 0 10px", color: "#78350F", fontSize: "13px" }}>
-                {legacyFileCount} file{legacyFileCount > 1 ? "s" : ""} found at the old location. Click below to move them to your private folder — one click, done.
+                {legacyFileCount} file{legacyFileCount > 1 ? "s" : ""} found at the old location. One click moves them to your private folder.
               </p>
               <form action={migrateLegacyFiles}>
-                <button
-                  type="submit"
-                  style={{
-                    background: "#F59E0B",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 16px",
-                    borderRadius: "8px",
-                    fontSize: "13px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    minHeight: "36px",
-                  }}
-                >
+                <button type="submit" style={{ background: "#F59E0B", color: "white", border: "none", padding: "8px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, cursor: "pointer", minHeight: "36px" }}>
                   Move my files →
                 </button>
               </form>
@@ -237,117 +260,128 @@ export default async function AdminPage() {
           </div>
         )}
 
-        <p
-          style={{
-            fontSize: "12px",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            color: "#1B9AD6",
-            margin: "0 0 4px",
-          }}
-        >
-          Lecturer panel
+        {/* Page title */}
+        <p style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#1B9AD6", margin: "0 0 4px" }}>
+          {isOwner ? "Owner panel" : "Lecturer panel"}
         </p>
         <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#1A237E", margin: "0 0 6px" }}>
-          Approve students
+          {isOwner ? "Platform overview" : "Approve students"}
         </h1>
-        <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 28px" }}>
-          {pending.length} pending · {approved.length} approved
-        </p>
 
-        <section style={{ marginBottom: "36px" }}>
-          <h2 style={sectionH}>Pending approval ({pending.length})</h2>
-          {pending.length === 0 ? (
-            <p style={emptyText}>No students waiting right now. 🎉</p>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {pending.map((s) => (
-                <div key={s.id} style={card}>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={nameText}>{s.full_name || "—"}</p>
-                    <p style={subText}>{s.email}</p>
-                    <p style={dateText}>Registered {fmt(s.created_at)}</p>
-                  </div>
-                  <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
-                    <form action={setApproval}>
-                      <input type="hidden" name="id" value={s.id} />
-                      <input type="hidden" name="approve" value="true" />
-                      <button type="submit" style={approveBtn}>
-                        Approve
-                      </button>
-                    </form>
-                    <form action={denyApplicant}>
-                      <input type="hidden" name="id" value={s.id} />
-                      <button type="submit" style={denyBtn}>
-                        Deny
-                      </button>
-                    </form>
-                  </div>
+        {/* ─────────────────── OWNER VIEW ─────────────────── */}
+        {isOwner ? (
+          <>
+            {/* Stats strip */}
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", margin: "0 0 28px" }}>
+              {[
+                { label: "Lecturers", value: lecturerRows.length },
+                { label: "Total students", value: rows.length },
+                { label: "Pending", value: totalPending },
+                { label: "Approved", value: totalApproved },
+              ].map((s) => (
+                <div key={s.label} style={{ background: "white", border: "1px solid #E5F3FB", borderRadius: "12px", padding: "12px 18px", minWidth: "100px" }}>
+                  <p style={{ margin: 0, fontSize: "22px", fontWeight: 800, color: "#1A237E" }}>{s.value}</p>
+                  <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#6B7280" }}>{s.label}</p>
                 </div>
               ))}
             </div>
-          )}
-        </section>
 
-        <section>
-          <h2 style={sectionH}>Approved students ({approved.length})</h2>
-          {approved.length === 0 ? (
-            <p style={emptyText}>None yet.</p>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {approved.map((s) => (
-                <div key={s.id} style={cardApproved}>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={nameText}>{s.full_name || "—"}</p>
-                    <p style={subText}>{s.email}</p>
+            {/* Per-lecturer sections */}
+            {lecturerRows.map((lec) => {
+              const lStudents = byLecturer[lec.id] ?? [];
+              const lPending = lStudents.filter((s) => !s.approved);
+              const lApproved = lStudents.filter((s) => s.approved);
+              const lPendingCount = lPending.length;
+              const lApprovedCount = lApproved.length;
+              const isYou = lec.id === user.id;
+
+              return (
+                <section key={lec.id} style={{ marginBottom: "36px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px", paddingBottom: "10px", borderBottom: "2px solid #E5F3FB" }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h2 style={{ margin: 0, fontSize: "1rem", fontWeight: 800, color: "#1A237E" }}>
+                        {lec.full_name || "—"}
+                        {isYou && <span style={{ marginLeft: "8px", fontSize: "12px", fontWeight: 600, color: "#6B7280" }}>(you)</span>}
+                      </h2>
+                      <p style={{ margin: "2px 0 0", fontSize: "13px", color: "#6B7280" }}>{lec.email}</p>
+                    </div>
+                    <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                      <span style={{ background: lPendingCount > 0 ? "#FFFBEB" : "#F3F4F6", color: lPendingCount > 0 ? "#92400E" : "#6B7280", border: `1px solid ${lPendingCount > 0 ? "#FDE68A" : "#E5E7EB"}`, borderRadius: "999px", fontSize: "12px", fontWeight: 700, padding: "3px 10px", whiteSpace: "nowrap" }}>
+                        {lPendingCount} pending
+                      </span>
+                      <span style={{ background: lApprovedCount > 0 ? "#ECFDF5" : "#F3F4F6", color: lApprovedCount > 0 ? "#065F46" : "#6B7280", border: `1px solid ${lApprovedCount > 0 ? "#A7F3D0" : "#E5E7EB"}`, borderRadius: "999px", fontSize: "12px", fontWeight: 700, padding: "3px 10px", whiteSpace: "nowrap" }}>
+                        {lApprovedCount} approved
+                      </span>
+                    </div>
                   </div>
-                  <form action={setApproval}>
-                    <input type="hidden" name="id" value={s.id} />
-                    <input type="hidden" name="approve" value="false" />
-                    <button type="submit" style={revokeBtn}>
-                      Revoke
-                    </button>
-                  </form>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
 
+                  {lStudents.length === 0 ? (
+                    <p style={emptyText}>No students registered under this lecturer yet.</p>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {lPending.map((s) => <StudentCard key={s.id} s={s} isPending={true} />)}
+                      {lApproved.map((s) => <StudentCard key={s.id} s={s} isPending={false} />)}
+                    </div>
+                  )}
+                </section>
+              );
+            })}
+
+            {/* Unassigned students */}
+            {(byLecturer["__unassigned__"] ?? []).length > 0 && (
+              <section style={{ marginBottom: "36px" }}>
+                <h2 style={{ ...sectionH, color: "#B45309" }}>⚠️ No lecturer assigned ({byLecturer["__unassigned__"].length})</h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {byLecturer["__unassigned__"].map((s) => (
+                    <StudentCard key={s.id} s={s} isPending={!s.approved} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        ) : (
+          /* ─────────────────── LECTURER VIEW ─────────────────── */
+          <>
+            <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 28px" }}>
+              {rows.filter((s) => !s.approved).length} pending · {rows.filter((s) => s.approved).length} approved
+            </p>
+
+            <section style={{ marginBottom: "36px" }}>
+              <h2 style={sectionH}>Pending approval ({rows.filter((s) => !s.approved).length})</h2>
+              {rows.filter((s) => !s.approved).length === 0 ? (
+                <p style={emptyText}>No students waiting right now. 🎉</p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {rows.filter((s) => !s.approved).map((s) => <StudentCard key={s.id} s={s} isPending={true} />)}
+                </div>
+              )}
+            </section>
+
+            <section>
+              <h2 style={sectionH}>Approved students ({rows.filter((s) => s.approved).length})</h2>
+              {rows.filter((s) => s.approved).length === 0 ? (
+                <p style={emptyText}>None yet.</p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {rows.filter((s) => s.approved).map((s) => <StudentCard key={s.id} s={s} isPending={false} />)}
+                </div>
+              )}
+            </section>
+          </>
+        )}
+
+        {/* Lecturers management — visible to all lecturers */}
         <section style={{ marginTop: "36px" }}>
           <h2 style={sectionH}>Lecturers ({lecturerRows.length})</h2>
           {lecturerRows.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
               {lecturerRows.map((l) => (
-                <div
-                  key={l.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "12px",
-                    background: "white",
-                    border: "1px solid #E5F3FB",
-                    borderRadius: "12px",
-                    padding: "12px 16px",
-                  }}
-                >
+                <div key={l.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", background: "white", border: "1px solid #E5F3FB", borderRadius: "12px", padding: "12px 16px" }}>
                   <div style={{ minWidth: 0 }}>
                     <p style={nameText}>{l.full_name || "—"}</p>
                     <p style={subText}>{l.email}</p>
                   </div>
-                  <span
-                    style={{
-                      fontSize: "12px",
-                      fontWeight: 700,
-                      color: "#1A237E",
-                      background: "#1A237E12",
-                      padding: "4px 10px",
-                      borderRadius: "999px",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#1A237E", background: "#1A237E12", padding: "4px 10px", borderRadius: "999px", whiteSpace: "nowrap" }}>
                     Lecturer
                   </span>
                 </div>
@@ -361,105 +395,14 @@ export default async function AdminPage() {
   );
 }
 
-const signOutBtn: CSSProperties = {
-  background: "white",
-  border: "1px solid #D1D5DB",
-  color: "#1A237E",
-  padding: "8px 16px",
-  borderRadius: "8px",
-  fontSize: "14px",
-  fontWeight: 600,
-  cursor: "pointer",
-  minHeight: "40px",
-};
-const sectionH: CSSProperties = {
-  fontSize: "0.95rem",
-  fontWeight: 700,
-  color: "#0D1B2A",
-  margin: "0 0 12px",
-};
-const emptyText: CSSProperties = {
-  color: "#9CA3AF",
-  fontSize: "14px",
-  background: "white",
-  border: "1px dashed #E5E7EB",
-  borderRadius: "12px",
-  padding: "20px",
-  textAlign: "center",
-  margin: 0,
-};
-const card: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: "12px",
-  background: "white",
-  border: "1px solid #FDE68A",
-  borderRadius: "12px",
-  padding: "14px 16px",
-  boxShadow: "0 2px 12px rgba(27,154,214,0.06)",
-};
-const cardApproved: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: "12px",
-  background: "white",
-  border: "1px solid #A7F3D0",
-  borderRadius: "12px",
-  padding: "12px 16px",
-};
-const nameText: CSSProperties = {
-  margin: 0,
-  fontWeight: 700,
-  color: "#1A237E",
-  fontSize: "15px",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
-const subText: CSSProperties = {
-  margin: "2px 0 0",
-  color: "#6B7280",
-  fontSize: "13px",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
+const signOutBtn: CSSProperties = { background: "white", border: "1px solid #D1D5DB", color: "#1A237E", padding: "8px 16px", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", minHeight: "40px" };
+const sectionH: CSSProperties = { fontSize: "0.95rem", fontWeight: 700, color: "#0D1B2A", margin: "0 0 12px" };
+const emptyText: CSSProperties = { color: "#9CA3AF", fontSize: "14px", background: "white", border: "1px dashed #E5E7EB", borderRadius: "12px", padding: "20px", textAlign: "center", margin: 0 };
+const card: CSSProperties = { display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", background: "white", border: "1px solid #FDE68A", borderRadius: "12px", padding: "14px 16px", boxShadow: "0 2px 12px rgba(27,154,214,0.06)" };
+const cardApproved: CSSProperties = { display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", background: "white", border: "1px solid #A7F3D0", borderRadius: "12px", padding: "12px 16px" };
+const nameText: CSSProperties = { margin: 0, fontWeight: 700, color: "#1A237E", fontSize: "15px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" };
+const subText: CSSProperties = { margin: "2px 0 0", color: "#6B7280", fontSize: "13px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" };
 const dateText: CSSProperties = { margin: "4px 0 0", color: "#9CA3AF", fontSize: "12px" };
-const approveBtn: CSSProperties = {
-  background: "#10B981",
-  color: "white",
-  border: "none",
-  padding: "10px 18px",
-  borderRadius: "10px",
-  fontSize: "14px",
-  fontWeight: 700,
-  cursor: "pointer",
-  minHeight: "44px",
-  whiteSpace: "nowrap",
-};
-const denyBtn: CSSProperties = {
-  background: "white",
-  color: "#B91C1C",
-  border: "1px solid #FCA5A5",
-  padding: "10px 14px",
-  borderRadius: "10px",
-  fontSize: "14px",
-  fontWeight: 600,
-  cursor: "pointer",
-  minHeight: "44px",
-  whiteSpace: "nowrap",
-};
-const revokeBtn: CSSProperties = {
-  background: "white",
-  color: "#B45309",
-  border: "1px solid #FDE68A",
-  padding: "8px 14px",
-  borderRadius: "10px",
-  fontSize: "13px",
-  fontWeight: 600,
-  cursor: "pointer",
-  minHeight: "40px",
-  whiteSpace: "nowrap",
-};
+const approveBtn: CSSProperties = { background: "#10B981", color: "white", border: "none", padding: "10px 18px", borderRadius: "10px", fontSize: "14px", fontWeight: 700, cursor: "pointer", minHeight: "44px", whiteSpace: "nowrap" };
+const denyBtn: CSSProperties = { background: "white", color: "#B91C1C", border: "1px solid #FCA5A5", padding: "10px 14px", borderRadius: "10px", fontSize: "14px", fontWeight: 600, cursor: "pointer", minHeight: "44px", whiteSpace: "nowrap" };
+const revokeBtn: CSSProperties = { background: "white", color: "#B45309", border: "1px solid #FDE68A", padding: "8px 14px", borderRadius: "10px", fontSize: "13px", fontWeight: 600, cursor: "pointer", minHeight: "40px", whiteSpace: "nowrap" };
