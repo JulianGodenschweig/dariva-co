@@ -6,7 +6,9 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { sendEmail, escapeHtml, SITE_URL } from "@/lib/email";
+import { COURSE_BUCKET, courses } from "@/lib/courses";
 import { AddLecturer } from "@/components/admin/AddLecturer";
+import { LecturerTutorial } from "@/components/admin/LecturerTutorial";
 
 export const metadata: Metadata = {
   title: "Lecturer panel",
@@ -32,7 +34,6 @@ async function setApproval(formData: FormData) {
   } = await supabase.auth.getUser();
   if (!user) return;
 
-  // Defense in depth — the "lecturers update profiles" RLS policy also enforces this.
   const { data: me } = await supabase
     .from("profiles")
     .select("role")
@@ -42,7 +43,6 @@ async function setApproval(formData: FormData) {
 
   await supabase.from("profiles").update({ approved: approve }).eq("id", id);
 
-  // Let the student know they've been approved (no-op until the Resend domain is verified).
   if (approve) {
     const { data: student } = await supabase
       .from("profiles")
@@ -59,6 +59,59 @@ async function setApproval(formData: FormData) {
   }
 
   revalidatePath("/admin");
+}
+
+async function denyApplicant(formData: FormData) {
+  "use server";
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  if (me?.role !== "lecturer") return;
+
+  await supabase.from("profiles").delete().eq("id", id);
+  revalidatePath("/admin");
+}
+
+async function migrateLegacyFiles() {
+  "use server";
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  if (me?.role !== "lecturer") return;
+
+  for (const course of courses) {
+    const { data: files } = await supabase.storage.from(COURSE_BUCKET).list(course.slug);
+    if (!files) continue;
+    for (const f of files) {
+      if (f.name === ".emptyFolderPlaceholder" || !f.id) continue;
+      const oldPath = `${course.slug}/${f.name}`;
+      const newPath = `${user.id}/${course.slug}/${f.name}`;
+      await supabase.storage.from(COURSE_BUCKET).copy(oldPath, newPath);
+      await supabase.storage.from(COURSE_BUCKET).remove([oldPath]);
+    }
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/courses");
 }
 
 type Row = {
@@ -95,6 +148,7 @@ export default async function AdminPage() {
     .from("profiles")
     .select("id, full_name, email, approved, created_at")
     .eq("role", "student")
+    .eq("lecturer_id", user.id)
     .order("created_at", { ascending: true });
 
   const { data: lecturers } = await supabase
@@ -108,8 +162,16 @@ export default async function AdminPage() {
   const approved = rows.filter((s) => s.approved);
   const lecturerRows = (lecturers ?? []) as Row[];
 
+  // Check if old-format files still exist (first segment = course slug, not a UUID).
+  let legacyFileCount = 0;
+  for (const course of courses) {
+    const { data: oldFiles } = await supabase.storage.from(COURSE_BUCKET).list(course.slug);
+    legacyFileCount += (oldFiles ?? []).filter((f) => f.id !== null && f.name !== ".emptyFolderPlaceholder").length;
+  }
+
   return (
     <main style={{ minHeight: "100svh", background: "#F8F6F3", padding: "24px 20px 64px" }}>
+      <LecturerTutorial />
       <div style={{ maxWidth: "720px", margin: "0 auto" }}>
         <div
           style={{
@@ -131,6 +193,49 @@ export default async function AdminPage() {
             </form>
           </div>
         </div>
+
+        {legacyFileCount > 0 && (
+          <div
+            style={{
+              background: "#FFFBEB",
+              border: "1px solid #FDE68A",
+              borderRadius: "12px",
+              padding: "14px 16px",
+              marginBottom: "20px",
+              display: "flex",
+              gap: "12px",
+              alignItems: "flex-start",
+            }}
+          >
+            <span style={{ fontSize: "20px", flexShrink: 0 }}>📂</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: "0 0 4px", fontWeight: 700, color: "#92400E", fontSize: "14px" }}>
+                Your existing course files need to be moved
+              </p>
+              <p style={{ margin: "0 0 10px", color: "#78350F", fontSize: "13px" }}>
+                {legacyFileCount} file{legacyFileCount > 1 ? "s" : ""} found at the old location. Click below to move them to your private folder — one click, done.
+              </p>
+              <form action={migrateLegacyFiles}>
+                <button
+                  type="submit"
+                  style={{
+                    background: "#F59E0B",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: "8px",
+                    fontSize: "13px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    minHeight: "36px",
+                  }}
+                >
+                  Move my files →
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
         <p
           style={{
@@ -164,13 +269,21 @@ export default async function AdminPage() {
                     <p style={subText}>{s.email}</p>
                     <p style={dateText}>Registered {fmt(s.created_at)}</p>
                   </div>
-                  <form action={setApproval}>
-                    <input type="hidden" name="id" value={s.id} />
-                    <input type="hidden" name="approve" value="true" />
-                    <button type="submit" style={approveBtn}>
-                      Approve
-                    </button>
-                  </form>
+                  <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
+                    <form action={setApproval}>
+                      <input type="hidden" name="id" value={s.id} />
+                      <input type="hidden" name="approve" value="true" />
+                      <button type="submit" style={approveBtn}>
+                        Approve
+                      </button>
+                    </form>
+                    <form action={denyApplicant}>
+                      <input type="hidden" name="id" value={s.id} />
+                      <button type="submit" style={denyBtn}>
+                        Deny
+                      </button>
+                    </form>
+                  </div>
                 </div>
               ))}
             </div>
@@ -322,6 +435,18 @@ const approveBtn: CSSProperties = {
   borderRadius: "10px",
   fontSize: "14px",
   fontWeight: 700,
+  cursor: "pointer",
+  minHeight: "44px",
+  whiteSpace: "nowrap",
+};
+const denyBtn: CSSProperties = {
+  background: "white",
+  color: "#B91C1C",
+  border: "1px solid #FCA5A5",
+  padding: "10px 14px",
+  borderRadius: "10px",
+  fontSize: "14px",
+  fontWeight: 600,
   cursor: "pointer",
   minHeight: "44px",
   whiteSpace: "nowrap",

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { COURSE_BUCKET } from "@/lib/courses";
 
-export function CourseUpload({ slug }: { slug: string }) {
+export function CourseUpload({ slug, lecturerId }: { slug: string; lecturerId: string }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -20,7 +20,7 @@ export function CourseUpload({ slug }: { slug: string }) {
     const supabase = createClient();
     const { error } = await supabase.storage
       .from(COURSE_BUCKET)
-      .upload(`${slug}/${file.name}`, file, { upsert: true });
+      .upload(`${lecturerId}/${slug}/${file.name}`, file, { upsert: true });
 
     setBusy(false);
     if (inputRef.current) inputRef.current.value = "";

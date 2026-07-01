@@ -5,7 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { COURSE_BUCKET } from "@/lib/courses";
 
-export function RemoveMaterial({ slug, name }: { slug: string; name: string }) {
+export function RemoveMaterial({
+  slug,
+  name,
+  lecturerId,
+}: {
+  slug: string;
+  name: string;
+  lecturerId: string;
+}) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +24,9 @@ export function RemoveMaterial({ slug, name }: { slug: string; name: string }) {
     setError(null);
 
     const supabase = createClient();
-    const { error } = await supabase.storage.from(COURSE_BUCKET).remove([`${slug}/${name}`]);
+    const { error } = await supabase.storage
+      .from(COURSE_BUCKET)
+      .remove([`${lecturerId}/${slug}/${name}`]);
 
     setBusy(false);
     if (error) {

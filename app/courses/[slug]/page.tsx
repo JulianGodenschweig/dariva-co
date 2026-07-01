@@ -38,28 +38,35 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("role, approved")
+    .select("role, approved, lecturer_id")
     .eq("id", user.id)
     .single();
+
   const isLecturer = profile?.role === "lecturer";
   if (!isLecturer && !profile?.approved) redirect("/pending");
+
+  // Lecturers use their own id; students use their assigned lecturer's id.
+  const lecturerId = isLecturer ? user.id : (profile?.lecturer_id as string | null);
+  if (!lecturerId) redirect("/pending");
 
   const { data: setting } = await supabase
     .from("course_settings")
     .select("live_url")
     .eq("slug", slug)
+    .eq("lecturer_id", lecturerId)
     .maybeSingle();
   const liveUrl = setting?.live_url ?? null;
 
+  const materialPath = `${lecturerId}/${slug}`;
   const { data: list } = await supabase.storage
     .from(COURSE_BUCKET)
-    .list(slug, { sortBy: { column: "name", order: "asc" } });
+    .list(materialPath, { sortBy: { column: "name", order: "asc" } });
 
   const files = (list ?? []).filter((f) => f.name !== ".emptyFolderPlaceholder" && f.id !== null);
 
   const items = await Promise.all(
     files.map(async (f) => {
-      const path = `${slug}/${f.name}`;
+      const path = `${materialPath}/${f.name}`;
       const [{ data: view }, { data: dl }] = await Promise.all([
         supabase.storage.from(COURSE_BUCKET).createSignedUrl(path, 3600),
         supabase.storage.from(COURSE_BUCKET).createSignedUrl(path, 3600, { download: f.name }),
@@ -114,7 +121,6 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
         </h1>
         <p style={{ color: "#6B7280", fontSize: "14px", margin: "0 0 20px" }}>{course.blurb}</p>
 
-        {/* Live class — Google Meet / Zoom link, opens in a new tab */}
         {liveUrl && (
           <div style={{ marginBottom: "16px" }}>
             <a
@@ -143,13 +149,12 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
             </p>
           </div>
         )}
-        {isLecturer && <LiveClassLink slug={slug} current={liveUrl} />}
+        {isLecturer && <LiveClassLink slug={slug} lecturerId={lecturerId} current={liveUrl} />}
 
-        {/* Materials */}
         <h2 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D1B2A", margin: "8px 0 12px" }}>
           Course materials
         </h2>
-        {isLecturer && <CourseUpload slug={slug} />}
+        {isLecturer && <CourseUpload slug={slug} lecturerId={lecturerId} />}
 
         {items.length === 0 ? (
           <p
@@ -213,7 +218,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                     >
                       ↓ Download {f.size ? `(${fmtSize(f.size)})` : ""}
                     </a>
-                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} />}
+                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} lecturerId={lecturerId} />}
                   </div>
                 </div>
               ) : (
@@ -289,7 +294,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                     >
                       Download
                     </a>
-                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} />}
+                    {isLecturer && <RemoveMaterial slug={slug} name={f.name} lecturerId={lecturerId} />}
                   </div>
                 </div>
               ),

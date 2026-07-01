@@ -4,7 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export function LiveClassLink({ slug, current }: { slug: string; current: string | null }) {
+export function LiveClassLink({
+  slug,
+  lecturerId,
+  current,
+}: {
+  slug: string;
+  lecturerId: string;
+  current: string | null;
+}) {
   const router = useRouter();
   const [url, setUrl] = useState(current ?? "");
   const [busy, setBusy] = useState(false);
@@ -19,7 +27,10 @@ export function LiveClassLink({ slug, current }: { slug: string; current: string
     const supabase = createClient();
     const { error } = await supabase
       .from("course_settings")
-      .upsert({ slug, live_url: url.trim() || null, updated_at: new Date().toISOString() });
+      .upsert(
+        { slug, lecturer_id: lecturerId, live_url: url.trim() || null, updated_at: new Date().toISOString() },
+        { onConflict: "slug,lecturer_id" },
+      );
 
     setBusy(false);
     if (error) {
@@ -41,7 +52,7 @@ export function LiveClassLink({ slug, current }: { slug: string; current: string
       }}
     >
       <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "#1A237E", marginBottom: "8px" }}>
-        Live class link (Zoom / Google Meet) — students get a “Join live class” button
+        Live class link (Zoom / Google Meet) — students get a "Join live class" button
       </label>
       <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
         <input
