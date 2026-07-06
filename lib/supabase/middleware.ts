@@ -9,6 +9,20 @@ function isUnder(path: string, base: string) {
 }
 
 export async function updateSession(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  const needsAuth = PROTECTED.some((base) => isUnder(path, base));
+
+  // Public routes (marketing, /login, /signup, /api/*): nothing to gate, so
+  // skip the Supabase round-trip entirely. This matcher runs on every
+  // request, including the background prefetch Next.js fires for every
+  // <Link> that scrolls into view (every nav link, on every page). Calling
+  // getUser() unconditionally here meant a single portal page load could
+  // fan out into several *concurrent* refresh attempts against the same
+  // refresh token — Supabase's rotation treats that as reuse and revokes
+  // the whole session, which is what was throwing users out ~3 minutes in.
+  // See docs/KICKOUT-FIX.md.
+  if (!needsAuth) return NextResponse.next({ request });
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -37,12 +51,6 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const path = request.nextUrl.pathname;
-  const needsAuth = PROTECTED.some((base) => isUnder(path, base));
-
-  // Public routes (marketing, /login, /signup): just refresh the session.
-  if (!needsAuth) return supabaseResponse;
 
   // Protected route, not signed in → login.
   if (!user) return redirectTo(request, supabaseResponse, "/login");

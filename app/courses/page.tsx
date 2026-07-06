@@ -106,6 +106,7 @@ export default async function CoursesPage() {
             <Link
               key={c.slug}
               href={`/courses/${c.slug}`}
+              prefetch={false}
               style={{
                 display: "block",
                 background: "white",
