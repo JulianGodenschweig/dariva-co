@@ -3,7 +3,7 @@ import { FAQAccordion } from "@/components/faq-accordion";
 
 export const metadata: Metadata = {
   title: "Apply",
-  description: "Apply to join Dariva.co's community counsellor development programme in Namibia, Africa."
+  description: "Apply to join Dariva.co's community coach development programme in Namibia, Africa."
 };
 
 const faqItems = [
@@ -32,7 +32,7 @@ const faqItems = [
     )
   },
   {
-    question: "How much is my Return on Investment / can I earn after successful completion of the Training - as a Community Mental Wellness Counsellor?",
+    question: "How much is my Return on Investment / can I earn after successful completion of the Training - as a Community Mental Wellness Coach?",
     answer: (
       <div className="space-y-3">
         <p>
@@ -41,12 +41,12 @@ const faqItems = [
           double their initial investment within the first month of the Trainer programme.
         </p>
         <p>
-          Successful Graduated Community Mental Wellness Counsellors are Employed by Dariva.co
+          Successful Graduated Community Mental Wellness Coaches are Employed by Dariva.co
           and have the potential to earn:
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>N$ 2,400 - N$ 10,500 per month - depending on the number of consultations conducted.</li>
-          <li>Prior / already Qualified and Experienced Counsellors can earn up to N$ 15,000 per month - depending on the number of Consultations conducted.</li>
+          <li>Prior / already Qualified and Experienced Coaches can earn up to N$ 15,000 per month - depending on the number of Consultations conducted.</li>
         </ul>
       </div>
     )

@@ -8,12 +8,12 @@ const solutions = [
   {
     icon: Brain,
     title: "Train",
-    text: "We train community counsellors in mental wellness foundations, GBV awareness, facilitation, and ethical care practices.",
+    text: "We train community coaches in mental wellness foundations, GBV awareness, facilitation, and ethical care practices.",
   },
   {
     icon: Smartphone,
     title: "Connect",
-    text: "Digital tools link trained counsellors, community members, records, referrals, and continuous learning into one accessible system.",
+    text: "Digital tools link trained coaches, community members, records, referrals, and continuous learning into one accessible system.",
   },
   {
     icon: Award,

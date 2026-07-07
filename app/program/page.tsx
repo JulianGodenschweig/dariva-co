@@ -7,7 +7,7 @@ import { Stagger, StaggerItem } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Program",
-  description: "Dariva.co's train-the-trainer model develops community counsellors through learning, practice, and incentive-based service."
+  description: "Dariva.co's train-the-trainer model develops community coaches through learning, practice, and incentive-based service."
 };
 
 export default function ProgramPage() {
@@ -16,7 +16,7 @@ export default function ProgramPage() {
       <section className="about-hero">
         <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] opacity-80">Program</p>
         <h1>A practical path from training to trusted community care</h1>
-        <p>Dariva.co develops community counsellors through a preventative mental wellness model that builds confidence, leadership, and income pathways.</p>
+        <p>Dariva.co develops community coaches through a preventative mental wellness model that builds confidence, leadership, and income pathways.</p>
         <div className="river-wrap" aria-hidden="true">
           <svg className="river-svg" viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
             <path d="M0,45 C180,90 360,0 540,45 C720,90 900,0 1080,45 C1260,90 1440,0 1440,45 L1440,90 L0,90 Z" fill="rgba(255,255,255,0.12)"/>
@@ -64,7 +64,7 @@ export default function ProgramPage() {
             align="center"
             eyebrow="Programme Fees"
             title="Choose your path"
-            text="Dariva.co's Community Counsellor Training Programme."
+            text="Dariva.co's Community Coach Training Programme."
           />
           <p style={{textAlign:'center',fontSize:'1.1rem',fontWeight:700,color:'#1A237E',marginTop:'24px',marginBottom:'8px'}}>Train-the-Trainer Programme</p>
           <div className="mt-4" style={{display:'flex',flexWrap:'wrap',gap:'32px',justifyContent:'center'}}>
@@ -117,7 +117,7 @@ export default function ProgramPage() {
         <div className="container-page grid gap-6 md:grid-cols-3">
           {[
             { title: "Training", icon: Route, text: "Structured learning with practical community application." },
-            { title: "Mentorship", icon: Handshake, text: "Guidance, feedback, and ethical boundaries as counsellors grow." },
+            { title: "Mentorship", icon: Handshake, text: "Guidance, feedback, and ethical boundaries as coaches grow." },
             { title: "Network", icon: UsersRound, text: "A connected care economy with digital access and ongoing support." }
           ].map((item) => {
             const Icon = item.icon;

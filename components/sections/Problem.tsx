@@ -23,7 +23,7 @@ const problems = [
   {
     icon: Users,
     title: "Fragmented Support",
-    text: "Without trained local counsellors and connected referral pathways, people fall through the gaps between informal care and professional help.",
+    text: "Without trained local coaches and connected referral pathways, people fall through the gaps between informal care and professional help.",
   },
 ];
 

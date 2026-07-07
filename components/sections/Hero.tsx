@@ -154,7 +154,7 @@ export function Hero() {
           </motion.h1>
 
           <motion.p variants={childVariants} className="mt-6 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-text-muted">
-            Dariva.co trains community counsellors, opens digital access to mental wellness, and rewards care work so that prevention becomes practical.
+            Dariva.co trains community coaches, opens digital access to mental wellness, and rewards care work so that prevention becomes practical.
           </motion.p>
 
           <motion.div variants={childVariants} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">

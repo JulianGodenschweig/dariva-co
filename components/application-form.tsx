@@ -122,7 +122,7 @@ export function ApplicationForm() {
         name="role"
         label="What role are you applying for in the Train the Trainer Programme?"
         options={[
-          { value: "Community Counsellor", label: "Community Counsellor" },
+          { value: "Community Coach", label: "Community Coach" },
           { value: "Trainer", label: "Trainer" },
           { value: "Administrator", label: "Administrator" },
         ]}

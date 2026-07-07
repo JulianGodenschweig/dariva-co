@@ -33,7 +33,7 @@ export default function AboutPage() {
           />
           <div className="grid gap-4">
             {[
-              ["Mission", "To make mental wellness accessible and normal through trained community counsellors and digital support that ends Gender-Based Violence."],
+              ["Mission", "To make mental wellness accessible and normal through trained community coaches and digital support that ends Gender-Based Violence."],
               ["Vision", "Emotionally resilient, self-sustaining communities across Namibia and Africa."],
               ["Difference", "Dariva.co combines prevention, economic opportunity, digital health integration, and monitoring into one ecosystem."]
             ].map(([title, text], i) => (

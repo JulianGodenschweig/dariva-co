@@ -61,10 +61,10 @@ export default function ImpactPage() {
           <SectionHeading
             eyebrow="National potential"
             title="From local trust to a national care network."
-            text="Dariva.co can begin community by community, then connect trained counsellors, referral relationships, digital tools, and partner learning into a wider mental wellness system across Namibia, Africa."
+            text="Dariva.co can begin community by community, then connect trained coaches, referral relationships, digital tools, and partner learning into a wider mental wellness system across Namibia, Africa."
           />
           <Stagger className="grid gap-4">
-            {["Pilot communities", "Counsellor economy", "National prevention infrastructure"].map((step, index) => (
+            {["Pilot communities", "Coach economy", "National prevention infrastructure"].map((step, index) => (
               <StaggerItem key={step} className="card-lift rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-6">
                 <p className="text-sm font-bold text-[#00897b]">0{index + 1}</p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#1A237E]">{step}</h2>

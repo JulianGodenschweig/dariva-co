@@ -20,7 +20,7 @@ const steps = [
     number: "03",
     icon: Globe,
     title: "Serve",
-    text: "Trained counsellors serve their communities through digital and in-person channels, supported by ongoing mentorship and supervision.",
+    text: "Trained coaches serve their communities through digital and in-person channels, supported by ongoing mentorship and supervision.",
   },
   {
     number: "04",

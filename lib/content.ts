@@ -26,7 +26,7 @@ export const navItems = [
 
 export const pillars = [
   {
-    title: "Train community counsellors",
+    title: "Train community coaches",
     description:
       "Local leaders learn mental wellness foundations, facilitation, safeguarding, and practical care skills.",
     icon: UsersRound
@@ -34,7 +34,7 @@ export const pillars = [
   {
     title: "Open digital access",
     description:
-      "Dariva.co connects trained counsellors, communities, records, referrals, and learning through a digital health layer.",
+      "Dariva.co connects trained coaches, communities, records, referrals, and learning through a digital health layer.",
     icon: Smartphone
   },
   {
@@ -117,7 +117,7 @@ export const impactCards = [
 export const faqs = [
   {
     q: "Is Dariva.co a counselling app or a training programme?",
-    a: "It is both, and more. Dariva.co blends community counsellor training, digital access, partner implementation, and continuous learning into one mental wellness ecosystem."
+    a: "It is both, and more. Dariva.co blends community coach training, digital access, partner implementation, and continuous learning into one mental wellness ecosystem."
   },
   {
     q: "Who can apply?",
@@ -139,7 +139,7 @@ export const programmes = [
       "Phase 1: Learn & Grow (Months 1–3)",
       "Phase 2: Practice & Lead (Months 4–6)",
       "Phase 3: Earn & Impact (Digital Counselling)",
-      "Community counsellor certification",
+      "Community coach certification",
       "Digital access & tools",
       "Ongoing mentorship support"
     ],

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Dariva.co",
     "mental wellness",
     "community mental health",
-    "community counsellor",
+    "community coach",
     "GBV prevention",
     "gender-based violence",
     "Namibia Africa mental health",
@@ -90,7 +90,7 @@ const schemaOrgData = {
         height: 512,
       },
       description:
-        "Dariva.co trains community counsellors in mental wellness and gender-based violence prevention across Namibia, Africa. Building emotionally resilient, self-sustaining communities.",
+        "Dariva.co trains community coaches in mental wellness and gender-based violence prevention across Namibia, Africa. Building emotionally resilient, self-sustaining communities.",
       sameAs: [],
       contactPoint: {
         "@type": "ContactPoint",
@@ -119,7 +119,7 @@ const schemaOrgData = {
       url: "https://www.dariva.co",
       name: "Dariva.co | Mental Wellness & the End of GBV in Namibia, Africa",
       description:
-        "Dariva.co trains community counsellors in mental wellness and gender-based violence prevention across Namibia, Africa. Building emotionally resilient, self-sustaining communities.",
+        "Dariva.co trains community coaches in mental wellness and gender-based violence prevention across Namibia, Africa. Building emotionally resilient, self-sustaining communities.",
       isPartOf: {
         "@id": "https://www.dariva.co/#website",
       },
