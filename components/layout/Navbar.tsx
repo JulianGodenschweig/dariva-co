@@ -28,78 +28,138 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [open]);
 
+  const pillStyle = {
+    background: scrolled ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.8)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    border: '1px solid rgba(26,35,126,0.08)',
+    boxShadow: scrolled
+      ? '0 10px 34px rgba(13,27,42,0.14)'
+      : '0 6px 22px rgba(13,27,42,0.08)',
+    transition: 'all 0.35s ease',
+  };
+
   return (
     <>
-      <nav style={{
-        position:'fixed',top:0,left:0,right:0,zIndex:1000,height:'64px',
-        display:'flex',alignItems:'center',justifyContent:'space-between',
-        padding:'0 24px',
-        background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 2px 20px rgba(27,154,214,0.13)' : '0 1px 0 #e5e7eb',
-        transition:'all 0.3s ease',
-      }}>
-        <Link href="/" onClick={() => setOpen(false)}>
-          <Image src="/logo.png" alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',display:'block'}} priority />
-        </Link>
-
-        {/* Desktop */}
-        <div style={{display:'flex',gap:'28px',alignItems:'center'}} className="dariva-desktop-nav">
-          {links.map(l => (
-            <Link key={l.href} href={l.href} style={{color:'#0D1B2A',textDecoration:'none',fontSize:'15px',fontWeight:500}}>
-              {l.label}
-            </Link>
-          ))}
-          <Link href="/apply" style={{background:'#1B9AD6',color:'white',padding:'9px 22px',borderRadius:'8px',textDecoration:'none',fontSize:'15px',fontWeight:600}}>
-            Apply Now
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, padding: '16px 20px' }}>
+        <div
+          className="container-page"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}
+        >
+          {/* Logo pill */}
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            style={{ ...pillStyle, borderRadius: '999px', padding: '8px 18px', display: 'flex', alignItems: 'center' }}
+          >
+            <Image src="/logo.png" alt="Dariva.co" width={116} height={30} style={{ objectFit: 'contain', display: 'block' }} priority />
           </Link>
-        </div>
 
-        {/* Hamburger */}
-        <button onClick={() => setOpen(!open)} aria-label="Menu" className="dariva-hamburger"
-          style={{display:'none',flexDirection:'column',gap:'5px',background:'none',border:'none',cursor:'pointer',padding:'8px',zIndex:1001}}>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(45deg) translate(5px,5px)':'none'}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',opacity:open?0:1}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
-        </button>
-      </nav>
+          {/* Desktop links + CTA pill */}
+          <div
+            className="dariva-desktop-nav"
+            style={{ ...pillStyle, borderRadius: '999px', padding: '6px', display: 'flex', alignItems: 'center', gap: '2px' }}
+          >
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                style={{
+                  color: '#0D1B2A',
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  padding: '9px 16px',
+                  borderRadius: '999px',
+                  transition: 'background 0.2s ease',
+                }}
+                className="dariva-nav-link"
+              >
+                {l.label}
+              </Link>
+            ))}
+            <Link
+              href="/apply"
+              style={{
+                background: 'linear-gradient(135deg,#1A237E,#1B9AD6)',
+                color: 'white',
+                padding: '10px 20px',
+                borderRadius: '999px',
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: 700,
+                marginLeft: '4px',
+                boxShadow: '0 6px 16px rgba(27,154,214,0.35)',
+              }}
+            >
+              Apply Now
+            </Link>
+          </div>
+
+          {/* Hamburger pill (mobile) */}
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label="Menu"
+            className="dariva-hamburger"
+            style={{
+              ...pillStyle,
+              borderRadius: '999px',
+              display: 'none',
+              flexDirection: 'column',
+              gap: '5px',
+              cursor: 'pointer',
+              padding: '14px',
+              zIndex: 1001,
+            }}
+          >
+            <span style={{ display: 'block', width: '20px', height: '2px', background: '#0D1B2A', transition: 'all 0.3s', transform: open ? 'rotate(45deg) translate(4px,4px)' : 'none' }} />
+            <span style={{ display: 'block', width: '20px', height: '2px', background: '#0D1B2A', transition: 'all 0.3s', opacity: open ? 0 : 1 }} />
+            <span style={{ display: 'block', width: '20px', height: '2px', background: '#0D1B2A', transition: 'all 0.3s', transform: open ? 'rotate(-45deg) translate(4px,-4px)' : 'none' }} />
+          </button>
+        </div>
+      </div>
 
       {/* Mobile overlay */}
       <div style={{
-        position:'fixed',top:'64px',left:0,right:0,bottom:0,
-        background:'rgba(26,35,126,0.98)',
-        zIndex:999,
-        transform:open?'translateX(0)':'translateX(100%)',
-        transition:'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
-        display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'32px',
-        pointerEvents:open?'all':'none',
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+        background: 'rgba(13,27,42,0.98)',
+        zIndex: 999,
+        transform: open ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '28px',
+        pointerEvents: open ? 'all' : 'none',
       }}>
-        {links.map(l => (
+        {links.map((l, i) => (
           <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-            style={{color:'white',textDecoration:'none',fontSize:'24px',fontWeight:600,letterSpacing:'0.02em'}}>
+            style={{
+              color: 'white', textDecoration: 'none', fontSize: '26px', fontWeight: 700, letterSpacing: '0.01em',
+              opacity: open ? 1 : 0,
+              transform: open ? 'translateY(0)' : 'translateY(12px)',
+              transition: `opacity 0.4s ease ${i * 0.05}s, transform 0.4s ease ${i * 0.05}s`,
+            }}>
             {l.label}
           </Link>
         ))}
         <Link href="/apply" onClick={() => setOpen(false)}
-          style={{background:'#1B9AD6',color:'white',padding:'14px 40px',borderRadius:'10px',textDecoration:'none',fontSize:'18px',fontWeight:700,marginTop:'8px'}}>
+          style={{ background: 'linear-gradient(135deg,#1A237E,#1B9AD6)', color: 'white', padding: '14px 40px', borderRadius: '999px', textDecoration: 'none', fontSize: '18px', fontWeight: 700, marginTop: '8px' }}>
           Apply Now
         </Link>
         <a href="https://wa.me/264813404364" target="_blank" rel="noopener noreferrer"
-          style={{color:'#25D366',fontSize:'16px',fontWeight:500,textDecoration:'none'}}>
+          style={{ color: '#4FC3F7', fontSize: '15px', fontWeight: 500, textDecoration: 'none' }}>
           WhatsApp: +264 81 340 4364
         </a>
       </div>
 
-      {/* CSS to show/hide desktop vs hamburger */}
       <style>{`
         .dariva-desktop-nav { display: flex !important; }
         .dariva-hamburger { display: none !important; }
-        @media (max-width: 768px) {
+        .dariva-nav-link:hover { background: rgba(26,35,126,0.06); }
+        @media (max-width: 900px) {
           .dariva-desktop-nav { display: none !important; }
           .dariva-hamburger { display: flex !important; }
         }
       `}</style>
-      <div style={{height:'64px'}}/>
+      <div style={{ height: '82px' }} />
     </>
   );
 }

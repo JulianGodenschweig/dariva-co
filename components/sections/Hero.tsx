@@ -1,9 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 
 const containerVariants = {
   hidden: {},
@@ -112,35 +112,44 @@ function Bubbles() {
 }
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const bgParallaxY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
   return (
-    <section className="river-bg relative min-h-svh flex items-center overflow-hidden pt-20 bg-gradient-to-b from-[#EFF8FD] via-[#e6f3fc] to-[#dceef8]">
-      {/* Gradient mesh overlay */}
-      <div className="absolute inset-0 gradient-mesh animate-gradient-shift" />
+    <section ref={heroRef} className="river-bg relative min-h-svh flex items-center overflow-hidden pt-20 bg-gradient-to-b from-[#EFF8FD] via-[#e6f3fc] to-[#dceef8]">
+      {/* Depth layer — drifts on scroll for parallax */}
+      <motion.div className="absolute inset-0" style={{ y: bgParallaxY }}>
+        {/* Gradient mesh overlay */}
+        <div className="absolute inset-0 gradient-mesh animate-gradient-shift" />
 
-      {/* River wave layers */}
-      <RiverLines />
+        {/* River wave layers */}
+        <RiverLines />
 
-      {/* Floating bubbles */}
-      <Bubbles />
+        {/* Floating bubbles */}
+        <Bubbles />
 
-      {/* Ambient glows */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(27,154,214,0.08),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.05),transparent_50%)]" />
-      </div>
+        {/* Ambient glows */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(27,154,214,0.08),transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.05),transparent_50%)]" />
+        </div>
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <FloatingShape className="w-64 h-64 bg-primary-lighter rounded-full blur-3xl top-[10%] -left-[10%] animate-float-slow" delay={0} />
-        <FloatingShape className="w-48 h-48 bg-secondary/30 rounded-full blur-3xl bottom-[20%] -right-[5%] animate-float" delay={1} />
-        <FloatingShape className="w-32 h-32 bg-primary-light/20 rounded-full blur-2xl top-[40%] right-[15%] animate-float-slow" delay={2} />
-        <FloatingShape className="w-40 h-40 bg-primary-lighter/15 rounded-full blur-3xl bottom-[30%] left-[10%] animate-float" delay={0.5} />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <FloatingShape className="w-64 h-64 bg-primary-lighter rounded-full blur-3xl top-[10%] -left-[10%] animate-float-slow" delay={0} />
+          <FloatingShape className="w-48 h-48 bg-secondary/30 rounded-full blur-3xl bottom-[20%] -right-[5%] animate-float" delay={1} />
+          <FloatingShape className="w-32 h-32 bg-primary-light/20 rounded-full blur-2xl top-[40%] right-[15%] animate-float-slow" delay={2} />
+          <FloatingShape className="w-40 h-40 bg-primary-lighter/15 rounded-full blur-3xl bottom-[30%] left-[10%] animate-float" delay={0.5} />
 
-        <motion.div className="absolute top-[15%] right-[20%] w-24 h-24 border border-primary-lighter/20 rounded-full" animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.div className="absolute bottom-[25%] left-[15%] w-16 h-16 border border-secondary/20 rotate-45" animate={{ y: [0, 12, 0], rotate: [45, 55, 45] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.div className="absolute top-[35%] left-[25%] w-8 h-8 bg-primary-lighter/10 rounded-full blur-sm" animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
-      </div>
+          <motion.div className="absolute top-[15%] right-[20%] w-24 h-24 border border-primary-lighter/20 rounded-full" animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.div className="absolute bottom-[25%] left-[15%] w-16 h-16 border border-secondary/20 rotate-45" animate={{ y: [0, 12, 0], rotate: [45, 55, 45] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} />
+          <motion.div className="absolute top-[35%] left-[25%] w-8 h-8 bg-primary-lighter/10 rounded-full blur-sm" animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} />
+        </div>
+      </motion.div>
 
-      <motion.div className="container-page relative z-10 w-full" variants={containerVariants} initial="hidden" animate="show">
+      <motion.div className="container-page relative z-10 w-full" variants={containerVariants} initial="hidden" animate="show" style={{ y: contentY, opacity: contentOpacity }}>
         <div className="max-w-4xl mx-auto text-center">
           <motion.div variants={childVariants} className="mb-6">
             <span className="inline-flex items-center gap-2 rounded-full bg-[#10B981]/10 px-4 py-2 text-sm font-semibold text-[#10B981] border border-[#10B981]/10">

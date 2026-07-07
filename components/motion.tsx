@@ -1,7 +1,28 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import type { ReactNode } from "react";
+
+/** Continuous scroll-linked fade + depth tilt — fades in on approach, fades
+ * back out as the element exits past the top of the viewport. Unlike Reveal,
+ * this never "locks" visible, so it stays alive the whole way down the page. */
+export function ScrollReveal({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.94, 1, 1, 0.94]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [6, 0, 0, -6]);
+
+  if (reduce) return <div className={className}>{children}</div>;
+
+  return (
+    <motion.div ref={ref} className={className} style={{ opacity, scale, rotateX, transformPerspective: 1200 }}>
+      {children}
+    </motion.div>
+  );
+}
 
 export function Reveal({
  children,
