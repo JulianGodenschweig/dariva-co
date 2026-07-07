@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -15,12 +16,10 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { scrollY } = useScroll();
+  const navOpacity = useTransform(scrollY, [0, 90, 320], [1, 1, 0.55]);
 
-  useEffect(() => {
-    const s = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', s);
-    return () => window.removeEventListener('scroll', s);
-  }, []);
+  useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 60));
 
   useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
@@ -41,7 +40,9 @@ export default function Navbar() {
 
   return (
     <>
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, padding: '16px 20px' }}>
+      <motion.div
+        style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, padding: '16px 20px', opacity: navOpacity }}
+      >
         <div
           className="container-page"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}
@@ -117,7 +118,7 @@ export default function Navbar() {
             <span style={{ display: 'block', width: '20px', height: '2px', background: '#0D1B2A', transition: 'all 0.3s', transform: open ? 'rotate(-45deg) translate(4px,-4px)' : 'none' }} />
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile overlay */}
       <div style={{
