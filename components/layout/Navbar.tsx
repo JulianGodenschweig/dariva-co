@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/client';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -15,7 +14,6 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [authed, setAuthed] = useState<boolean | null>(null);
 
   useEffect(() => {
     const s = () => setScrolled(window.scrollY > 60);
@@ -24,22 +22,10 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setAuthed(!!data.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthed(!!session);
-    });
-    return () => sub.subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
     if (open) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = '';
     return () => { document.body.style.overflow = ''; };
   }, [open]);
-
-  const authHref = authed ? '/account' : '/login';
-  const authLabel = authed ? 'My Account' : 'Log in';
 
   return (
     <>
@@ -63,9 +49,6 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
-          <Link href={authHref} style={{color:'#1A237E',textDecoration:'none',fontSize:'15px',fontWeight:600}}>
-            {authLabel}
-          </Link>
           <Link href="/apply" style={{background:'#1B9AD6',color:'white',padding:'9px 22px',borderRadius:'8px',textDecoration:'none',fontSize:'15px',fontWeight:600}}>
             Apply Now
           </Link>
@@ -96,10 +79,6 @@ export default function Navbar() {
             {l.label}
           </Link>
         ))}
-        <Link href={authHref} onClick={() => setOpen(false)}
-          style={{color:'#4FC3F7',textDecoration:'none',fontSize:'22px',fontWeight:700,letterSpacing:'0.02em'}}>
-          {authLabel}
-        </Link>
         <Link href="/apply" onClick={() => setOpen(false)}
           style={{background:'#1B9AD6',color:'white',padding:'14px 40px',borderRadius:'10px',textDecoration:'none',fontSize:'18px',fontWeight:700,marginTop:'8px'}}>
           Apply Now
