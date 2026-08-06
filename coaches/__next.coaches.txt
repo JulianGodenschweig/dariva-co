@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[39756,["/dariva-co/_next/static/chunks/30gfyvh_9uahl.js","/dariva-co/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
+3:I[37457,["/dariva-co/_next/static/chunks/30gfyvh_9uahl.js","/dariva-co/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
+4:[]
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"XVn1E_t7kF60gbgcG_muo"}
