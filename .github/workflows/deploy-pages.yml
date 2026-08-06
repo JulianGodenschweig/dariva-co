@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - feature/lms
-      - claude/github-pages-404-fix-p3rq37
   workflow_dispatch:
 
 permissions:
