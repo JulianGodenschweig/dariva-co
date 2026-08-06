@@ -1,21 +1,40 @@
 import type { NextConfig } from "next";
 
 /**
- * Two deploy targets:
+ * Three deploy targets. They vary on two independent axes — where the site is
+ * mounted, and whether search engines should index it — so they are resolved
+ * separately rather than from one boolean.
  *
  *   preview    → https://juliangodenschweig.github.io/dariva-co/
- *                A project page lives in a subdirectory, so every asset URL
- *                needs the /dariva-co prefix or the whole site 404s.
+ *                A GitHub project page lives in a subdirectory, so every asset
+ *                URL needs the /dariva-co prefix or the whole site 404s.
+ *                Not indexed: it would compete with the real domain.
+ *
+ *   vercel     → a temporary *.vercel.app URL
+ *                Served from the root, so no prefix. Still not indexed — it is
+ *                a stand-in for sharing, not the canonical site.
  *
  *   production → https://www.dariva.co
- *                A custom domain serves from the root, so there must be no
- *                prefix, and a CNAME file must ship in the export.
- *
- * The workflow sets DEPLOY_TARGET. Flip it to "production" once DNS points at
- * GitHub Pages — see .github/workflows/deploy.yml.
+ *                Root, no prefix, and the only target crawlers may index.
  */
-const isPreview = process.env.DEPLOY_TARGET !== "production";
-const basePath = isPreview ? "/dariva-co" : "";
+type DeployTarget = "preview" | "vercel" | "production";
+
+function resolveTarget(): DeployTarget {
+  const explicit = process.env.DEPLOY_TARGET as DeployTarget | undefined;
+  if (explicit) return explicit;
+
+  // Vercel sets VERCEL=1 in every build. Without this, a Vercel build would
+  // fall through to the GitHub Pages default and prefix every asset with
+  // /dariva-co at a domain that serves from the root — a fully broken site.
+  if (process.env.VERCEL) return "vercel";
+
+  return "preview";
+}
+
+const target = resolveTarget();
+
+// Only the GitHub project page is mounted in a subdirectory.
+const basePath = target === "preview" ? "/dariva-co" : "";
 
 const nextConfig: NextConfig = {
   output: "export",
