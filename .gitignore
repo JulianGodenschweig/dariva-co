@@ -7,3 +7,6 @@ node_modules
 # build artifacts / stray nested dir
 *.tsbuildinfo
 /dariva.co/
+
+# static export output (built by CI)
+out/

@@ -1,434 +1,227 @@
 @import "tailwindcss";
 
+/* ───────────────────────────── Design tokens ─────────────────────────────
+   Carried over from the existing Dariva.co brand so the rebuild still looks
+   like the same organisation: navy authority, cyan clarity, emerald growth.
+   The neutrals are warm rather than grey — a mental-wellness site should not
+   feel clinical.
+   ------------------------------------------------------------------------ */
+
 @theme {
-  --color-primary: #1A237E;
-  --color-primary-deep: #0D1B2A;
-  --color-primary-light: #1B9AD6;
-  --color-primary-lighter: #4FC3F7;
-  --color-secondary: #10B981;
-  --color-secondary-light: #34D399;
-  --color-bg: #F8F6F3;
-  --color-bg-warm: #FAF9F7;
-  --color-text: #1A1A2E;
-  --color-text-muted: #6B7280;
-  --color-text-light: #9CA3AF;
-  --color-card: #FFFFFF;
-  --color-success: #10B981;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Sora", ui-sans-serif, system-ui, sans-serif;
+  /* Brand */
+  --color-navy: #1a237e;
+  --color-navy-deep: #0d1b2a;
+  --color-navy-ink: #070f18;
+  --color-cyan: #1b9ad6;
+  --color-cyan-bright: #4fc3f7;
+  --color-emerald: #10b981;
+  --color-emerald-bright: #34d399;
+
+  /* Warm neutrals */
+  --color-sand: #f8f6f3;
+  --color-sand-warm: #faf9f7;
+  --color-ink: #14161f;
+  --color-ink-muted: #5b6472;
+  --color-ink-faint: #8b95a5;
+  --color-line: #e6e2dc;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+
+  /* A single easing used everywhere, so motion feels like one hand made it. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* ───────────────────────────── Base ───────────────────────────── */
 
 html {
   scroll-behavior: smooth;
+  /* Anchor targets shouldn't hide under the fixed navbar. */
+  scroll-padding-top: 6rem;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: var(--color-sand);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-::selection {
-  background: rgba(26, 35, 126, 0.15);
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-12px) rotate(1deg); }
-  66% { transform: translateY(6px) rotate(-0.5deg); }
-}
-
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(2deg); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.05); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes counter-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-}
-
-.animate-gradient-shift {
-  background-size: 200% 200%;
-  animation: gradient-shift 12s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-.animate-float-slow {
-  animation: float-slow 12s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  background-size: 200% 100%;
-  animation: shimmer 8s ease-in-out infinite;
-}
-
-.animate-counter-pulse {
-  animation: counter-pulse 0.3s ease;
-}
-
-.section-pad {
-  padding-block: clamp(4rem, 7vw, 7rem);
-}
-
-.container-page {
-  width: min(1120px, calc(100% - 2rem));
-  margin-inline: auto;
-}
-
-.text-balance {
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
-.gradient-mesh {
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(26, 35, 126, 0.12), transparent 50%),
-    radial-gradient(ellipse at 80% 30%, rgba(27, 154, 214, 0.08), transparent 40%),
-    radial-gradient(ellipse at 40% 80%, rgba(16, 185, 129, 0.06), transparent 45%),
-    radial-gradient(ellipse at 70% 70%, rgba(26, 35, 126, 0.05), transparent 35%);
+p {
+  text-wrap: pretty;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #1A237E, #1B9AD6, #4FC3F7);
+::selection {
+  background: color-mix(in srgb, var(--color-cyan) 25%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─────────────────────── Layout primitives ─────────────────────── */
+
+.container-page {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-page { padding-inline: 2rem; }
+}
+
+.section-pad {
+  padding-block: clamp(4rem, 10vw, 8rem);
+}
+
+/* Fluid type — one scale, no magic numbers scattered through components. */
+.t-display { font-size: clamp(2.5rem, 7vw, 5.25rem); line-height: 1.02; }
+.t-h1      { font-size: clamp(2rem, 5vw, 3.5rem);    line-height: 1.1; }
+.t-h2      { font-size: clamp(1.6rem, 3.6vw, 2.6rem); line-height: 1.15; }
+.t-h3      { font-size: clamp(1.25rem, 2vw, 1.6rem);  line-height: 1.25; }
+.t-lead    { font-size: clamp(1.05rem, 1.6vw, 1.3rem); line-height: 1.65; }
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────── Surfaces ─────────────────────────── */
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-cyan-bright), var(--color-emerald-bright) 55%, var(--color-cyan-bright));
+  background-size: 200% auto;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
 }
 
-.gradient-gold {
-  background: linear-gradient(135deg, #D4A853, #F5C542);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.glass {
+  background: color-mix(in srgb, white 6%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid color-mix(in srgb, white 12%, transparent);
 }
 
-.focus-ring {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+.card {
+  background: white;
+  border: 1px solid var(--color-line);
+  border-radius: 1.25rem;
+  transition: transform 0.5s var(--ease-out-soft), box-shadow 0.5s var(--ease-out-soft), border-color 0.5s var(--ease-out-soft);
 }
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--color-cyan) 40%, transparent);
+  box-shadow: 0 18px 50px -24px color-mix(in srgb, var(--color-navy) 45%, transparent);
+}
+
+/* Aurora field behind dark sections — pure CSS, costs no WebGL context. */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+}
+
+.aurora::before {
+  background: radial-gradient(circle, var(--color-cyan), transparent 68%);
+  top: -18%;
+  left: -12%;
+  animation: drift-a 22s ease-in-out infinite;
+}
+
+.aurora::after {
+  background: radial-gradient(circle, var(--color-emerald), transparent 68%);
+  bottom: -22%;
+  right: -12%;
+  animation: drift-b 28s ease-in-out infinite;
+}
+
+/* ─────────────────────────── Motion ─────────────────────────── */
+
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(8vw, 5vh) scale(1.12); }
+}
+
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-7vw, -6vh) scale(1.16); }
+}
+
+/* Scroll reveal. Elements start hidden only once JS confirms it can reveal
+   them — `.js-reveal` is set on <html> by an inline script — so a visitor
+   without JS sees everything rather than a blank page. */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s var(--ease-out-soft), transform 0.9s var(--ease-out-soft);
+}
+
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger children of a revealed group. */
+.js-reveal .reveal-group > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.js-reveal .reveal-group.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* ──────────────────── Reduced motion ────────────────────
+   Not a nicety: vestibular disorders are real, and this is a site about
+   wellbeing. Everything still renders — it just stops moving. */
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
   }
-}
 
-@media (max-width: 768px) {
-  .hide-mobile {
-    display: none !important;
+  .js-reveal .reveal,
+  .js-reveal .reveal-group > * {
+    opacity: 1 !important;
+    transform: none !important;
   }
-}
-
-/* ============================================================
-   DARIVA.CO — RIVER THEME VISUAL SYSTEM
-   ============================================================ */
-
-/* --- Scroll-triggered entrance --- */
-.reveal {
-  opacity: 0;
-  transform: translateY(36px);
-  transition: opacity 0.75s ease, transform 0.75s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
-
-/* --- River wave animation --- */
-@keyframes riverScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.river-wrap {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 90px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.river-svg {
-  display: block;
-  width: 200%;
-  height: 100%;
-  animation: riverScroll 14s linear infinite;
-}
-
-@media (max-width: 768px) {
-  .river-wrap { height: 50px; }
-  .river-svg { animation-duration: 18s; }
-}
-
-/* --- Section background textures --- */
-.bg-river-light {
-  background: linear-gradient(180deg, #EFF8FD 0%, #dceef8 60%, #EFF8FD 100%);
-  position: relative;
-}
-
-.bg-deep {
-  background: linear-gradient(135deg, #0D1B2A 0%, #1A237E 100%);
-  color: white;
-  position: relative;
-}
-
-.bg-deep > * { color: inherit; }
-
-.river-cta {
-  background: linear-gradient(135deg, #1A237E 0%, #1B9AD6 100%);
-  color: white;
-  position: relative;
-}
-
-.river-cta > * { color: inherit; }
-
-.bg-mid {
-  background: linear-gradient(180deg, #f0f7ff 0%, #e8f4fd 100%);
-  position: relative;
-}
-
-.bg-warm-white {
-  background: linear-gradient(180deg, #ffffff 0%, #f5fbff 100%);
-}
-
-/* --- Card hover lift --- */
-.card-lift {
-  transition: transform 0.28s ease, box-shadow 0.28s ease;
-}
-.card-lift:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 50px rgba(26, 35, 126, 0.18) !important;
-}
-
-/* --- Stat counter pulse --- */
-@keyframes statPop {
-  0%   { transform: scale(0.85); opacity: 0; }
-  60%  { transform: scale(1.05); opacity: 1; }
-  100% { transform: scale(1);    opacity: 1; }
-}
-.stat-pop { animation: statPop 0.6s ease forwards; }
-
-/* --- Shimmer glow on hero headline --- */
-@keyframes shimmerText {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
-}
-.hero-shimmer {
-  background: linear-gradient(-135deg, #1A237E 0%, #1B9AD6 40%, #10B981 100%);
-  background-size: 500% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmerText 40s ease infinite;
-}
-
-/* --- Flowing dashed connector (phase section) --- */
-@keyframes dashFlow {
-  to { stroke-dashoffset: -24; }
-}
-.flow-line {
-  stroke-dasharray: 8 6;
-  animation: dashFlow 1.2s linear infinite;
-}
-
-/* --- Floating gentle bob --- */
-@keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-.bob { animation: bob 4s ease-in-out infinite; }
-
-/* --- About page hero fix --- */
-.about-hero {
-  background: linear-gradient(135deg, #1A237E 0%, #1B9AD6 60%, #0D1B2A 100%);
-  color: white !important;
-  padding: 100px 24px 80px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.about-hero h1 { 
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  line-height: 1.2;
-  max-width: 700px;
-  margin: 0 auto 20px;
-}
-.about-hero p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-  max-width: 560px;
-  margin: 0 auto;
-  line-height: 1.8;
-}
-
-/* --- Section divider wave --- */
-.wave-divider {
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  margin: 0;
-  display: block;
-}
-.wave-divider svg {
-  display: block;
-  width: 100%;
-  height: 60px;
-}
-@media (max-width: 768px) {
-  .wave-divider svg { height: 36px; }
-}
-
-/* --- Global mobile tightening --- */
-html { scroll-behavior: smooth; }
-body { overflow-x: hidden; }
-@media (max-width: 768px) {
-  section { padding-left: 20px !important; padding-right: 20px !important; }
-}
-
-@media (min-width: 769px) {
-  .hide-desktop {
-    display: none !important;
-  }
-}
-
-/* ── RIVER BACKGROUND ── */
-.river-bg {
-  position: relative;
-  overflow: hidden;
-}
-.river-wave {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 200%;
-  height: 70px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 70'%3E%3Cpath fill='%231B9AD6' fill-opacity='0.07' d='M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 720px 70px;
-  animation: riverFlow 10s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-@keyframes riverFlow {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@media (max-width: 768px) {
-  .river-wave { height: 40px; animation-duration: 14s; }
-}
-
-/* ── WHATSAPP FLOAT ── */
-.wa-float {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  background: #25D366;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(37,211,102,0.45);
-  z-index: 9998;
-  text-decoration: none;
-  animation: waPulse 2.5s ease-in-out infinite;
-  transition: transform 0.2s ease;
-}
-.wa-float:hover { transform: scale(1.1); }
-@keyframes waPulse {
-  0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.45); }
-  50%      { box-shadow: 0 4px 36px rgba(37,211,102,0.75); }
-}
-@media (max-width: 768px) {
-  .wa-float { width: 50px; height: 50px; bottom: 16px; right: 16px; }
-}
-
-/* ── GLOBAL MOBILE FIXES ── */
-html { scroll-behavior: smooth; box-sizing: border-box; }
-*, *::before, *::after { box-sizing: inherit; }
-body { overflow-x: hidden; }
-@media (max-width: 768px) {
-  body { font-size: 16px; }
-  button, a[role="button"] { min-height: 44px; }
-  h1 { font-size: clamp(1.8rem, 6vw, 2.6rem) !important; }
-}
-
-/* ── CARD ANIMATIONS ── */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.fade-up { animation: fadeSlideUp 0.7s ease-out forwards; }
-.fade-up-1 { animation: fadeSlideUp 0.7s ease-out 0.1s both; }
-.fade-up-2 { animation: fadeSlideUp 0.7s ease-out 0.2s both; }
-.fade-up-3 { animation: fadeSlideUp 0.7s ease-out 0.3s both; }
-
-/* ── RIVER WAVE KEYFRAMES (Hero background) ── */
-@keyframes river-scroll-slow {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes river-scroll-medium {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes river-scroll-fast {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes shimmer-move {
-  0%   { transform: translateX(-50%); }
-  50%  { transform: translateX(50%); }
-  100% { transform: translateX(-50%); }
-}
-
-.animate-river-slow {
-  animation: river-scroll-slow 20s linear infinite;
-}
-.animate-river-medium {
-  animation: river-scroll-medium 15s linear infinite;
-}
-.animate-river-fast {
-  animation: river-scroll-fast 12s linear infinite;
-}
-.animate-shimmer {
-  animation: shimmer-move 10s ease-in-out infinite;
 }

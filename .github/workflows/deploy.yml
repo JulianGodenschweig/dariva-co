@@ -1,0 +1,75 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    # This repo has no `main` yet and its default branch is still `feature/lms`,
+    # so the working branch is included to get the site live now. Drop it once
+    # the rebuild is merged and `main` is the default.
+    branches: [main, claude/new-github-project-vbmuqc]
+  workflow_dispatch:
+
+env:
+  # ── The only line to change when the domain is ready ──────────────────────
+  #   preview    → https://juliangodenschweig.github.io/dariva-co/
+  #                Adds the /dariva-co basePath, ships no CNAME.
+  #   production → https://www.dariva.co
+  #                Drops the basePath, ships a CNAME.
+  # Set this to `production` only after the DNS records resolve, or the site
+  # will redirect to a domain that does not answer yet.
+  DEPLOY_TARGET: preview
+
+# Allow GITHUB_TOKEN to deploy to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; don't cancel a run that is already publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # next.config.ts sets output: "export", so this writes a static site to out/
+      - run: npm run build
+
+      # A CNAME in the export forces Pages onto the custom domain, which would
+      # break the github.io preview URL — so it ships only for production.
+      - name: Add CNAME for custom domain
+        if: env.DEPLOY_TARGET == 'production'
+        run: echo "www.dariva.co" > out/CNAME
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # Restated at job level deliberately. actions/deploy-pages mints an OIDC
+    # token, and a run failed with "Failed to get ID Token" while the job's
+    # effective permissions listed only Contents/Metadata/Pages — the
+    # workflow-level grant had not reached it. Declaring it on the job is the
+    # scope the action actually reads.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
