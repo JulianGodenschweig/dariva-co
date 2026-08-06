@@ -8,6 +8,16 @@ on:
     branches: [main, claude/new-github-project-vbmuqc]
   workflow_dispatch:
 
+env:
+  # ── The only line to change when the domain is ready ──────────────────────
+  #   preview    → https://juliangodenschweig.github.io/dariva-co/
+  #                Adds the /dariva-co basePath, ships no CNAME.
+  #   production → https://www.dariva.co
+  #                Drops the basePath, ships a CNAME.
+  # Set this to `production` only after the DNS records resolve, or the site
+  # will redirect to a domain that does not answer yet.
+  DEPLOY_TARGET: preview
+
 # Allow GITHUB_TOKEN to deploy to Pages.
 permissions:
   contents: read
@@ -34,6 +44,12 @@ jobs:
 
       # next.config.ts sets output: "export", so this writes a static site to out/
       - run: npm run build
+
+      # A CNAME in the export forces Pages onto the custom domain, which would
+      # break the github.io preview URL — so it ships only for production.
+      - name: Add CNAME for custom domain
+        if: env.DEPLOY_TARGET == 'production'
+        run: echo "www.dariva.co" > out/CNAME
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,105 +1,136 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
 
-const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/program', label: 'Program' },
-  { href: '/coaches', label: 'Coaches' },
-  { href: '/impact', label: 'Impact' },
-  { href: '/contact', label: 'Contact' },
-];
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { navItems } from "@/lib/content";
+import { asset } from "@/lib/utils";
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
+export function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const s = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', s);
-    return () => window.removeEventListener('scroll', s);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the drawer on navigation, and lock the page behind it while open.
+  useEffect(() => setOpen(false), [pathname]);
+
   useEffect(() => {
-    if (open) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = '';
-    return () => { document.body.style.overflow = ''; };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
-    <>
-      <nav style={{
-        position:'fixed',top:0,left:0,right:0,zIndex:1000,height:'64px',
-        display:'flex',alignItems:'center',justifyContent:'space-between',
-        padding:'0 24px',
-        background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 2px 20px rgba(27,154,214,0.13)' : '0 1px 0 #e5e7eb',
-        transition:'all 0.3s ease',
-      }}>
-        <Link href="/" onClick={() => setOpen(false)}>
-          <Image src="/logo.png" alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',display:'block'}} priority />
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+        scrolled || open
+          ? "bg-navy-deep/85 backdrop-blur-xl border-b border-white/10"
+          : "bg-transparent"
+      }`}
+    >
+      <nav
+        className="container-page flex h-20 items-center justify-between"
+        aria-label="Main"
+      >
+        <Link href="/" aria-label="Dariva.co home" className="flex items-center">
+          <Image
+            src={asset("/wordmark.png")}
+            alt="Dariva.co"
+            width={640}
+            height={84}
+            className="h-7 w-auto sm:h-8"
+            priority
+          />
         </Link>
 
-        {/* Desktop */}
-        <div style={{display:'flex',gap:'28px',alignItems:'center'}} className="dariva-desktop-nav">
-          {links.map(l => (
-            <Link key={l.href} href={l.href} style={{color:'#0D1B2A',textDecoration:'none',fontSize:'15px',fontWeight:500}}>
-              {l.label}
-            </Link>
-          ))}
-          <Link href="/apply" style={{background:'#1B9AD6',color:'white',padding:'9px 22px',borderRadius:'8px',textDecoration:'none',fontSize:'15px',fontWeight:600}}>
-            Apply Now
-          </Link>
-        </div>
+        <ul className="hidden items-center gap-1 lg:flex">
+          {navItems.map((item) => {
+            const active =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
 
-        {/* Hamburger */}
-        <button onClick={() => setOpen(!open)} aria-label="Menu" className="dariva-hamburger"
-          style={{display:'none',flexDirection:'column',gap:'5px',background:'none',border:'none',cursor:'pointer',padding:'8px',zIndex:1001}}>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(45deg) translate(5px,5px)':'none'}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',opacity:open?0:1}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
-        </button>
+            return (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? "bg-white/10 text-white"
+                      : "text-white/70 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href="/contact"
+            className="hidden rounded-full bg-gradient-to-r from-cyan to-emerald px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan/20 transition-transform hover:scale-[1.03] sm:inline-flex"
+          >
+            Join the Movement
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-white lg:hidden"
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile overlay */}
-      <div style={{
-        position:'fixed',top:'64px',left:0,right:0,bottom:0,
-        background:'rgba(26,35,126,0.98)',
-        zIndex:999,
-        transform:open?'translateX(0)':'translateX(100%)',
-        transition:'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
-        display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'32px',
-        pointerEvents:open?'all':'none',
-      }}>
-        {links.map(l => (
-          <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-            style={{color:'white',textDecoration:'none',fontSize:'24px',fontWeight:600,letterSpacing:'0.02em'}}>
-            {l.label}
-          </Link>
-        ))}
-        <Link href="/apply" onClick={() => setOpen(false)}
-          style={{background:'#1B9AD6',color:'white',padding:'14px 40px',borderRadius:'10px',textDecoration:'none',fontSize:'18px',fontWeight:700,marginTop:'8px'}}>
-          Apply Now
-        </Link>
-        <a href="https://wa.me/264813404364" target="_blank" rel="noopener noreferrer"
-          style={{color:'#25D366',fontSize:'16px',fontWeight:500,textDecoration:'none'}}>
-          WhatsApp: +264 81 340 4364
-        </a>
+      <div
+        id="mobile-nav"
+        hidden={!open}
+        className="border-t border-white/10 bg-navy-deep/95 backdrop-blur-xl lg:hidden"
+      >
+        <ul className="container-page flex flex-col py-4">
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="block border-b border-white/5 py-3.5 text-base font-medium text-white/80 hover:text-white"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li className="pt-4">
+            <Link
+              href="/contact"
+              className="block rounded-full bg-gradient-to-r from-cyan to-emerald px-5 py-3 text-center text-sm font-semibold text-white"
+            >
+              Join the Movement
+            </Link>
+          </li>
+        </ul>
       </div>
-
-      {/* CSS to show/hide desktop vs hamburger */}
-      <style>{`
-        .dariva-desktop-nav { display: flex !important; }
-        .dariva-hamburger { display: none !important; }
-        @media (max-width: 768px) {
-          .dariva-desktop-nav { display: none !important; }
-          .dariva-hamburger { display: flex !important; }
-        }
-      `}</style>
-      <div style={{height:'64px'}}/>
-    </>
+    </header>
   );
 }

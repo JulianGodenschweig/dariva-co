@@ -1,63 +1,97 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { Hero } from "@/components/sections/Hero";
-import { Problem } from "@/components/sections/Problem";
-import { Solution } from "@/components/sections/Solution";
-import { Impact } from "@/components/sections/Impact";
-import { HowItWorks } from "@/components/sections/HowItWorks";
-import { Testimonials } from "@/components/sections/Testimonials";
+import {
+  Section,
+  SectionHeader,
+  PillGrid,
+  CheckList,
+  Statement,
+} from "@/components/ui/primitives";
+import { whyDariva, programmes, whoWeServe, homeVision } from "@/lib/content";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       <Hero />
-      {/* Wave — Problem bg */}
 
-      <Problem />
-      {/* Wave — Solution bg */}
+      <Section tone="warm" id="why">
+        <SectionHeader
+          eyebrow="Why Dariva.co?"
+          title="Prevention is more powerful than intervention"
+          lead={whyDariva.lead}
+        />
+        <CheckList items={whyDariva.points} columns={3} />
+        <Statement>{whyDariva.close}</Statement>
+      </Section>
 
-      <Solution />
-      {/* Wave — Impact bg */}
+      <Section tone="light" id="programmes">
+        <SectionHeader
+          eyebrow="Our Programmes"
+          title="Three streams, one outcome"
+          lead="Every Dariva.co programme turns emotional skill into something a person can use the same day — at home, at work, and in their community."
+        />
 
-      <Impact />
+        <div className="reveal-group mt-14 grid gap-6 lg:grid-cols-3">
+          {programmes.map((programme, index) => (
+            <Link
+              key={programme.slug}
+              href={`/programmes/${programme.slug}`}
+              className="card group flex flex-col p-8"
+            >
+              <span className="eyebrow text-cyan">
+                {String(index + 1).padStart(2, "0")}
+              </span>
 
-      {/* Founders' Vision */}
-      <section className="section-pad bg-white reveal" id="founders-vision">
-        <div className="container-page relative z-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="mb-6 text-sm font-bold uppercase tracking-[0.2em] text-[#1B9AD6]">
-              FOUNDERS&apos; VISION
-            </p>
-            <blockquote className="relative">
-              <span className="absolute -left-4 -top-4 text-6xl leading-none text-[#1B9AD6]/20">&ldquo;</span>
-              <p className="text-xl leading-relaxed italic text-gray-700 sm:text-2xl">
-                A community that can speak about pain early is a community
-                with more room for dignity, leadership, and safety.
+              <h3 className="t-h3 mt-4 font-heading text-ink">
+                {programme.title}
+              </h3>
+
+              <p className="mt-4 flex-1 leading-relaxed text-ink-muted">
+                {programme.summary}
               </p>
-              <span className="absolute -bottom-8 -right-4 text-6xl leading-none text-[#1B9AD6]/20">&rdquo;</span>
-            </blockquote>
-            <p className="mt-8 text-base font-semibold text-[#1B9AD6]">
-              &mdash; Dariva.co
-            </p>
-          </div>
+
+              <div className="mt-7 border-t border-line pt-6">
+                <p className="eyebrow text-ink-faint">Outcome</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink">
+                  {programme.outcome}
+                </p>
+              </div>
+
+              <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-cyan">
+                Explore module
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </span>
+            </Link>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      {/* Wave — HowItWorks bg */}
+      <Section tone="dark" aurora id="who-we-serve">
+        <SectionHeader
+          eyebrow="Who We Serve"
+          title="Mental wellness belongs everywhere people gather"
+          invert
+        />
+        <PillGrid items={whoWeServe} invert />
+        <Statement invert>{homeVision}</Statement>
 
-      <HowItWorks />
-      {/* Wave — Testimonials bg */}
-
-      <Testimonials />
-      {/* Closing section */}
-      <section className="section-pad bg-deep reveal" id="contact">
-        <div className="container-page relative z-10 text-center">
-          <h2
-            className="font-heading font-bold tracking-tight text-white"
-            style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", lineHeight: 1.2 }}
+        <div className="reveal mt-12">
+          <Link
+            href="/community-counsellor"
+            className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-base font-semibold text-navy-deep transition-transform hover:scale-[1.03]"
           >
-            Mental Wellness and the end of Gender-Based Violence
-          </h2>
+            Become a Community Counsellor
+            <ArrowUpRight
+              size={18}
+              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </Link>
         </div>
-      </section>
+      </Section>
     </>
   );
 }
