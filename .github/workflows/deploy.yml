@@ -58,6 +58,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Restated at job level deliberately. actions/deploy-pages mints an OIDC
+    # token, and a run failed with "Failed to get ID Token" while the job's
+    # effective permissions listed only Contents/Metadata/Pages — the
+    # workflow-level grant had not reached it. Declaring it on the job is the
+    # scope the action actually reads.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
