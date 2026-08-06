@@ -3,6 +3,10 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 
+// Empty on dariva.co / Netlify, "/dariva-co" on GitHub Pages. next/link and
+// next/image apply this themselves; raw <link> tags below need it manually.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.dariva.co"),
   title: {
@@ -136,9 +140,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="32x32" />
-        <link rel="icon" href="/favicon.png" type="image/png" sizes="512x512" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href={`${basePath}/favicon.ico`} sizes="32x32" />
+        <link rel="icon" href={`${basePath}/favicon.png`} type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href={`${basePath}/favicon.png`} />
         <meta name="theme-color" content="#1A237E" />
         <script
           type="application/ld+json"

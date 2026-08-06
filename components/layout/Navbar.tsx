@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { asset } from '@/lib/utils';
 
 const links = [
   { href: '/', label: 'Home' },
@@ -40,7 +41,7 @@ export default function Navbar() {
         transition:'all 0.3s ease',
       }}>
         <Link href="/" onClick={() => setOpen(false)}>
-          <Image src="/logo.png" alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',display:'block'}} priority />
+          <Image src={asset('/logo.png')} alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',display:'block'}} priority />
         </Link>
 
         {/* Desktop */}

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { asset } from '@/lib/utils';
 
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
         <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr',gap:'48px',marginBottom:'48px'}} className="footer-grid">
 
           <div>
-            <Image src="/logo.png" alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',marginBottom:'16px',filter:'brightness(0) invert(1)'}} />
+            <Image src={asset('/logo.png')} alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',marginBottom:'16px',filter:'brightness(0) invert(1)'}} />
             <p style={{color:'rgba(255,255,255,0.75)',lineHeight:1.8,fontSize:'14px',maxWidth:'320px'}}>
               Dariva.co builds emotionally resilient, self-sustaining communities where mental wellness is accessible, normalised, and practiced across Namibia and Africa.
             </p>
