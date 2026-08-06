@@ -27,7 +27,14 @@ const script = `
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
+        // Reveal on intersection — but also when a fast scroll has already
+        // carried the element up past the viewport before this callback ran.
+        // Observer entries are batched, so flicking down a long page can
+        // deliver an entry whose isIntersecting is already false again; without
+        // this second test that content stays invisible permanently.
+        var scrolledPast = entry.boundingClientRect.bottom < 0;
+        if (!entry.isIntersecting && !scrolledPast) return;
+
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
