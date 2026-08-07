@@ -1,0 +1,30 @@
+# Netlify / Cloudflare Pages header rules. Both hosts read this file from the
+# root of the publish directory, so it is kept in public/ and copied into out/
+# by the Next.js static export.
+
+# Hashed build assets never change under a given name — cache them hard.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Photography is content-addressed by name rather than hash, so allow a long
+# cache but let a revalidation pick up a replacement.
+/images/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+# HTML must revalidate so a deploy is visible immediately.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Baseline security headers. No external hosts are used at runtime — fonts are
+# self-hosted by next/font and all imagery is local — so these stay strict.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()

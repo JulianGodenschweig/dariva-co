@@ -1,3 +1,18 @@
+# Netlify build settings for the Dariva.co static export.
+#
+# next.config.ts only applies a base path when GITHUB_PAGES=true, so leaving
+# that unset here produces a root-served build — which is what Netlify and a
+# custom domain both want.
+#
+# No redirect rules are defined on purpose. Netlify already serves out/about.html
+# for /about and falls back to out/404.html automatically, and a catch-all
+# rewrite risks intercepting asset requests. Header rules live in public/_headers,
+# which both Netlify and Cloudflare Pages read from the publish directory.
+
 [build]
   command = "npm run build"
   publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
