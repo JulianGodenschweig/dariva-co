@@ -16,3 +16,9 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+  # Netlify auto-installs its Next.js Runtime when it detects Next in the
+  # dependencies. That runtime exists to host server-rendered apps and fights
+  # with output: "export" — it looks for a server build that never gets
+  # produced. This site is a pure static export served straight from out/,
+  # so the runtime is skipped.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
