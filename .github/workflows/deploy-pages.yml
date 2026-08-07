@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - claude/kalahari-labs-web-app-lmx110
+      - main
+      - feature/lms
   workflow_dispatch:
 
 permissions:
