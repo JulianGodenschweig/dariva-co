@@ -14,7 +14,7 @@ export default function NotFound() {
       <div className="absolute inset-0 -z-10 scrim-full" />
 
       <div className="mx-auto w-full max-w-3xl text-center">
-        <p className="eyebrow text-ochre">404</p>
+        <p className="eyebrow text-azure">404</p>
         <h1 className="display-lg mt-6 text-cream">
           This path does not lead anywhere.
         </h1>
@@ -32,7 +32,7 @@ export default function NotFound() {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="inline-flex rounded-full border border-sand/20 px-5 py-2.5 text-sm text-cream/70 transition-colors hover:border-ochre hover:text-ochre"
+                className="inline-flex rounded-full border border-mist/20 px-5 py-2.5 text-sm text-cream/70 transition-colors hover:border-azure hover:text-azure"
               >
                 {item.label}
               </Link>

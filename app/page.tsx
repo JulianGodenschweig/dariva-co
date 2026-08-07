@@ -40,7 +40,7 @@ export default function HomePage() {
       >
         <Eyebrow>{hero.eyebrow}</Eyebrow>
         <h1 className="display-xl mt-6 max-w-5xl text-cream">{hero.title}</h1>
-        <p className="mt-7 max-w-2xl font-display text-lg text-sand/90 md:text-2xl">
+        <p className="mt-7 max-w-2xl font-display text-lg text-mist/90 md:text-2xl">
           {hero.subtitle}
         </p>
         <p className="eyebrow mt-8 text-cream/50">{org.tagline}</p>
@@ -63,7 +63,7 @@ export default function HomePage() {
               </ul>
             </Reveal>
             <Reveal delay={3}>
-              <p className="mt-10 border-l-2 border-ochre pl-6 font-display text-xl leading-snug text-sand">
+              <p className="mt-10 border-l-2 border-azure pl-6 font-display text-xl leading-snug text-mist">
                 {whyDariva.closer}
               </p>
             </Reveal>
@@ -127,21 +127,21 @@ export default function HomePage() {
               </Reveal>
 
               <Reveal delay={1}>
-                <span className="font-display text-sm font-semibold tracking-[0.3em] text-ochre">
+                <span className="font-display text-sm font-semibold tracking-[0.3em] text-azure">
                   {programme.index}
                 </span>
                 <h3 className="display-md mt-4 text-cream">
                   {programme.title}
                 </h3>
-                <p className="mt-4 font-display text-lg text-sand/85">
+                <p className="mt-4 font-display text-lg text-mist/85">
                   {programme.tagline}
                 </p>
                 <p className="mt-5 leading-relaxed text-cream/65">
                   {programme.summary}
                 </p>
 
-                <div className="mt-8 rounded-xl border border-sand/12 bg-sand/[0.03] p-6">
-                  <p className="eyebrow text-teal-light">Outcome</p>
+                <div className="mt-8 rounded-xl border border-mist/12 bg-mist/[0.03] p-6">
+                  <p className="eyebrow text-royal-light">Outcome</p>
                   <p className="mt-3 text-cream/85">{programme.outcome}</p>
                 </div>
 
@@ -180,7 +180,7 @@ export default function HomePage() {
             {[...whoWeServe, ...whoWeServe].map((group, i) => (
               <span
                 key={`${group}-${i}`}
-                className="whitespace-nowrap rounded-full border border-sand/25 bg-ink/40 px-7 py-3.5 font-display text-lg text-cream/90 backdrop-blur-sm"
+                className="whitespace-nowrap rounded-full border border-mist/25 bg-ink/40 px-7 py-3.5 font-display text-lg text-cream/90 backdrop-blur-sm"
               >
                 {group}
               </span>
@@ -230,7 +230,7 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={2}>
-              <p className="eyebrow mt-10 text-ochre">
+              <p className="eyebrow mt-10 text-azure">
                 {coachingProgramme.benefitsLabel}
               </p>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -262,7 +262,7 @@ export default function HomePage() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-3">
+            <div className="grid gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12 sm:grid-cols-3">
               {[
                 { value: 10, suffix: "", label: "Impact indicators tracked" },
                 { value: 3, suffix: "", label: "Core training streams" },
@@ -270,7 +270,7 @@ export default function HomePage() {
               ].map((stat, i) => (
                 <Reveal key={stat.label} delay={(i + 1) as 1 | 2 | 3}>
                   <div className="h-full bg-ink-2 p-8">
-                    <p className="font-display text-5xl font-bold text-ochre">
+                    <p className="font-display text-5xl font-bold text-azure">
                       <Counter to={stat.value} suffix={stat.suffix} />
                     </p>
                     <p className="mt-3 text-sm text-cream/60">{stat.label}</p>
@@ -284,7 +284,7 @@ export default function HomePage() {
                 {impact.measures.slice(0, 6).map((m) => (
                   <div
                     key={m}
-                    className="rounded-lg border border-sand/10 bg-sand/[0.02] px-5 py-4 text-sm text-cream/70"
+                    className="rounded-lg border border-mist/10 bg-mist/[0.02] px-5 py-4 text-sm text-cream/70"
                   >
                     {m}
                   </div>
@@ -336,7 +336,7 @@ export default function HomePage() {
             <Button href="/partner">Partner With Us</Button>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-cream/70 transition-colors hover:text-ochre"
+              className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-cream/70 transition-colors hover:text-azure"
             >
               {org.email}
             </Link>

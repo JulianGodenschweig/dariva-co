@@ -8,6 +8,9 @@
 
 export const org = {
   name: "Dariva.co",
+  /** The brand slogan, set beneath the wordmark in the logo lockup. */
+  slogan: "Purpose, People, Planet",
+  /** The campaign line from the content draft's hero section. */
   tagline: "Learn • Grow • Lead",
   email: "dariva.co001@gmail.com",
   phone: "+264 81 340 4364",

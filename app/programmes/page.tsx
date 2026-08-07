@@ -37,7 +37,7 @@ export default function ProgrammesPage() {
             </Reveal>
 
             <Reveal delay={2}>
-              <p className="eyebrow mt-12 text-ochre">
+              <p className="eyebrow mt-12 text-azure">
                 {coachingProgramme.benefitsLabel}
               </p>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -57,7 +57,7 @@ export default function ProgrammesPage() {
               />
             </Reveal>
             <Reveal delay={2}>
-              <p className="eyebrow mt-10 text-ochre">
+              <p className="eyebrow mt-10 text-azure">
                 {coachingProgramme.suitableLabel}
               </p>
               <div className="mt-5 flex flex-wrap gap-2.5">
@@ -83,7 +83,7 @@ export default function ProgrammesPage() {
             <Reveal key={p.slug} delay={((i + 1) as 1 | 2 | 3)}>
               <Link
                 href={`/programmes/${p.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-sand/12 bg-ink-2 transition-all duration-500 hover:border-ochre/40"
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-mist/12 bg-ink-2 transition-all duration-500 hover:border-azure/40"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
@@ -93,22 +93,22 @@ export default function ProgrammesPage() {
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink-2 via-ink/30 to-transparent" />
-                  <span className="absolute left-6 top-6 font-display text-sm font-semibold tracking-[0.3em] text-ochre">
+                  <span className="absolute left-6 top-6 font-display text-sm font-semibold tracking-[0.3em] text-azure">
                     {p.index}
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col p-8">
-                  <h3 className="display-sm text-cream transition-colors group-hover:text-ochre">
+                  <h3 className="display-sm text-cream transition-colors group-hover:text-azure">
                     {p.title}
                   </h3>
-                  <p className="mt-3 font-display text-sand/80">{p.tagline}</p>
+                  <p className="mt-3 font-display text-mist/80">{p.tagline}</p>
                   <p className="mt-4 flex-1 text-sm leading-relaxed text-cream/60">
                     {p.summary}
                   </p>
-                  <p className="mt-6 border-t border-sand/10 pt-5 text-sm text-teal-light">
+                  <p className="mt-6 border-t border-mist/10 pt-5 text-sm text-royal-light">
                     {p.outcome}
                   </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ochre">
+                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-azure">
                     Explore
                     <span
                       aria-hidden="true"

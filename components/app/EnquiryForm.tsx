@@ -84,8 +84,8 @@ export default function EnquiryForm() {
   const err = (key: keyof Errors) => (touched ? errors[key] : undefined);
 
   const field =
-    "w-full rounded-xl border bg-sand/[0.03] px-5 py-3.5 text-cream placeholder:text-cream/30 transition-colors focus:outline-none";
-  const ok = "border-sand/18 focus:border-ochre/60";
+    "w-full rounded-xl border bg-mist/[0.03] px-5 py-3.5 text-cream placeholder:text-cream/30 transition-colors focus:outline-none";
+  const ok = "border-mist/18 focus:border-azure/60";
   const bad = "border-red-400/60 focus:border-red-400";
 
   return (
@@ -100,7 +100,7 @@ export default function EnquiryForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div data-invalid={Boolean(err("name"))}>
           <label htmlFor="name" className="mb-2 block text-sm text-cream/70">
-            Your name <span className="text-ochre">*</span>
+            Your name <span className="text-azure">*</span>
           </label>
           <input
             id="name"
@@ -135,7 +135,7 @@ export default function EnquiryForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div data-invalid={Boolean(err("email"))}>
           <label htmlFor="email" className="mb-2 block text-sm text-cream/70">
-            Email <span className="text-ochre">*</span>
+            Email <span className="text-azure">*</span>
           </label>
           <input
             id="email"
@@ -189,7 +189,7 @@ export default function EnquiryForm() {
 
       <div data-invalid={Boolean(err("message"))}>
         <label htmlFor="message" className="mb-2 block text-sm text-cream/70">
-          Your message <span className="text-ochre">*</span>
+          Your message <span className="text-azure">*</span>
         </label>
         <textarea
           id="message"
@@ -211,14 +211,14 @@ export default function EnquiryForm() {
       <div className="flex flex-wrap gap-4 pt-2">
         <button
           type="submit"
-          className="inline-flex items-center gap-2.5 rounded-full bg-ochre px-8 py-4 font-semibold text-ink transition-all duration-300 hover:bg-ochre-light hover:shadow-[0_0_36px_-6px_rgba(200,134,47,0.6)]"
+          className="inline-flex items-center gap-2.5 rounded-full bg-azure px-8 py-4 font-semibold text-ink transition-all duration-300 hover:bg-azure-light hover:shadow-[0_0_36px_-6px_rgba(42,168,246,0.6)]"
         >
           Send by email <span aria-hidden="true">→</span>
         </button>
         <button
           type="button"
           onClick={() => handle("whatsapp")}
-          className="inline-flex items-center gap-2.5 rounded-full border border-teal/45 px-8 py-4 font-semibold text-teal-light transition-colors duration-300 hover:bg-teal/10"
+          className="inline-flex items-center gap-2.5 rounded-full border border-royal/45 px-8 py-4 font-semibold text-royal-light transition-colors duration-300 hover:bg-royal/10"
         >
           Send on WhatsApp
         </button>
@@ -230,7 +230,7 @@ export default function EnquiryForm() {
         directly?{" "}
         <a
           href={`mailto:${org.email}`}
-          className="text-ochre underline-offset-4 hover:underline"
+          className="text-azure underline-offset-4 hover:underline"
         >
           {org.email}
         </a>

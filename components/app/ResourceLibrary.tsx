@@ -56,7 +56,7 @@ export default function ResourceLibrary() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search articles, tips, guides and questions…"
             aria-label="Search resources"
-            className="w-full rounded-full border border-sand/18 bg-sand/[0.04] py-4 pl-14 pr-5 text-cream placeholder:text-cream/35 focus:border-ochre/60 focus:outline-none"
+            className="w-full rounded-full border border-mist/18 bg-mist/[0.04] py-4 pl-14 pr-5 text-cream placeholder:text-cream/35 focus:border-azure/60 focus:outline-none"
           />
         </div>
 
@@ -73,8 +73,8 @@ export default function ResourceLibrary() {
               aria-pressed={type === t}
               className={`rounded-full border px-4 py-2 text-sm transition-colors duration-200 ${
                 type === t
-                  ? "border-ochre bg-ochre text-ink"
-                  : "border-sand/18 text-cream/65 hover:border-sand/40 hover:text-cream"
+                  ? "border-azure bg-azure text-ink"
+                  : "border-mist/18 text-cream/65 hover:border-mist/40 hover:text-cream"
               }`}
             >
               {t}
@@ -102,8 +102,8 @@ export default function ResourceLibrary() {
             aria-pressed={topic === t}
             className={`rounded-full px-3 py-1.5 text-xs transition-colors duration-200 ${
               topic === t
-                ? "bg-teal text-ink"
-                : "bg-sand/[0.05] text-cream/45 hover:bg-sand/10 hover:text-cream/75"
+                ? "bg-royal text-ink"
+                : "bg-mist/[0.05] text-cream/45 hover:bg-mist/10 hover:text-cream/75"
             }`}
           >
             {t}
@@ -111,7 +111,7 @@ export default function ResourceLibrary() {
         ))}
       </div>
 
-      <div className="mt-8 flex items-center justify-between border-b border-sand/10 pb-4">
+      <div className="mt-8 flex items-center justify-between border-b border-mist/10 pb-4">
         <p
           id="resource-count"
           aria-live="polite"
@@ -127,7 +127,7 @@ export default function ResourceLibrary() {
               setType("All");
               setTopic(null);
             }}
-            className="text-sm text-ochre transition-opacity hover:opacity-70"
+            className="text-sm text-azure transition-opacity hover:opacity-70"
           >
             Clear filters
           </button>
@@ -142,7 +142,7 @@ export default function ResourceLibrary() {
       ) : (
         <ul
           aria-labelledby="resource-count"
-          className="mt-2 divide-y divide-sand/10"
+          className="mt-2 divide-y divide-mist/10"
         >
           <AnimatePresence initial={false}>
             {filtered.map((r) => (
@@ -185,14 +185,14 @@ function ResourceRow({
   const header = (
     <div className="flex flex-1 flex-col gap-2 text-left">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="rounded-full border border-sand/20 px-2.5 py-0.5 text-[0.65rem] uppercase tracking-widest text-ochre">
+        <span className="rounded-full border border-mist/20 px-2.5 py-0.5 text-[0.65rem] uppercase tracking-widest text-azure">
           {resource.type}
         </span>
         {resource.readTime ? (
           <span className="text-xs text-cream/35">{resource.readTime}</span>
         ) : null}
       </div>
-      <h3 className="font-display text-lg font-semibold text-cream transition-colors group-hover:text-ochre">
+      <h3 className="font-display text-lg font-semibold text-cream transition-colors group-hover:text-azure">
         {resource.title}
       </h3>
       <p className="max-w-2xl text-sm leading-relaxed text-cream/60">
@@ -208,7 +208,7 @@ function ResourceRow({
           {header}
           <span
             aria-hidden="true"
-            className="mt-8 shrink-0 text-ochre transition-transform duration-300 group-hover:translate-x-1"
+            className="mt-8 shrink-0 text-azure transition-transform duration-300 group-hover:translate-x-1"
           >
             →
           </span>
@@ -225,7 +225,7 @@ function ResourceRow({
           {hasBody ? (
             <span
               aria-hidden="true"
-              className={`mt-8 shrink-0 text-ochre transition-transform duration-300 ${
+              className={`mt-8 shrink-0 text-azure transition-transform duration-300 ${
                 open ? "rotate-45" : ""
               }`}
             >
@@ -259,7 +259,7 @@ function ResourceRow({
             key={t}
             type="button"
             onClick={() => onTopic(t)}
-            className="rounded-full bg-sand/[0.05] px-2.5 py-1 text-[0.7rem] text-cream/40 transition-colors hover:bg-sand/10 hover:text-cream/70"
+            className="rounded-full bg-mist/[0.05] px-2.5 py-1 text-[0.7rem] text-cream/40 transition-colors hover:bg-mist/10 hover:text-cream/70"
           >
             {t}
           </button>

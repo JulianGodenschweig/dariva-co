@@ -189,7 +189,7 @@ export function ZoomHero({
           className="absolute inset-0 opacity-40"
           style={{
             background:
-              "radial-gradient(ellipse at 50% 40%, rgba(200,134,47,0.16), transparent 62%)",
+              "radial-gradient(ellipse at 50% 40%, rgba(42,168,246,0.16), transparent 62%)",
           }}
         />
 
@@ -242,8 +242,8 @@ function ScrollHint({ progress }: { progress: MotionValue<number> }) {
       className="absolute bottom-7 left-1/2 z-20 -translate-x-1/2 text-center"
       aria-hidden="true"
     >
-      <span className="eyebrow block text-sand/60">Scroll</span>
-      <span className="mx-auto mt-2 block h-10 w-px bg-gradient-to-b from-sand/70 to-transparent" />
+      <span className="eyebrow block text-mist/60">Scroll</span>
+      <span className="mx-auto mt-2 block h-10 w-px bg-gradient-to-b from-mist/70 to-transparent" />
     </motion.div>
   );
 }
@@ -426,7 +426,7 @@ export function ScrollProgress() {
   return (
     <motion.div
       style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-gradient-to-r from-ochre via-ochre-light to-teal"
+      className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-gradient-to-r from-azure via-azure-light to-royal"
       aria-hidden="true"
     />
   );

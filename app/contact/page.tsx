@@ -42,33 +42,33 @@ export default function ContactPage() {
           <aside className="lg:col-span-5">
             <div className="lg:sticky lg:top-28 space-y-6">
               <Reveal>
-                <div className="rounded-2xl border border-sand/12 bg-sand/[0.03] p-8">
+                <div className="rounded-2xl border border-mist/12 bg-mist/[0.03] p-8">
                   <h2 className="display-sm text-cream">Direct</h2>
                   <dl className="mt-6 space-y-5">
                     <div>
-                      <dt className="eyebrow text-ochre">Email</dt>
+                      <dt className="eyebrow text-azure">Email</dt>
                       <dd className="mt-2">
                         <a
                           href={`mailto:${org.email}`}
-                          className="text-cream transition-colors hover:text-ochre"
+                          className="text-cream transition-colors hover:text-azure"
                         >
                           {org.email}
                         </a>
                       </dd>
                     </div>
                     <div>
-                      <dt className="eyebrow text-ochre">Phone</dt>
+                      <dt className="eyebrow text-azure">Phone</dt>
                       <dd className="mt-2">
                         <a
                           href={org.phoneHref}
-                          className="text-cream transition-colors hover:text-ochre"
+                          className="text-cream transition-colors hover:text-azure"
                         >
                           {org.phone}
                         </a>
                       </dd>
                     </div>
                     <div>
-                      <dt className="eyebrow text-ochre">Location</dt>
+                      <dt className="eyebrow text-azure">Location</dt>
                       <dd className="mt-2 text-cream">{org.location}</dd>
                     </div>
                   </dl>
@@ -76,7 +76,7 @@ export default function ContactPage() {
                     href={org.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border border-teal/45 px-6 py-3.5 font-semibold text-teal-light transition-colors hover:bg-teal/10"
+                    className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full border border-royal/45 px-6 py-3.5 font-semibold text-royal-light transition-colors hover:bg-royal/10"
                   >
                     Message us on WhatsApp
                   </a>
@@ -84,8 +84,8 @@ export default function ContactPage() {
               </Reveal>
 
               <Reveal delay={2}>
-                <div className="rounded-2xl border border-ochre/25 bg-ochre/[0.06] p-8">
-                  <p className="eyebrow text-ochre">Please note</p>
+                <div className="rounded-2xl border border-azure/25 bg-azure/[0.06] p-8">
+                  <p className="eyebrow text-azure">Please note</p>
                   <p className="mt-4 text-sm leading-relaxed text-cream/75">
                     {CRISIS_NOTE}
                   </p>

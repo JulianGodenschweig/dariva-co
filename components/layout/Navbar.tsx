@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 import { nav, org } from "@/lib/site";
 import { ScrollProgress, useScrolled } from "@/components/motion/scroll";
 
+// Empty on dariva.co, "/dariva-co" on GitHub Pages. next/link applies this
+// itself; a raw <img> src needs it added by hand.
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export default function Navbar() {
   const scrolled = useScrolled(60);
   const pathname = usePathname();
@@ -37,7 +41,7 @@ export default function Navbar() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled || open
-            ? "glass border-b border-sand/10 py-3"
+            ? "glass border-b border-mist/10 py-3"
             : "border-b border-transparent py-6"
         }`}
       >
@@ -45,11 +49,20 @@ export default function Navbar() {
           aria-label="Primary"
           className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-14 lg:px-20"
         >
-          <Link
-            href="/"
-            className="font-display text-lg font-bold tracking-tight text-cream"
-          >
-            Dariva<span className="text-ochre">.co</span>
+          <Link href="/" aria-label={`${org.name} — home`} className="shrink-0">
+            <img
+              src={`${basePath}/logo-script.png`}
+              alt={org.name}
+              width={374}
+              height={48}
+              // The script sits over full-bleed photography before the header
+              // gains its glass background, so it carries its own shadow.
+              className={`w-auto transition-all duration-500 ${
+                scrolled || open
+                  ? "h-7"
+                  : "h-8 drop-shadow-[0_2px_10px_rgba(7,11,20,0.85)] md:h-9"
+              }`}
+            />
           </Link>
 
           <ul className="hidden items-center gap-8 lg:flex">
@@ -64,14 +77,14 @@ export default function Navbar() {
                     href={item.href}
                     aria-current={active ? "page" : undefined}
                     className={`relative text-sm transition-colors duration-300 ${
-                      active ? "text-ochre" : "text-cream/75 hover:text-cream"
+                      active ? "text-azure" : "text-cream/75 hover:text-cream"
                     }`}
                   >
                     {item.label}
                     {active ? (
                       <span
                         aria-hidden="true"
-                        className="absolute -bottom-1.5 left-0 h-px w-full bg-ochre"
+                        className="absolute -bottom-1.5 left-0 h-px w-full bg-azure"
                       />
                     ) : null}
                   </Link>
@@ -83,7 +96,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               href="/assessment"
-              className="hidden rounded-full bg-ochre px-5 py-2.5 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-ochre-light md:inline-flex"
+              className="hidden rounded-full bg-azure px-5 py-2.5 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-azure-light md:inline-flex"
             >
               Free Check-In
             </Link>
@@ -94,7 +107,7 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "Close menu" : "Open menu"}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-sand/20 text-cream lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-mist/20 text-cream lg:hidden"
             >
               <span className="relative block h-3 w-4">
                 <span
@@ -132,7 +145,7 @@ export default function Navbar() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="block border-b border-sand/10 py-4 font-display text-2xl text-cream transition-colors hover:text-ochre"
+                  className="block border-b border-mist/10 py-4 font-display text-2xl text-cream transition-colors hover:text-azure"
                   style={{ transitionDelay: `${i * 30}ms` }}
                 >
                   {item.label}
@@ -143,7 +156,7 @@ export default function Navbar() {
           <div className="space-y-4">
             <Link
               href="/assessment"
-              className="block rounded-full bg-ochre px-6 py-4 text-center font-semibold text-ink"
+              className="block rounded-full bg-azure px-6 py-4 text-center font-semibold text-ink"
             >
               Take the Free Wellness Check-In
             </Link>

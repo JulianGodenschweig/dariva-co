@@ -27,8 +27,8 @@ export default function ResourcesPage() {
 
       <Section className="bg-ink">
         <Reveal>
-          <div className="rounded-2xl border border-ochre/25 bg-ochre/[0.06] p-8 md:p-10">
-            <p className="eyebrow text-ochre">If you need help now</p>
+          <div className="rounded-2xl border border-azure/25 bg-azure/[0.06] p-8 md:p-10">
+            <p className="eyebrow text-azure">If you need help now</p>
             <p className="mt-4 max-w-3xl leading-relaxed text-cream/80">
               {CRISIS_NOTE}
             </p>

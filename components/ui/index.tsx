@@ -20,10 +20,10 @@ export function Button({
     "group inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold tracking-wide transition-all duration-300";
   const styles = {
     solid:
-      "bg-ochre text-ink hover:bg-ochre-light hover:shadow-[0_0_36px_-6px_rgba(200,134,47,0.6)]",
+      "bg-azure text-ink hover:bg-azure-light hover:shadow-[0_0_36px_-6px_rgba(42,168,246,0.6)]",
     outline:
-      "border border-sand/30 text-cream hover:border-ochre hover:text-ochre hover:bg-ochre/5",
-    ghost: "text-cream/80 hover:text-ochre",
+      "border border-mist/30 text-cream hover:border-azure hover:text-azure hover:bg-azure/5",
+    ghost: "text-cream/80 hover:text-azure",
   }[variant];
 
   const content = (
@@ -66,8 +66,8 @@ export function Eyebrow({
   className?: string;
 }) {
   return (
-    <p className={`eyebrow flex items-center gap-3 text-ochre ${className}`}>
-      <span aria-hidden="true" className="h-px w-8 bg-ochre/60" />
+    <p className={`eyebrow flex items-center gap-3 text-azure ${className}`}>
+      <span aria-hidden="true" className="h-px w-8 bg-azure/60" />
       {children}
     </p>
   );
@@ -75,7 +75,7 @@ export function Eyebrow({
 
 export function Pill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-sand/20 bg-sand/5 px-4 py-2 text-sm text-cream/85 transition-colors duration-300 hover:border-ochre/50 hover:text-ochre">
+    <span className="inline-flex items-center rounded-full border border-mist/20 bg-mist/5 px-4 py-2 text-sm text-cream/85 transition-colors duration-300 hover:border-azure/50 hover:text-azure">
       {children}
     </span>
   );
@@ -87,7 +87,7 @@ export function Tick({ children }: { children: ReactNode }) {
       <svg
         aria-hidden="true"
         viewBox="0 0 20 20"
-        className="mt-1 h-4 w-4 shrink-0 text-teal-light"
+        className="mt-1 h-4 w-4 shrink-0 text-royal-light"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.4"
@@ -106,7 +106,7 @@ export function Dot({ children }: { children: ReactNode }) {
     <li className="flex items-start gap-3 text-cream/75">
       <span
         aria-hidden="true"
-        className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ochre"
+        className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-azure"
       />
       <span>{children}</span>
     </li>

@@ -2,9 +2,11 @@ import Link from "next/link";
 import { nav, org, programmes } from "@/lib/site";
 import { Reveal } from "@/components/motion/scroll";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export default function Footer() {
   return (
-    <footer className="relative isolate overflow-hidden border-t border-sand/10 bg-ink">
+    <footer className="relative isolate overflow-hidden border-t border-mist/10 bg-ink">
       <img
         src="/images/desert-road.jpg"
         alt=""
@@ -19,12 +21,16 @@ export default function Footer() {
           <p className="display-md max-w-4xl text-cream">{org.footerCta}</p>
         </Reveal>
 
-        <div className="mt-20 grid gap-12 border-t border-sand/10 pt-14 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-20 grid gap-12 border-t border-mist/10 pt-14 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-xl font-bold text-cream">
-              Dariva<span className="text-ochre">.co</span>
-            </p>
-            <p className="mt-3 text-sm text-cream/55">{org.tagline}</p>
+            <img
+              src={`${basePath}/logo.png`}
+              alt={org.name}
+              width={441}
+              height={132}
+              className="h-16 w-auto"
+            />
+            <p className="mt-4 text-sm text-cream/55">{org.tagline}</p>
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/50">
               A social enterprise making mental wellness practical, affordable
               and accessible for every community.
@@ -32,13 +38,13 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Footer">
-            <h2 className="eyebrow text-ochre">Explore</h2>
+            <h2 className="eyebrow text-azure">Explore</h2>
             <ul className="mt-5 space-y-2.5">
               {nav.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-cream/60 transition-colors hover:text-ochre"
+                    className="text-sm text-cream/60 transition-colors hover:text-azure"
                   >
                     {item.label}
                   </Link>
@@ -48,13 +54,13 @@ export default function Footer() {
           </nav>
 
           <div>
-            <h2 className="eyebrow text-ochre">Programmes</h2>
+            <h2 className="eyebrow text-azure">Programmes</h2>
             <ul className="mt-5 space-y-2.5">
               {programmes.map((p) => (
                 <li key={p.slug}>
                   <Link
                     href={`/programmes/${p.slug}`}
-                    className="text-sm text-cream/60 transition-colors hover:text-ochre"
+                    className="text-sm text-cream/60 transition-colors hover:text-azure"
                   >
                     {p.title}
                   </Link>
@@ -63,7 +69,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/community-counsellor"
-                  className="text-sm text-cream/60 transition-colors hover:text-ochre"
+                  className="text-sm text-cream/60 transition-colors hover:text-azure"
                 >
                   Community Counsellor
                 </Link>
@@ -71,7 +77,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/partner"
-                  className="text-sm text-cream/60 transition-colors hover:text-ochre"
+                  className="text-sm text-cream/60 transition-colors hover:text-azure"
                 >
                   Partner With Us
                 </Link>
@@ -80,12 +86,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="eyebrow text-ochre">Contact</h2>
+            <h2 className="eyebrow text-azure">Contact</h2>
             <ul className="mt-5 space-y-2.5 text-sm text-cream/60">
               <li>
                 <a
                   href={`mailto:${org.email}`}
-                  className="transition-colors hover:text-ochre"
+                  className="transition-colors hover:text-azure"
                 >
                   {org.email}
                 </a>
@@ -93,7 +99,7 @@ export default function Footer() {
               <li>
                 <a
                   href={org.phoneHref}
-                  className="transition-colors hover:text-ochre"
+                  className="transition-colors hover:text-azure"
                 >
                   {org.phone}
                 </a>
@@ -104,7 +110,7 @@ export default function Footer() {
                   href={org.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-teal/40 px-4 py-2 text-teal-light transition-colors hover:bg-teal/10"
+                  className="inline-flex items-center gap-2 rounded-full border border-royal/40 px-4 py-2 text-royal-light transition-colors hover:bg-royal/10"
                 >
                   WhatsApp us
                 </a>
@@ -113,12 +119,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-sand/10 pt-8 text-xs text-cream/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-14 flex flex-col gap-3 border-t border-mist/10 pt-8 text-xs text-cream/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {org.name}. Building emotionally
             resilient communities across Namibia and Africa.
           </p>
-          <p>{org.tagline}</p>
+          <p>{org.slogan}</p>
         </div>
       </div>
     </footer>

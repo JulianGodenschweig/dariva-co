@@ -73,7 +73,7 @@ export default function ImpactPage() {
           </div>
         </div>
 
-        <div className="mt-20 grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-20 grid gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { n: 10, label: "Impact indicators tracked" },
             { n: 4, label: "Stages in the M&E framework" },
@@ -82,7 +82,7 @@ export default function ImpactPage() {
           ].map((s, i) => (
             <Reveal key={s.label} delay={((i + 1) as 1 | 2 | 3 | 4)}>
               <div className="h-full bg-ink-2 p-8">
-                <p className="font-display text-5xl font-bold text-ochre">
+                <p className="font-display text-5xl font-bold text-azure">
                   <Counter to={s.n} />
                 </p>
                 <p className="mt-3 text-sm text-cream/60">{s.label}</p>
@@ -100,12 +100,12 @@ export default function ImpactPage() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 space-y-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12">
+        <div className="mt-16 space-y-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12">
           {framework.map((row, i) => (
             <Reveal key={row.stage} delay={((i + 1) as 1 | 2 | 3 | 4)}>
               <div className="grid gap-6 bg-ink-2 p-8 md:grid-cols-12 md:items-center md:p-10">
                 <div className="md:col-span-1">
-                  <span className="font-display text-sm font-semibold tracking-[0.3em] text-ochre">
+                  <span className="font-display text-sm font-semibold tracking-[0.3em] text-azure">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
@@ -118,7 +118,7 @@ export default function ImpactPage() {
                     {row.measures.map((m) => (
                       <li
                         key={m}
-                        className="rounded-full border border-sand/18 bg-sand/[0.03] px-4 py-2 text-sm text-cream/75"
+                        className="rounded-full border border-mist/18 bg-mist/[0.03] px-4 py-2 text-sm text-cream/75"
                       >
                         {m}
                       </li>

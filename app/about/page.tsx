@@ -39,7 +39,7 @@ export default function AboutPage() {
 
         <div className="mt-24 grid gap-10 md:grid-cols-2">
           <Reveal delay={1}>
-            <div className="h-full rounded-2xl border border-sand/12 bg-sand/[0.03] p-9">
+            <div className="h-full rounded-2xl border border-mist/12 bg-mist/[0.03] p-9">
               <Eyebrow>Our Mission</Eyebrow>
               <p className="mt-6 font-display text-xl leading-snug text-cream">
                 {org.mission}
@@ -47,7 +47,7 @@ export default function AboutPage() {
             </div>
           </Reveal>
           <Reveal delay={2}>
-            <div className="h-full rounded-2xl border border-sand/12 bg-sand/[0.03] p-9">
+            <div className="h-full rounded-2xl border border-mist/12 bg-mist/[0.03] p-9">
               <Eyebrow>Our Vision</Eyebrow>
               <p className="mt-6 font-display text-xl leading-snug text-cream">
                 {org.vision}
@@ -65,11 +65,11 @@ export default function AboutPage() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12 sm:grid-cols-2 lg:grid-cols-3">
           {values.map((value, i) => (
             <Reveal key={value.name} delay={((i % 5) + 1) as 1 | 2 | 3 | 4 | 5}>
               <div className="h-full bg-ink-2 p-9 transition-colors duration-500 hover:bg-ink-3">
-                <span className="font-display text-xs font-semibold tracking-[0.3em] text-ochre">
+                <span className="font-display text-xs font-semibold tracking-[0.3em] text-azure">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="display-sm mt-4 text-cream">{value.name}</h3>
@@ -99,7 +99,7 @@ export default function AboutPage() {
               {whoWeServe.map((group) => (
                 <li
                   key={group}
-                  className="rounded-full border border-sand/25 bg-ink/40 px-5 py-2.5 text-sm text-cream/85 backdrop-blur-sm"
+                  className="rounded-full border border-mist/25 bg-ink/40 px-5 py-2.5 text-sm text-cream/85 backdrop-blur-sm"
                 >
                   {group}
                 </li>

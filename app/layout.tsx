@@ -138,7 +138,7 @@ export default function RootLayout({
           sizes="512x512"
         />
         <link rel="apple-touch-icon" href={`${basePath}/favicon.png`} />
-        <meta name="theme-color" content="#0a0d13" />
+        <meta name="theme-color" content="#070b14" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrgData) }}
@@ -156,7 +156,7 @@ export default function RootLayout({
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Message Dariva.co on WhatsApp"
-          className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-teal shadow-[0_8px_30px_-6px_rgba(47,139,122,0.7)] transition-transform duration-300 hover:scale-110 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
+          className="fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-royal shadow-[0_8px_30px_-6px_rgba(26,33,216,0.7)] transition-transform duration-300 hover:scale-110 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
         >
           <svg
             width="26"

@@ -44,7 +44,7 @@ export default function CommunityCounsellorPage() {
             </Reveal>
 
             <Reveal delay={2}>
-              <h2 className="eyebrow mt-16 text-ochre">
+              <h2 className="eyebrow mt-16 text-azure">
                 {counselling.topicsLabel}
               </h2>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -55,8 +55,8 @@ export default function CommunityCounsellorPage() {
             </Reveal>
 
             <Reveal delay={3}>
-              <div className="mt-14 rounded-2xl border border-ochre/25 bg-ochre/[0.06] p-8">
-                <p className="eyebrow text-ochre">The essential skill</p>
+              <div className="mt-14 rounded-2xl border border-azure/25 bg-azure/[0.06] p-8">
+                <p className="eyebrow text-azure">The essential skill</p>
                 <p className="mt-4 font-display text-xl leading-snug text-cream">
                   {counselling.outcome}
                 </p>
@@ -80,7 +80,7 @@ export default function CommunityCounsellorPage() {
                 />
               </Reveal>
               <Reveal delay={2}>
-                <div className="mt-8 rounded-2xl border border-sand/12 bg-sand/[0.03] p-8">
+                <div className="mt-8 rounded-2xl border border-mist/12 bg-mist/[0.03] p-8">
                   <h2 className="display-sm text-cream">
                     Graduates become better
                   </h2>

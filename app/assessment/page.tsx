@@ -32,11 +32,11 @@ export default function AssessmentPage() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12 sm:grid-cols-2 lg:grid-cols-5">
           {dimensions.map((d, i) => (
             <Reveal key={d.id} delay={((i + 1) as 1 | 2 | 3 | 4 | 5)}>
               <div className="h-full bg-ink-2 p-7">
-                <span className="font-display text-xs font-semibold tracking-[0.3em] text-ochre">
+                <span className="font-display text-xs font-semibold tracking-[0.3em] text-azure">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-4 font-display text-base font-semibold leading-snug text-cream">

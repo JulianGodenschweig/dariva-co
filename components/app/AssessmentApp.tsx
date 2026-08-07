@@ -88,9 +88,9 @@ export default function AssessmentApp() {
   return (
     <div className="mx-auto w-full max-w-3xl">
       {/* Progress rail */}
-      <div className="sticky top-20 z-20 mb-12 h-[3px] w-full overflow-hidden rounded-full bg-sand/12">
+      <div className="sticky top-20 z-20 mb-12 h-[3px] w-full overflow-hidden rounded-full bg-mist/12">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-ochre to-teal"
+          className="h-full rounded-full bg-gradient-to-r from-azure to-royal"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ type: "spring", stiffness: 120, damping: 24 }}
@@ -116,7 +116,7 @@ export default function AssessmentApp() {
               room to grow, and which Dariva.co programme fits you best.
             </p>
 
-            <div className="mt-8 rounded-xl border border-sand/15 bg-sand/[0.03] p-6">
+            <div className="mt-8 rounded-xl border border-mist/15 bg-mist/[0.03] p-6">
               <p className="text-sm leading-relaxed text-cream/70">
                 <strong className="text-cream">Please read: </strong>
                 {DISCLAIMER}
@@ -128,7 +128,7 @@ export default function AssessmentApp() {
             </div>
 
             {restored ? (
-              <div className="mt-6 flex flex-wrap items-center gap-4 rounded-xl border border-teal/30 bg-teal/5 p-5">
+              <div className="mt-6 flex flex-wrap items-center gap-4 rounded-xl border border-royal/30 bg-royal/5 p-5">
                 <p className="text-sm text-cream/75">
                   You completed a check-in on{" "}
                   {new Date(restored.completedAt).toLocaleDateString()} — you
@@ -140,7 +140,7 @@ export default function AssessmentApp() {
                     setResult(restored);
                     setStage("results");
                   }}
-                  className="rounded-full border border-teal/50 px-4 py-2 text-sm text-teal-light transition-colors hover:bg-teal/10"
+                  className="rounded-full border border-royal/50 px-4 py-2 text-sm text-royal-light transition-colors hover:bg-royal/10"
                 >
                   View those results
                 </button>
@@ -150,7 +150,7 @@ export default function AssessmentApp() {
             <button
               type="button"
               onClick={() => setStage("quiz")}
-              className="mt-10 inline-flex items-center gap-2.5 rounded-full bg-ochre px-8 py-4 font-semibold text-ink transition-all duration-300 hover:bg-ochre-light hover:shadow-[0_0_36px_-6px_rgba(200,134,47,0.6)]"
+              className="mt-10 inline-flex items-center gap-2.5 rounded-full bg-azure px-8 py-4 font-semibold text-ink transition-all duration-300 hover:bg-azure-light hover:shadow-[0_0_36px_-6px_rgba(42,168,246,0.6)]"
             >
               Start the check-in <span aria-hidden="true">→</span>
             </button>
@@ -166,7 +166,7 @@ export default function AssessmentApp() {
             transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex items-center justify-between">
-              <p className="eyebrow text-ochre">
+              <p className="eyebrow text-azure">
                 Question {step + 1} of {total}
               </p>
               {step > 0 ? (
@@ -201,16 +201,16 @@ export default function AssessmentApp() {
                     onClick={() => answer(value)}
                     className={`flex w-full items-center gap-4 rounded-xl border px-6 py-4 text-left transition-all duration-200 ${
                       selected
-                        ? "border-ochre bg-ochre/10 text-cream"
-                        : "border-sand/15 bg-sand/[0.02] text-cream/75 hover:border-sand/35 hover:bg-sand/[0.05]"
+                        ? "border-azure bg-azure/10 text-cream"
+                        : "border-mist/15 bg-mist/[0.02] text-cream/75 hover:border-mist/35 hover:bg-mist/[0.05]"
                     }`}
                   >
                     <span
                       aria-hidden="true"
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
                         selected
-                          ? "border-ochre bg-ochre text-ink"
-                          : "border-sand/25 text-cream/45"
+                          ? "border-azure bg-azure text-ink"
+                          : "border-mist/25 text-cream/45"
                       }`}
                     >
                       {value}
@@ -262,7 +262,7 @@ function ResultsView({
       <Eyebrow>Your check-in</Eyebrow>
 
       <div className="mt-8 flex flex-wrap items-end gap-6">
-        <p className="font-display text-7xl font-bold leading-none text-ochre">
+        <p className="font-display text-7xl font-bold leading-none text-azure">
           {result.overall}
           <span className="text-3xl text-cream/40">/100</span>
         </p>
@@ -289,24 +289,27 @@ function ResultsView({
                 <span
                   className={
                     d.band === "Strong"
-                      ? "text-teal-light"
+                      ? "text-azure-light"
                       : d.band === "Steady"
-                        ? "text-sand"
-                        : "text-ochre-light"
+                        ? "text-azure"
+                        : "text-royal-light"
                   }
                 >
                   {d.band}
                 </span>
               </p>
             </div>
-            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-sand/10">
+            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-mist/10">
               <motion.div
                 className={`h-full rounded-full ${
+                  // A single-hue ramp: brighter reads as stronger. Warning
+                  // colours would be wrong here — a low score is a starting
+                  // point, not a failure.
                   d.band === "Strong"
-                    ? "bg-teal"
+                    ? "bg-azure-light"
                     : d.band === "Steady"
-                      ? "bg-sand"
-                      : "bg-ochre"
+                      ? "bg-azure"
+                      : "bg-royal-light"
                 }`}
                 initial={{ width: 0 }}
                 animate={{ width: `${d.score}%` }}
@@ -326,10 +329,10 @@ function ResultsView({
 
       {/* Recommendation */}
       {programme ? (
-        <div className="mt-14 overflow-hidden rounded-2xl border border-ochre/30 bg-gradient-to-br from-ochre/10 to-transparent">
+        <div className="mt-14 overflow-hidden rounded-2xl border border-azure/30 bg-gradient-to-br from-azure/10 to-transparent">
           <div className="grid gap-0 md:grid-cols-5">
             <div className="md:col-span-3 md:p-9 p-7">
-              <p className="eyebrow text-ochre">Recommended for you</p>
+              <p className="eyebrow text-azure">Recommended for you</p>
               <h3 className="display-sm mt-4 text-cream">{programme.title}</h3>
               <p className="mt-3 text-sm text-cream/70">
                 Your lowest area was{" "}
@@ -344,7 +347,7 @@ function ResultsView({
                 </Button>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center rounded-full border border-sand/25 px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:border-ochre hover:text-ochre"
+                  className="inline-flex items-center rounded-full border border-mist/25 px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:border-azure hover:text-azure"
                 >
                   Ask a question
                 </Link>
@@ -364,9 +367,9 @@ function ResultsView({
       ) : null}
 
       {/* Safety */}
-      <div className="mt-10 rounded-xl border border-sand/15 bg-sand/[0.03] p-6">
+      <div className="mt-10 rounded-xl border border-mist/15 bg-mist/[0.03] p-6">
         <p className="text-sm leading-relaxed text-cream/65">{DISCLAIMER}</p>
-        <p className="mt-4 text-sm leading-relaxed text-ochre-light">
+        <p className="mt-4 text-sm leading-relaxed text-azure-light">
           {CRISIS_NOTE}
         </p>
       </div>
@@ -375,13 +378,13 @@ function ResultsView({
         <button
           type="button"
           onClick={onRestart}
-          className="rounded-full border border-sand/25 px-6 py-3 text-sm text-cream/80 transition-colors hover:border-ochre hover:text-ochre"
+          className="rounded-full border border-mist/25 px-6 py-3 text-sm text-cream/80 transition-colors hover:border-azure hover:text-azure"
         >
           Take it again
         </button>
         <Link
           href="/programmes"
-          className="rounded-full px-6 py-3 text-sm text-cream/60 transition-colors hover:text-ochre"
+          className="rounded-full px-6 py-3 text-sm text-cream/60 transition-colors hover:text-azure"
         >
           Browse all programmes
         </Link>

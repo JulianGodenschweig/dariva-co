@@ -25,13 +25,13 @@ export default function PartnerPage() {
           <div className="lg:col-span-6">
             <Reveal>
               <p className="display-md text-cream">{partner.body}</p>
-              <ul className="mt-10 space-y-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12">
+              <ul className="mt-10 space-y-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12">
                 {partner.partners.map((p, i) => (
                   <li
                     key={p}
                     className="flex items-center gap-5 bg-ink-2 px-7 py-5 transition-colors duration-500 hover:bg-ink-3"
                   >
-                    <span className="font-display text-xs font-semibold tracking-[0.3em] text-ochre">
+                    <span className="font-display text-xs font-semibold tracking-[0.3em] text-azure">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="font-display text-lg text-cream">{p}</span>
@@ -50,8 +50,8 @@ export default function PartnerPage() {
               />
             </Reveal>
             <Reveal delay={2}>
-              <div className="mt-8 rounded-2xl border border-teal/25 bg-teal/[0.06] p-8">
-                <p className="eyebrow text-teal-light">
+              <div className="mt-8 rounded-2xl border border-royal/25 bg-royal/[0.06] p-8">
+                <p className="eyebrow text-royal-light">
                   Accountability to funders
                 </p>
                 <p className="mt-4 leading-relaxed text-cream/75">

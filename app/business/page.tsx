@@ -26,7 +26,7 @@ export default function BusinessPage() {
               <p className="display-md text-cream">{business.body}</p>
             </Reveal>
             <Reveal delay={2}>
-              <h2 className="eyebrow mt-14 text-ochre">Business benefits</h2>
+              <h2 className="eyebrow mt-14 text-azure">Business benefits</h2>
               <ul className="mt-6 space-y-3.5">
                 {business.benefits.map((b) => (
                   <Tick key={b}>{b}</Tick>
@@ -49,14 +49,14 @@ export default function BusinessPage() {
               />
             </Reveal>
             <Reveal delay={2}>
-              <div className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12">
+              <div className="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12">
                 {[
                   { n: 8, label: "Workplace services" },
                   { n: 6, label: "Measured benefits" },
                   { n: 3, label: "Training streams" },
                 ].map((s) => (
                   <div key={s.label} className="bg-ink-2 p-6 text-center">
-                    <p className="font-display text-4xl font-bold text-ochre">
+                    <p className="font-display text-4xl font-bold text-azure">
                       <Counter to={s.n} />
                     </p>
                     <p className="mt-2 text-xs text-cream/55">{s.label}</p>
@@ -76,11 +76,11 @@ export default function BusinessPage() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-2xl border border-mist/12 bg-mist/12 sm:grid-cols-2 lg:grid-cols-4">
           {business.services.map((service, i) => (
             <Reveal key={service} delay={((i % 4) + 1) as 1 | 2 | 3 | 4}>
               <div className="h-full bg-ink-2 p-8 transition-colors duration-500 hover:bg-ink-3">
-                <span className="font-display text-xs font-semibold tracking-[0.3em] text-ochre">
+                <span className="font-display text-xs font-semibold tracking-[0.3em] text-azure">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-4 font-display text-lg font-semibold leading-snug text-cream">

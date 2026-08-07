@@ -56,8 +56,8 @@ export default async function ProgrammePage({
           <div className="lg:col-span-7">
             <Reveal>
               <p className="display-md text-cream">{programme.summary}</p>
-              <div className="mt-10 rounded-2xl border border-teal/25 bg-teal/[0.06] p-8">
-                <p className="eyebrow text-teal-light">Outcome</p>
+              <div className="mt-10 rounded-2xl border border-royal/25 bg-royal/[0.06] p-8">
+                <p className="eyebrow text-royal-light">Outcome</p>
                 <p className="mt-4 font-display text-xl leading-snug text-cream">
                   {programme.outcome}
                 </p>
@@ -65,7 +65,7 @@ export default async function ProgrammePage({
             </Reveal>
 
             <Reveal delay={2}>
-              <h2 className="eyebrow mt-16 text-ochre">
+              <h2 className="eyebrow mt-16 text-azure">
                 {programme.topicsLabel}
               </h2>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -76,7 +76,7 @@ export default async function ProgrammePage({
             </Reveal>
 
             <Reveal delay={3}>
-              <h2 className="eyebrow mt-16 text-ochre">
+              <h2 className="eyebrow mt-16 text-azure">
                 {programme.benefitsLabel}
               </h2>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -98,7 +98,7 @@ export default async function ProgrammePage({
                 />
               </Reveal>
               <Reveal delay={2}>
-                <div className="mt-8 rounded-2xl border border-sand/12 bg-sand/[0.03] p-8">
+                <div className="mt-8 rounded-2xl border border-mist/12 bg-mist/[0.03] p-8">
                   <h2 className="display-sm text-cream">Ready to start?</h2>
                   <p className="mt-3 text-sm leading-relaxed text-cream/60">
                     Tell us a little about yourself or your organisation and we
@@ -127,7 +127,7 @@ export default async function ProgrammePage({
             <Reveal key={other.slug} delay={((i + 1) as 1 | 2)}>
               <Link
                 href={`/programmes/${other.slug}`}
-                className="group flex h-full gap-6 overflow-hidden rounded-2xl border border-sand/12 bg-ink-2 p-6 transition-colors duration-500 hover:border-ochre/40"
+                className="group flex h-full gap-6 overflow-hidden rounded-2xl border border-mist/12 bg-ink-2 p-6 transition-colors duration-500 hover:border-azure/40"
               >
                 <img
                   src={other.image}
@@ -137,10 +137,10 @@ export default async function ProgrammePage({
                   className="hidden h-32 w-32 shrink-0 rounded-xl object-cover sm:block"
                 />
                 <div>
-                  <span className="font-display text-xs font-semibold tracking-[0.3em] text-ochre">
+                  <span className="font-display text-xs font-semibold tracking-[0.3em] text-azure">
                     {other.index}
                   </span>
-                  <h3 className="display-sm mt-2 text-cream transition-colors group-hover:text-ochre">
+                  <h3 className="display-sm mt-2 text-cream transition-colors group-hover:text-azure">
                     {other.title}
                   </h3>
                   <p className="mt-2 text-sm text-cream/60">{other.tagline}</p>
