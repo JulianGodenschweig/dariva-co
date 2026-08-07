@@ -3,6 +3,7 @@ import AssessmentApp from "@/components/app/AssessmentApp";
 import { dimensions } from "@/lib/assessment";
 import { Reveal } from "@/components/motion/scroll";
 import { Eyebrow, Section } from "@/components/ui";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "Wellness Check-In",
@@ -15,7 +16,7 @@ export default function AssessmentPage() {
     <>
       <section className="relative isolate grain overflow-hidden px-6 pb-20 pt-40 md:px-14 lg:px-20">
         <img
-          src="/images/portrait-lead.jpg"
+          src={asset("/images/portrait-lead.jpg")}
           alt=""
           aria-hidden="true"
           className="absolute inset-0 -z-10 h-full w-full object-cover opacity-30"

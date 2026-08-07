@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { asset } from "@/lib/asset";
 
 type ButtonProps = {
   href: string;
@@ -145,7 +146,7 @@ export function PageHeader({
   return (
     <header className="relative isolate grain min-h-[62vh] overflow-hidden pt-32">
       <img
-        src={image}
+        src={asset(image)}
         alt={alt}
         className="absolute inset-0 -z-10 h-full w-full object-cover"
       />

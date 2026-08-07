@@ -3,6 +3,7 @@ import Link from "next/link";
 import { DepthImage, ParallaxBand, Reveal } from "@/components/motion/scroll";
 import { Button, Dot, Eyebrow, PageHeader, Pill, Section } from "@/components/ui";
 import { coachingProgramme, programmes } from "@/lib/site";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "Programmes",
@@ -87,7 +88,7 @@ export default function ProgrammesPage() {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src={p.image}
+                    src={asset(p.image)}
                     alt={p.title}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"

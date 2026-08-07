@@ -16,6 +16,7 @@ import {
 } from "@/lib/assessment";
 import { programmes } from "@/lib/site";
 import { Button, Eyebrow } from "@/components/ui";
+import { asset } from "@/lib/asset";
 
 type Stage = "intro" | "quiz" | "results";
 
@@ -355,7 +356,7 @@ function ResultsView({
             </div>
             <div className="relative min-h-[180px] md:col-span-2">
               <img
-                src={programme.image}
+                src={asset(programme.image)}
                 alt=""
                 aria-hidden="true"
                 className="absolute inset-0 h-full w-full object-cover"

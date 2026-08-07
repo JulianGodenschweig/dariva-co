@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { DepthImage, Reveal } from "@/components/motion/scroll";
 import { Button, Dot, Eyebrow, PageHeader, Section, Tick } from "@/components/ui";
 import { programmes } from "@/lib/site";
+import { asset } from "@/lib/asset";
 
 type Params = { slug: string };
 
@@ -130,7 +131,7 @@ export default async function ProgrammePage({
                 className="group flex h-full gap-6 overflow-hidden rounded-2xl border border-mist/12 bg-ink-2 p-6 transition-colors duration-500 hover:border-azure/40"
               >
                 <img
-                  src={other.image}
+                  src={asset(other.image)}
                   alt=""
                   aria-hidden="true"
                   loading="lazy"

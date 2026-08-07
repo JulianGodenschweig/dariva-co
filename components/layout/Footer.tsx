@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { nav, org, programmes } from "@/lib/site";
 import { Reveal } from "@/components/motion/scroll";
+import { asset } from "@/lib/asset";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -8,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="relative isolate overflow-hidden border-t border-mist/10 bg-ink">
       <img
-        src="/images/desert-road.jpg"
+        src={asset("/images/desert-road.jpg")}
         alt=""
         aria-hidden="true"
         loading="lazy"

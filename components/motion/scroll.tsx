@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { asset } from "@/lib/asset";
 
 /* -------------------------------------------------------------------------
  * useCalmMotion
@@ -162,7 +163,7 @@ export function ZoomHero({
         aria-label="Introduction"
       >
         <img
-          src={image}
+          src={asset(image)}
           alt={alt}
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
@@ -198,7 +199,7 @@ export function ZoomHero({
           className="absolute inset-0 grain overflow-hidden"
         >
           <motion.img
-            src={image}
+            src={asset(image)}
             alt={alt}
             style={{ scale }}
             className="absolute inset-0 h-full w-full object-cover will-change-transform"
@@ -287,10 +288,10 @@ export function DepthImage({
       className={`relative overflow-hidden grain ${rounded} ${className}`}
     >
       {reduce ? (
-        <img src={src} alt={alt} className="h-full w-full object-cover" />
+        <img src={asset(src)} alt={alt} className="h-full w-full object-cover" />
       ) : (
         <motion.img
-          src={src}
+          src={asset(src)}
           alt={alt}
           style={{ scale: smooth }}
           loading="lazy"
@@ -339,10 +340,10 @@ export function ParallaxBand({
     >
       <div className="absolute inset-0 -z-10">
         {reduce ? (
-          <img src={src} alt={alt} className="h-full w-full object-cover" />
+          <img src={asset(src)} alt={alt} className="h-full w-full object-cover" />
         ) : (
           <motion.img
-            src={src}
+            src={asset(src)}
             alt={alt}
             style={{ y, scale }}
             loading="lazy"

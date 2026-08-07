@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui";
 import { nav } from "@/lib/site";
+import { asset } from "@/lib/asset";
 
 export default function NotFound() {
   return (
     <section className="relative isolate grain flex min-h-screen items-center overflow-hidden px-6 py-32 md:px-14 lg:px-20">
       <img
-        src="/images/desert-road.jpg"
+        src={asset("/images/desert-road.jpg")}
         alt=""
         aria-hidden="true"
         className="absolute inset-0 -z-10 h-full w-full object-cover opacity-35"
