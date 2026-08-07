@@ -1,106 +1,161 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { asset } from '@/lib/utils';
+"use client";
 
-const links = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/program', label: 'Program' },
-  { href: '/coaches', label: 'Coaches' },
-  { href: '/impact', label: 'Impact' },
-  { href: '/contact', label: 'Contact' },
-];
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { nav, org } from "@/lib/site";
+import { ScrollProgress, useScrolled } from "@/components/motion/scroll";
 
 export default function Navbar() {
+  const scrolled = useScrolled(60);
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+
+  // Close the drawer on navigation, and never leave the body locked.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
-    const s = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', s);
-    return () => window.removeEventListener('scroll', s);
-  }, []);
-
-  useEffect(() => {
-    if (open) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = '';
-    return () => { document.body.style.overflow = ''; };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [open]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <>
-      <nav style={{
-        position:'fixed',top:0,left:0,right:0,zIndex:1000,height:'64px',
-        display:'flex',alignItems:'center',justifyContent:'space-between',
-        padding:'0 24px',
-        background: scrolled ? 'rgba(255,255,255,0.96)' : 'white',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        boxShadow: scrolled ? '0 2px 20px rgba(27,154,214,0.13)' : '0 1px 0 #e5e7eb',
-        transition:'all 0.3s ease',
-      }}>
-        <Link href="/" onClick={() => setOpen(false)}>
-          <Image src={asset('/logo.png')} alt="Dariva.co" width={130} height={34} style={{objectFit:'contain',display:'block'}} priority />
-        </Link>
+      <ScrollProgress />
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+          scrolled || open
+            ? "glass border-b border-sand/10 py-3"
+            : "border-b border-transparent py-6"
+        }`}
+      >
+        <nav
+          aria-label="Primary"
+          className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-14 lg:px-20"
+        >
+          <Link
+            href="/"
+            className="font-display text-lg font-bold tracking-tight text-cream"
+          >
+            Dariva<span className="text-ochre">.co</span>
+          </Link>
 
-        {/* Desktop */}
-        <div style={{display:'flex',gap:'28px',alignItems:'center'}} className="dariva-desktop-nav">
-          {links.map(l => (
-            <Link key={l.href} href={l.href} style={{color:'#0D1B2A',textDecoration:'none',fontSize:'15px',fontWeight:500}}>
-              {l.label}
+          <ul className="hidden items-center gap-8 lg:flex">
+            {nav.map((item) => {
+              const active =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`relative text-sm transition-colors duration-300 ${
+                      active ? "text-ochre" : "text-cream/75 hover:text-cream"
+                    }`}
+                  >
+                    {item.label}
+                    {active ? (
+                      <span
+                        aria-hidden="true"
+                        className="absolute -bottom-1.5 left-0 h-px w-full bg-ochre"
+                      />
+                    ) : null}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/assessment"
+              className="hidden rounded-full bg-ochre px-5 py-2.5 text-sm font-semibold text-ink transition-colors duration-300 hover:bg-ochre-light md:inline-flex"
+            >
+              Free Check-In
             </Link>
-          ))}
-          <Link href="/apply" style={{background:'#1B9AD6',color:'white',padding:'9px 22px',borderRadius:'8px',textDecoration:'none',fontSize:'15px',fontWeight:600}}>
-            Apply Now
-          </Link>
+
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-sand/20 text-cream lg:hidden"
+            >
+              <span className="relative block h-3 w-4">
+                <span
+                  className={`absolute left-0 block h-[1.5px] w-4 bg-current transition-all duration-300 ${
+                    open ? "top-1.5 rotate-45" : "top-0"
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 top-1.5 block h-[1.5px] w-4 bg-current transition-opacity duration-300 ${
+                    open ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`absolute left-0 block h-[1.5px] w-4 bg-current transition-all duration-300 ${
+                    open ? "top-1.5 -rotate-45" : "top-3"
+                  }`}
+                />
+              </span>
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile drawer */}
+      <div
+        id="mobile-nav"
+        hidden={!open}
+        className={`fixed inset-0 z-40 bg-ink/97 backdrop-blur-xl transition-opacity duration-300 lg:hidden ${
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <div className="flex h-full flex-col justify-between px-6 pb-10 pt-28">
+          <ul className="space-y-1">
+            {nav.map((item, i) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="block border-b border-sand/10 py-4 font-display text-2xl text-cream transition-colors hover:text-ochre"
+                  style={{ transitionDelay: `${i * 30}ms` }}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="space-y-4">
+            <Link
+              href="/assessment"
+              className="block rounded-full bg-ochre px-6 py-4 text-center font-semibold text-ink"
+            >
+              Take the Free Wellness Check-In
+            </Link>
+            <a
+              href={`mailto:${org.email}`}
+              className="block text-center text-sm text-cream/60"
+            >
+              {org.email}
+            </a>
+          </div>
         </div>
-
-        {/* Hamburger */}
-        <button onClick={() => setOpen(!open)} aria-label="Menu" className="dariva-hamburger"
-          style={{display:'none',flexDirection:'column',gap:'5px',background:'none',border:'none',cursor:'pointer',padding:'8px',zIndex:1001}}>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(45deg) translate(5px,5px)':'none'}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',opacity:open?0:1}}/>
-          <span style={{display:'block',width:'24px',height:'2px',background:'#0D1B2A',transition:'all 0.3s',transform:open?'rotate(-45deg) translate(5px,-5px)':'none'}}/>
-        </button>
-      </nav>
-
-      {/* Mobile overlay */}
-      <div style={{
-        position:'fixed',top:'64px',left:0,right:0,bottom:0,
-        background:'rgba(26,35,126,0.98)',
-        zIndex:999,
-        transform:open?'translateX(0)':'translateX(100%)',
-        transition:'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
-        display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'32px',
-        pointerEvents:open?'all':'none',
-      }}>
-        {links.map(l => (
-          <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-            style={{color:'white',textDecoration:'none',fontSize:'24px',fontWeight:600,letterSpacing:'0.02em'}}>
-            {l.label}
-          </Link>
-        ))}
-        <Link href="/apply" onClick={() => setOpen(false)}
-          style={{background:'#1B9AD6',color:'white',padding:'14px 40px',borderRadius:'10px',textDecoration:'none',fontSize:'18px',fontWeight:700,marginTop:'8px'}}>
-          Apply Now
-        </Link>
-        <a href="https://wa.me/264813404364" target="_blank" rel="noopener noreferrer"
-          style={{color:'#25D366',fontSize:'16px',fontWeight:500,textDecoration:'none'}}>
-          WhatsApp: +264 81 340 4364
-        </a>
       </div>
-
-      {/* CSS to show/hide desktop vs hamburger */}
-      <style>{`
-        .dariva-desktop-nav { display: flex !important; }
-        .dariva-hamburger { display: none !important; }
-        @media (max-width: 768px) {
-          .dariva-desktop-nav { display: none !important; }
-          .dariva-hamburger { display: flex !important; }
-        }
-      `}</style>
-      <div style={{height:'64px'}}/>
     </>
   );
 }

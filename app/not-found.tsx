@@ -1,24 +1,44 @@
 import Link from "next/link";
+import { Button } from "@/components/ui";
+import { nav } from "@/lib/site";
 
 export default function NotFound() {
   return (
-    <section className="min-h-[70vh] flex items-center justify-center py-24">
-      <div className="container-page text-center">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary/60">
-          404
-        </p>
-        <h1 className="mt-4 font-heading font-bold tracking-tight text-text" style={{ fontSize: "clamp(2rem, 6vw, 3.5rem)" }}>
-          Page not found
+    <section className="relative isolate grain flex min-h-screen items-center overflow-hidden px-6 py-32 md:px-14 lg:px-20">
+      <img
+        src="/images/desert-road.jpg"
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 h-full w-full object-cover opacity-35"
+      />
+      <div className="absolute inset-0 -z-10 scrim-full" />
+
+      <div className="mx-auto w-full max-w-3xl text-center">
+        <p className="eyebrow text-ochre">404</p>
+        <h1 className="display-lg mt-6 text-cream">
+          This path does not lead anywhere.
         </h1>
-        <p className="mx-auto mt-5 max-w-md text-base leading-relaxed text-text-muted">
-          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+        <p className="lede mt-6 text-cream/70">
+          The page you were looking for has moved or never existed. Everything
+          else is still here.
         </p>
-        <Link
-          href="/"
-          className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-primary-deep hover:shadow-xl hover:shadow-primary/25 min-h-[48px]"
-        >
-          Back to Home
-        </Link>
+
+        <div className="mt-10 flex justify-center">
+          <Button href="/">Back to home</Button>
+        </div>
+
+        <ul className="mt-14 flex flex-wrap justify-center gap-2.5">
+          {nav.slice(1).map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className="inline-flex rounded-full border border-sand/20 px-5 py-2.5 text-sm text-cream/70 transition-colors hover:border-ochre hover:text-ochre"
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

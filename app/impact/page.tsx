@@ -1,82 +1,154 @@
 import type { Metadata } from "next";
-import { CTA, FeatureGrid, SectionHeading, StatBand } from "@/components/ui";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion";
-import { impactCards } from "@/lib/content";
+import { Counter, DepthImage, ParallaxBand, Reveal } from "@/components/motion/scroll";
+import { Button, Eyebrow, PageHeader, Section } from "@/components/ui";
+import { impact } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Impact",
-  description: "Dariva.co's impact model focuses on preventative wellness, GBV driver ending, economic opportunity, and scalable community care in Namibia, Africa."
+  title: "Impact & Monitoring",
+  description: impact.body,
 };
 
-const insightCards = [
-  { title: "Local insight", text: "Community feedback shows what is working, where trust is growing, and where support must improve." },
-  { title: "Partner reporting", text: "Implementation partners can see activity, reach, outcomes, and learning in a credible format." },
-  { title: "Adaptive delivery", text: "The model is built to refine training, referral pathways, and digital access over time." },
+/**
+ * The measurement framework, grouped the way M&E practice actually reads:
+ * activity → learning → behaviour → longer-term community change.
+ */
+const framework = [
+  {
+    stage: "Participation",
+    note: "Who we reached, and whether they stayed.",
+    measures: ["People trained", "Programme completion rates"],
+  },
+  {
+    stage: "Learning outcomes",
+    note: "What participants actually gained.",
+    measures: ["Knowledge gained", "Participant satisfaction"],
+  },
+  {
+    stage: "Behaviour change",
+    note: "What people do differently afterwards.",
+    measures: ["Behaviour change", "Leadership growth", "Referral outcomes"],
+  },
+  {
+    stage: "Community impact",
+    note: "Whether the change held, and spread.",
+    measures: [
+      "Workplace wellbeing improvements",
+      "Community engagement",
+      "Community impact indicators",
+    ],
+  },
 ];
 
 export default function ImpactPage() {
   return (
     <>
-      <section className="about-hero">
-        <p className="mb-4 text-sm font-bold uppercase tracking-[0.2em] opacity-80">Impact</p>
-        <h1>Proof that prevention can become community infrastructure</h1>
-        <p>Dariva.co measures what matters: emotional literacy, help-seeking, safer relationships, trained local capacity, and economic opportunity through care work.</p>
-      </section>
+      <PageHeader
+        eyebrow="Impact & Monitoring"
+        title={impact.title}
+        lede={impact.lede}
+        image="/images/savanna-wide.jpg"
+        alt="Wide open savanna at golden hour"
+      />
 
-      <section className="section-pad reveal">
-        <div className="container-page">
-          <SectionHeading
-            align="center"
-            eyebrow="Transformation"
-            title="The impact is human, practical, and scalable."
-            text="Dariva.co's model links individual healing with community capability, safer social conditions, and national potential."
-          />
-          <div className="mt-12">
-            <FeatureGrid items={impactCards} columns="four" />
+      <Section className="surface-dark">
+        <div className="grid gap-16 lg:grid-cols-12 lg:gap-20">
+          <div className="lg:col-span-7">
+            <Reveal>
+              <p className="display-md text-cream">
+                Every programme should create measurable impact.
+              </p>
+              <p className="mt-8 leading-relaxed text-cream/70">
+                {impact.body}
+              </p>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-5">
+            <Reveal clip>
+              <DepthImage
+                src="/images/notes-meeting.jpg"
+                alt="Reviewing programme results together"
+                className="aspect-[4/3] w-full"
+              />
+            </Reveal>
           </div>
         </div>
-      </section>
 
-      <section className="section-pad bg-river-light reveal">
-        <div className="container-page">
-          <SectionHeading align="center" eyebrow="Measurement" title="A serious movement needs a serious learning loop." />
-          <div className="mt-12">
-            <StatBand />
-          </div>
-
-
-          <div className="mt-8 grid gap-4 lg:grid-cols-3">
-            {insightCards.map((item) => (
-              <Reveal key={item.title} className="card-lift rounded-2xl border border-[#b8d4d8] bg-white p-6">
-                <h2 className="text-xl font-semibold text-[#1A237E]">{item.title}</h2>
-                <p className="mt-3 text-sm leading-7 text-[#4e6878]">{item.text}</p>
-              </Reveal>
-            ))}
-          </div>
+        <div className="mt-20 grid gap-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { n: 10, label: "Impact indicators tracked" },
+            { n: 4, label: "Stages in the M&E framework" },
+            { n: 3, label: "Core training streams" },
+            { n: 9, label: "Audience groups served" },
+          ].map((s, i) => (
+            <Reveal key={s.label} delay={((i + 1) as 1 | 2 | 3 | 4)}>
+              <div className="h-full bg-ink-2 p-8">
+                <p className="font-display text-5xl font-bold text-ochre">
+                  <Counter to={s.n} />
+                </p>
+                <p className="mt-3 text-sm text-cream/60">{s.label}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <section className="section-pad reveal">
-        <div className="container-page grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <SectionHeading
-            eyebrow="National potential"
-            title="From local trust to a national care network."
-            text="Dariva.co can begin community by community, then connect trained coaches, referral relationships, digital tools, and partner learning into a wider mental wellness system across Namibia, Africa."
-          />
-          <Stagger className="grid gap-4">
-            {["Pilot communities", "Coach economy", "National prevention infrastructure"].map((step, index) => (
-              <StaggerItem key={step} className="card-lift rounded-2xl border border-[#b8d4d8] bg-[#f6faf9] p-6">
-                <p className="text-sm font-bold text-[#00897b]">0{index + 1}</p>
-                <h2 className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#1A237E]">{step}</h2>
-              </StaggerItem>
-            ))}
-          </Stagger>
+      <Section className="bg-ink">
+        <Reveal>
+          <Eyebrow>{impact.measuresLabel}</Eyebrow>
+          <h2 className="display-md mt-6 max-w-3xl text-cream">
+            Ten indicators, tracked across four stages.
+          </h2>
+        </Reveal>
+
+        <div className="mt-16 space-y-px overflow-hidden rounded-2xl border border-sand/12 bg-sand/12">
+          {framework.map((row, i) => (
+            <Reveal key={row.stage} delay={((i + 1) as 1 | 2 | 3 | 4)}>
+              <div className="grid gap-6 bg-ink-2 p-8 md:grid-cols-12 md:items-center md:p-10">
+                <div className="md:col-span-1">
+                  <span className="font-display text-sm font-semibold tracking-[0.3em] text-ochre">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <div className="md:col-span-4">
+                  <h3 className="display-sm text-cream">{row.stage}</h3>
+                  <p className="mt-2 text-sm text-cream/50">{row.note}</p>
+                </div>
+                <div className="md:col-span-7">
+                  <ul className="flex flex-wrap gap-2.5">
+                    {row.measures.map((m) => (
+                      <li
+                        key={m}
+                        className="rounded-full border border-sand/18 bg-sand/[0.03] px-4 py-2 text-sm text-cream/75"
+                      >
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <div className="bg-deep">
-        <CTA />
-      </div>
+      <ParallaxBand
+        src="/images/acacia-dusk.jpg"
+        alt="Acacia tree at dusk"
+        className="py-32 md:py-40"
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 md:px-14 lg:px-20">
+          <Reveal>
+            <Eyebrow>{impact.whyLabel}</Eyebrow>
+            <p className="display-md mt-8 max-w-4xl text-cream">{impact.why}</p>
+            <div className="mt-12 flex flex-wrap gap-4">
+              <Button href="/partner">Partner with us</Button>
+              <Button href="/contact" variant="outline">
+                Request our reporting approach
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+      </ParallaxBand>
     </>
   );
 }
