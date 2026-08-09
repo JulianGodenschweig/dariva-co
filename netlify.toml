@@ -1,0 +1,35 @@
+# Netlify build settings for Dariva.co.
+#
+# This site is server-rendered, not a static export. The enquiry forms write to
+# Supabase from Server Actions, so Netlify's Next.js Runtime has to run —
+# NETLIFY_NEXT_PLUGIN_SKIP is deliberately absent, unlike the previous build.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Self-hosted fonts and the detect-gpu benchmark JSON are content-hashed or
+# versioned, so they can be cached hard.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/gpu/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
