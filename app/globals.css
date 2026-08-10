@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — DESIGN.md §1–§4.
+
+   Every colour here is measured from the logo files, not chosen. See
+   tools-palette-extract.py for the sampling script and DESIGN.md for the
+   pixel shares and contrast ratios.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Palette. One saturated accent: --signal. Nothing else is saturated. */
+  --color-ink: #12184f; /* tagline hue 237.5°, value dropped. 16.11:1 on paper */
+  --color-signal: #007abf; /* logo hue 201.6° held exactly. 4.51:1 on paper  */
+  --color-quiet: #525f73; /* 6.30:1 on paper                                 */
+  --color-wash: #e8f1f8;
+  --color-paper: #fbfcfd;
+
+  /* Raw logo cyan: 2.57:1. NEVER text, NEVER a focus ring. Particle field and
+     large non-text graphics only. */
+  --color-signal-raw: #28a8f0;
+
+  /* Derived, for hairlines and hovers only. */
+  --color-ink-12: #12184f1f;
+  --color-ink-08: #12184f14;
+  --color-signal-12: #007abf1f;
+
+  /* Type */
+  --font-display: var(--font-clash), "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-space), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Radius — from the script logo's round stroke terminals, not from zero. */
+  --radius-button: 999px;
+  --radius-surface: 4px;
+
+  /* 8px baseline */
+  --spacing-section: clamp(6rem, 12vh, 10rem);
+  --spacing-gutter: clamp(1.25rem, 5vw, 6rem);
+
+  /* Motion */
+  --ease-out-quiet: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    /* Lenis drives smooth scroll on capable devices, but native smooth scroll
+       has to remain for anchor links and for every device Lenis is gated off. */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-quiet);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.75;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Focus is always visible, always --signal, never removed. */
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-paper);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Type scale — DESIGN.md §2. Fluid, line-heights land on the 8px grid.
+--------------------------------------------------------------------------- */
+
+@utility text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+@utility text-display-l {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+@utility text-display-m {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+@utility text-lede {
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.6;
+  color: var(--color-quiet);
+  max-width: 46ch;
+}
+
+/* Geist Mono. Five earned uses only — DESIGN.md §3. */
+@utility text-micro {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@utility measure {
+  max-width: 68ch;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — a designed state, not a deletion. BRIEF.md §3.
+
+   Everything resolves to its finished position: the connecting stroke renders
+   fully drawn, reveals are already revealed, the hero shows its resolved
+   poster. No content is hidden and nothing needs motion to be understood.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Reveals: final state, no transform. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* The connecting stroke: fully drawn. */
+  [data-stroke] {
+    stroke-dashoffset: 0 !important;
+  }
+}
