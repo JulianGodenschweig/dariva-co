@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // three and drei are deep-import heavy; this keeps the WebGL chunk from
     // dragging unused modules along. Budget for that chunk is 220 KB gzipped.
-    optimizePackageImports: ["@react-three/drei", "three"],
+    optimizePackageImports: ["three"],
   },
 };
 

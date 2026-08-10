@@ -14,7 +14,6 @@
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@pmndrs/detect-gpu": "^6.0.17",
-    "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.58.0",
@@ -23,7 +22,7 @@
     "next": "16.2.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "three": "^0.185.1",
+    "three": "0.169.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -34,9 +33,12 @@
     "@types/node": "20.19.39",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "@types/three": "^0.185.4",
+    "@types/three": "0.169.0",
     "sharp": "^0.35.3",
     "tailwindcss": "4.2.4",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "three": "0.169.0"
   }
 }

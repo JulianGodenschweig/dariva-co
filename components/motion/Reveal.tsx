@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode, type ElementType } from "react";
+import type React from "react";
 
 /**
  * Section-entry reveal.
@@ -52,9 +53,14 @@ export function Reveal({
     return () => observer.disconnect();
   }, []);
 
+  // `As` is intentionally widened: a polymorphic `as` prop cannot be typed
+  // precisely without a generic signature that would make every call site
+  // noisier than the flexibility is worth here.
+  const Tag = As as "div";
+
   return (
-    <As
-      ref={ref}
+    <Tag
+      ref={ref as React.Ref<HTMLDivElement>}
       data-reveal=""
       style={{ transitionDelay: delay ? `${delay}ms` : undefined }}
       className={[
@@ -67,7 +73,7 @@ export function Reveal({
         .join(" ")}
     >
       {children}
-    </As>
+    </Tag>
   );
 }
 
