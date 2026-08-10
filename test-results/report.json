@@ -1,0 +1,235 @@
+{
+  "config": {
+    "argv": [
+      "/opt/node22/bin/node",
+      "/home/user/dariva-co/node_modules/.bin/playwright",
+      "test",
+      "tests/perf.spec.ts"
+    ],
+    "configFile": "/home/user/dariva-co/playwright.config.ts",
+    "rootDir": "/home/user/dariva-co/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/user/dariva-co/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/user/dariva-co/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run start",
+      "url": "http://127.0.0.1:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "perf.spec.ts",
+      "file": "perf.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Tier C on Fast 3G: LCP, CLS, INP and bytes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7508,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n  === TIER C (no WebGL) on Fast 3G ===\n"
+                    },
+                    {
+                      "text": "  LCP            1.18 s      ceiling 2.50 s\n"
+                    },
+                    {
+                      "text": "  LCP element    img src=image?url=%2Fhero-poster.avif&w=1920&q=75\n"
+                    },
+                    {
+                      "text": "  CLS            0.0011       ceiling 0.05\n"
+                    },
+                    {
+                      "text": "  INP (proxy)    14.6 ms\n"
+                    },
+                    {
+                      "text": "  Transferred    392.8 KB   ceiling 600 KB\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-08-10T08:46:40.796Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "73ed389be8d3d6a89cdb-1956b973f9df37913634",
+          "file": "perf.spec.ts",
+          "line": 83,
+          "column": 5
+        },
+        {
+          "title": "Tier A on Fast 3G: total transfer with the WebGL chunk",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7330,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n  === TIER A (WebGL) on Fast 3G ===\n"
+                    },
+                    {
+                      "text": "  LCP            1.14 s\n"
+                    },
+                    {
+                      "text": "  LCP element    img src=image?url=%2Fhero-poster.avif&w=1920&q=75\n"
+                    },
+                    {
+                      "text": "  CLS            0.0011\n"
+                    },
+                    {
+                      "text": "  Transferred    661.7 KB   ceiling 1200 KB\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-08-10T08:46:48.954Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "73ed389be8d3d6a89cdb-83091b5132742a67869c",
+          "file": "perf.spec.ts",
+          "line": 100,
+          "column": 5
+        },
+        {
+          "title": "Tier C downloads zero Three.js bytes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3991,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n  requests matching /three|webgl/: 0\n"
+                    },
+                    {
+                      "text": "  <canvas> elements on the page:   0\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-08-10T08:46:56.302Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "73ed389be8d3d6a89cdb-e50564a2d8fd384bad3b",
+          "file": "perf.spec.ts",
+          "line": 114,
+          "column": 5
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-08-10T08:46:39.012Z",
+    "duration": 21385.001,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
