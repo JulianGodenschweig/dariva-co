@@ -50,10 +50,10 @@ export default function ImpactPage() {
             </caption>
             <thead>
               <tr className="border-b border-ink/20">
-                <th scope="col" className="text-micro py-4 pr-6 text-quiet/70">
+                <th scope="col" className="text-micro py-4 pr-6 text-quiet">
                   Indicator
                 </th>
-                <th scope="col" className="text-micro py-4 text-quiet/70">
+                <th scope="col" className="text-micro py-4 text-quiet">
                   Status
                 </th>
               </tr>
@@ -78,7 +78,7 @@ export default function ImpactPage() {
           <Prose>
             <p className="text-lg">{impact.disclosure.body}</p>
           </Prose>
-          <p className="text-micro mt-8 text-quiet/70">
+          <p className="text-micro mt-8 text-quiet">
             {TODO_CLIENT.participantNumbers}
           </p>
         </Split>
@@ -96,7 +96,7 @@ export default function ImpactPage() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-ink">{c.where}</p>
-                  <p className="text-micro text-quiet/70">{c.mode}</p>
+                  <p className="text-micro text-quiet">{c.mode}</p>
                   {c.note ? <p className="text-sm text-quiet">{c.note}</p> : null}
                 </div>
               </div>

@@ -56,7 +56,7 @@ export default function ProgrammesPage() {
           ].map((fact, i) => (
             <Reveal key={fact.label} delay={i * 60}>
               <div className="h-full bg-paper p-8">
-                <p className="text-micro text-quiet/70">{fact.label}</p>
+                <p className="text-micro text-quiet">{fact.label}</p>
                 <p className="mt-4 font-[family-name:var(--font-mono)] text-3xl text-ink">
                   {fact.value}
                 </p>
@@ -96,7 +96,7 @@ export default function ProgrammesPage() {
                 className="group grid gap-6 border-t border-ink/12 py-10 transition-colors last:border-b hover:bg-ink/[0.02] md:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] md:gap-16"
               >
                 <div>
-                  <p className="text-micro text-quiet/60">
+                  <p className="text-micro text-quiet">
                     Month {String(i + 1).padStart(2, "0")} / 0{programmeFacts.durationMonths}
                   </p>
                   <h3 className="text-display-m mt-3 text-ink transition-colors group-hover:text-signal">
@@ -130,7 +130,7 @@ export default function ProgrammesPage() {
                 </div>
                 <div className="space-y-2">
                   <p className="text-ink">{c.where}</p>
-                  <p className="text-micro text-quiet/70">{c.mode}</p>
+                  <p className="text-micro text-quiet">{c.mode}</p>
                   {c.note ? <p className="text-sm text-quiet">{c.note}</p> : null}
                 </div>
               </div>

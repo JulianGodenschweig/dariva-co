@@ -51,7 +51,7 @@ export default function AboutPage() {
                 key={goal}
                 className="flex items-baseline gap-5 border-b border-ink/10 py-6 first:border-t"
               >
-                <span className="text-micro shrink-0 text-quiet/45" aria-hidden="true">
+                <span className="text-micro shrink-0 text-quiet" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="text-lg text-ink">{goal}</span>

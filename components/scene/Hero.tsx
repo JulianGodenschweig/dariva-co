@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { detectTier, type Tier, type TierResult } from "@/lib/tier";
-import { scrollProgress } from "./scrollProgress";
+
 import { home } from "@/lib/content/pages";
 import { ButtonLink } from "@/components/ui/Button";
 
@@ -23,7 +23,23 @@ const Scene = dynamic(() => import("./Scene"), { ssr: false });
 export function Hero() {
   const [tier, setTier] = useState<TierResult | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  // Owned here, read inside the scene chunk. See scrollProgress.ts.
+  const scrollProgress = useRef(0);
   const [stage, setStage] = useState(0);
+  // Whether the hero is on screen at all. Drives the render loop on and off.
+  const [inView, setInView] = useState(true);
+
+  // Stop rendering entirely once the hero has scrolled away.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "10% 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Detect once on mount.
   useEffect(() => {
@@ -109,7 +125,7 @@ export function Hero() {
       <div className="sticky top-0 h-screen overflow-hidden">
         <div className="absolute inset-0" aria-hidden="true">
           {showCanvas ? (
-            <Scene tier={tier} />
+            <Scene tier={tier} active={inView} progress={scrollProgress} />
           ) : (
             <Image
               src="/hero-poster.avif"
@@ -165,7 +181,7 @@ function ScaleReadout({ stage }: { stage: number }) {
         <span
           key={step.key}
           className={`transition-colors duration-500 ${
-            i === stage ? "text-signal" : "text-quiet/40"
+            i === stage ? "text-signal" : "text-quiet"
           }`}
         >
           {step.label}

@@ -25,19 +25,26 @@ export function ProgrammeInterestForm({
 }) {
   const [state, action, pending] = useActionState(submitProgrammeInterest, IDLE_STATE);
 
+  // React 19 resets an uncontrolled form once its action resolves, so a failed
+  // submission would wipe everything typed. The action echoes the submitted
+  // values back and they are re-applied here as defaults.
+  const v = (name: string) => state.values?.[name] ?? "";
+
   return (
     <form id={id} action={action} noValidate className="flex max-w-[42rem] flex-col gap-6">
       <Honeypot />
 
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Your name" name="name" required errors={state.errors?.name}>
-          {(p) => <input {...p} type="text" autoComplete="name" />}
+          {(p) => <input {...p} type="text" autoComplete="name" defaultValue={v("name")} />}
         </Field>
         <Field label="Email" name="email" required errors={state.errors?.email}>
-          {(p) => <input {...p} type="email" autoComplete="email" inputMode="email" />}
+          {(p) => (
+            <input {...p} type="email" autoComplete="email" inputMode="email" defaultValue={v("email")} />
+          )}
         </Field>
         <Field label="Phone" name="phone" errors={state.errors?.phone}>
-          {(p) => <input {...p} type="tel" autoComplete="tel" inputMode="tel" />}
+          {(p) => <input {...p} type="tel" autoComplete="tel" inputMode="tel" defaultValue={v("phone")} />}
         </Field>
         <Field
           label="Town or region"
@@ -45,13 +52,13 @@ export function ProgrammeInterestForm({
           errors={state.errors?.region}
           hint="Cohorts run in person and fully online."
         >
-          {(p) => <input {...p} type="text" />}
+          {(p) => <input {...p} type="text" defaultValue={v("region")} />}
         </Field>
       </div>
 
       <Field label="Which programme?" name="programme" required errors={state.errors?.programme}>
         {(p) => (
-          <select {...p} defaultValue={defaultProgramme ?? ""}>
+          <select {...p} defaultValue={v("programme") || defaultProgramme || ""}>
             <option value="">Choose one</option>
             {moduleSummaries.map((m) => (
               <option key={m.slug} value={m.title}>

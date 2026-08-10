@@ -44,7 +44,7 @@ export function BookingBlock() {
           <ButtonLink href={site.whatsapp} variant="primary" external>
             Book a call on WhatsApp
           </ButtonLink>
-          <p className="text-micro mt-6 text-quiet/70">{TODO_CLIENT.calendly}</p>
+          <p className="text-micro mt-6 text-quiet">{TODO_CLIENT.calendly}</p>
         </>
       )}
 

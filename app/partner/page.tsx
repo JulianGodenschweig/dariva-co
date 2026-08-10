@@ -27,7 +27,7 @@ export default function PartnerPage() {
         {/* No "trusted by" strip. There are no confirmed partner logos to
             show, and a strip of placeholders would be a lie — BRIEF.md §13. */}
         <Reveal delay={100}>
-          <p className="text-micro mt-12 text-quiet/70">{TODO_CLIENT.partners}</p>
+          <p className="text-micro mt-12 text-quiet">{TODO_CLIENT.partners}</p>
         </Reveal>
       </Section>
 

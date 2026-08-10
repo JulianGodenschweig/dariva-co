@@ -59,7 +59,7 @@ export default function HomePage() {
                 </h3>
                 <div>
                   <p className="max-w-[52ch] text-lg text-quiet">{m.summary}</p>
-                  <p className="text-micro mt-6 text-quiet/70">{m.outcomeLabel}</p>
+                  <p className="text-micro mt-6 text-quiet">{m.outcomeLabel}</p>
                   <p className="mt-2 max-w-[52ch] text-ink">{m.outcome}</p>
                 </div>
               </Link>
@@ -88,7 +88,7 @@ export default function HomePage() {
                   <h3 className="text-display-m text-paper transition-colors group-hover:text-signal-raw">
                     {bucket.title}
                   </h3>
-                  <p className="text-micro mt-4 text-paper/45">
+                  <p className="text-micro mt-4 text-paper/70">
                     {bucket.absorbs.join(" · ")}
                   </p>
                 </div>

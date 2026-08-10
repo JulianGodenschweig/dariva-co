@@ -10,7 +10,15 @@ import { Reveal } from "@/components/motion/Reveal";
  * separates rows rather than boxing them.
  */
 
-/** A dense list of short items — topics, values, benefits. */
+/**
+ * A dense list of short items — topics, values, benefits.
+ *
+ * Deliberately unnumbered. These are not sequences: "Build healthier families"
+ * is not step 01 of anything, and numbering it would be the decorative
+ * ordinal BRIEF.md §13 bans. The only numbered lists on this site are the
+ * three programme months and the long-term goals, both of which are ordered
+ * in reality.
+ */
 export function TermList({
   items,
   inverted = false,
@@ -29,7 +37,7 @@ export function TermList({
 
   return (
     <ul className={`grid gap-x-10 ${cols}`}>
-      {items.map((item, i) => (
+      {items.map((item) => (
         <li
           key={item}
           className={`flex items-baseline gap-4 border-b py-4 ${
@@ -37,13 +45,11 @@ export function TermList({
           }`}
         >
           <span
-            className={`text-micro shrink-0 tabular-nums ${
-              inverted ? "text-paper/35" : "text-quiet/45"
-            }`}
             aria-hidden="true"
-          >
-            {String(i + 1).padStart(2, "0")}
-          </span>
+            className={`mt-2 h-1 w-1 shrink-0 rounded-full ${
+              inverted ? "bg-paper/70" : "bg-signal"
+            }`}
+          />
           <span className={inverted ? "text-paper/85" : "text-ink"}>{item}</span>
         </li>
       ))}
@@ -119,7 +125,7 @@ export function Split({
             {heading}
           </h2>
           {lede ? (
-            <p className={`mt-5 ${inverted ? "text-paper/65" : "text-quiet"}`}>{lede}</p>
+            <p className={`mt-5 ${inverted ? "text-paper/70" : "text-quiet"}`}>{lede}</p>
           ) : null}
         </div>
       </Reveal>

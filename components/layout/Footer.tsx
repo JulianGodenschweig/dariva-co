@@ -57,7 +57,7 @@ export function Footer() {
                   {site.phone}
                 </a>
               </p>
-              <p className="text-paper/55">{site.postal}</p>
+              <p className="text-paper/70">{site.postal}</p>
             </address>
           </div>
         </div>
@@ -81,7 +81,7 @@ export function Footer() {
           <p className="text-micro mt-4 text-signal-raw">{crisisReferral.number}</p>
         </aside>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-paper/15 pt-8 text-xs text-paper/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-paper/15 pt-8 text-xs text-paper/70 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {site.name}. A Namibian social enterprise.
           </p>

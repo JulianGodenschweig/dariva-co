@@ -36,6 +36,22 @@ const message = z
   .max(4000, "That message is over 4,000 characters. Send the short version and we will ask for the rest.");
 
 /**
+ * An optional <select> submits "" when nothing is chosen, and "" is not
+ * `undefined` — so `z.enum([...]).optional()` rejects it and the whole form
+ * fails with an error the user cannot act on. Normalise empty to undefined
+ * before the enum sees it.
+ */
+function optionalEnum<const T extends readonly [string, ...string[]]>(
+  values: T,
+  message: string,
+) {
+  return z.preprocess(
+    (v) => (v === "" || v === null ? undefined : v),
+    z.enum(values, { message }).optional(),
+  );
+}
+
+/**
  * Honeypot. A real person never sees this field, so a real person never fills
  * it. Anything non-empty is a bot and is rejected without an error the bot can
  * learn from.
@@ -51,12 +67,10 @@ export const enquirySchema = z.object({
   email,
   phone,
   org: z.string().trim().max(160, "That organisation name is too long.").optional().or(z.literal("")),
-  audience_type: z
-    .enum(
-      ["individual", "workplace", "government", "faith", "school", "ngo", "donor", "other"],
-      { message: "Choose the option closest to you so we route this to the right person." },
-    )
-    .optional(),
+  audience_type: optionalEnum(
+    ["individual", "workplace", "government", "faith", "school", "ngo", "donor", "other"],
+    "Choose the option closest to you so we route this to the right person.",
+  ),
   message,
   source_page: z.string().trim().max(200).optional(),
   website: honeypot,
@@ -87,11 +101,10 @@ export const partnerEnquirySchema = z.object({
   contact_name: name,
   email,
   phone,
-  partnership_type: z
-    .enum(["government", "ngo", "business", "school", "church", "donor", "international", "other"], {
-      message: "Choose the option closest to your organisation.",
-    })
-    .optional(),
+  partnership_type: optionalEnum(
+    ["government", "ngo", "business", "school", "church", "donor", "international", "other"],
+    "Choose the option closest to your organisation.",
+  ),
   message,
   website: honeypot,
 });
@@ -111,9 +124,32 @@ export type FormState = {
   ok: boolean;
   message: string;
   errors?: Record<string, string[]>;
+  /**
+   * The values the visitor submitted, echoed back so the form can re-render
+   * them as defaults.
+   *
+   * React 19 automatically resets an uncontrolled form after its action
+   * completes. Without this, one mistyped email address wipes everything the
+   * person just wrote — including a long message. That is a real loss of
+   * work, not a cosmetic issue.
+   */
+  values?: Record<string, string>;
 };
 
 export const IDLE_STATE: FormState = { ok: false, message: "" };
+
+/**
+ * Pulls the visitor's own fields out of a FormData, dropping React's internal
+ * action bookkeeping ($ACTION_REF, $ACTION_KEY and friends) and the honeypot.
+ */
+export function submittedValues(formData: FormData): Record<string, string> {
+  const values: Record<string, string> = {};
+  for (const [key, value] of formData.entries()) {
+    if (key.startsWith("$") || key === "website") continue;
+    if (typeof value === "string") values[key] = value;
+  }
+  return values;
+}
 
 /** Flattens a Zod error into the shape the form components render. */
 export function fieldErrors(error: z.ZodError): Record<string, string[]> {

@@ -1,45 +1,29 @@
 /**
- * GPGPU shaders for the propagation field.
+ * Shaders for the propagation field.
  *
- * Positions live in a float texture, RGB = XYZ. The simulation pass reads the
- * previous frame's texture, eases toward the current blended target, and
- * writes to the other texture — classic ping-pong. The render pass reads the
- * result in the *vertex* shader and places each point.
+ * Positions for the four acts live in float textures (RGB = XYZ), one texel per
+ * particle. The vertex shader samples two of them and mixes by the scroll
+ * offset, then layers curl noise so the field drifts organically rather than
+ * sliding mechanically between two fixed states.
+ *
+ * ARCHITECTURE NOTE — this is not the ping-pong FBO feedback loop originally
+ * planned. That version wrote positions into alternating render targets and
+ * read the previous frame back as input. It produced nothing in this
+ * environment: every simulation pass rendered empty, the targets stayed at
+ * zero, and all 65k particles collapsed onto the origin. Sampling the act
+ * textures directly in the vertex shader is what actually renders, costs one
+ * fewer full-screen pass per frame, and needs no float render-target support
+ * at all — which is one less thing to fail on a mid-range Android GPU.
+ *
+ * The "settling" quality that frame-to-frame feedback would have given comes
+ * instead from smoothing the scroll value on the CPU before it reaches here,
+ * so the field still lags the scroll and eases to rest.
  *
  * Copy never enters this file. Headlines are real DOM text over the canvas,
  * per BRIEF.md §3 — nothing legible is rendered in WebGL.
  */
 
-/** Fullscreen triangle for the simulation pass. */
-export const simVertexShader = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = vec4(position, 1.0);
-  }
-`;
-
-/**
- * Simulation. Curl noise gives organic drift so the field never looks
- * mechanical; the easing term makes particles lag the target and settle, which
- * is what reads as "resolving" rather than "snapping".
- */
-export const simFragmentShader = /* glsl */ `
-  precision highp float;
-
-  uniform sampler2D uPrev;
-  uniform sampler2D uTargetA;
-  uniform sampler2D uTargetB;
-  uniform float uMix;      // 0..1 between the two acts
-  uniform float uTime;
-  uniform float uEase;     // how fast a particle chases its target
-  uniform float uDrift;    // curl noise amplitude
-  uniform float uBreath;   // act 1 only: the slow breathing pulse
-
-  varying vec2 vUv;
-
-  // Simplex-ish gradient noise. Cheap, good enough for drift, and far smaller
-  // than importing a noise library into the WebGL chunk.
+const NOISE = /* glsl */ `
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
   vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -98,65 +82,70 @@ export const simFragmentShader = /* glsl */ `
     float n6 = snoise(vec3(p.x - e, p.y, p.z));
     return normalize(vec3(n2 - n1 - n4 + n3, n4 - n3 - n6 + n5, n6 - n5 - n2 + n1));
   }
-
-  void main() {
-    vec3 prev = texture2D(uPrev, vUv).xyz;
-    vec3 a = texture2D(uTargetA, vUv).xyz;
-    vec3 b = texture2D(uTargetB, vUv).xyz;
-
-    // smoothstep on the act mix so an act settles before the next begins,
-    // rather than the field being in permanent transit.
-    vec3 target = mix(a, b, smoothstep(0.0, 1.0, uMix));
-
-    // The breathing pulse only has amplitude in act 1, where one point is
-    // alone on screen and needs to read as alive rather than as a dead pixel.
-    target *= 1.0 + uBreath * 0.16 * sin(uTime * 0.7);
-
-    target += curl(target * 0.28 + uTime * 0.035) * uDrift;
-
-    // Ease toward the target. No spring, no overshoot — wellness resolving,
-    // not fireworks.
-    vec3 next = prev + (target - prev) * uEase;
-
-    gl_FragColor = vec4(next, 1.0);
-  }
 `;
 
-/** Render pass. Reads the simulated position in the vertex shader. */
 export const pointsVertexShader = /* glsl */ `
   precision highp float;
 
-  uniform sampler2D uPositions;
+  // All four acts are bound once and never reassigned. Swapping which Texture
+  // object a sampler uniform points at, every frame, silently failed to take
+  // effect — the field stayed frozen on act 1 while the scroll value was
+  // demonstrably correct. Selecting in the shader removes that whole class of
+  // bug and costs three extra texture fetches on a 16k–65k point draw.
+  uniform sampler2D uAct0;
+  uniform sampler2D uAct1;
+  uniform sampler2D uAct2;
+  uniform sampler2D uAct3;
+  uniform float uStage;    // 0..3, the float position across the four acts
+  uniform float uTime;
+  uniform float uDrift;    // curl amplitude, widens as the field opens out
+  uniform float uBreath;   // act 1 only: the slow pulse of one point alone
   uniform float uSize;
   uniform float uPixelRatio;
-  uniform float uTime;
 
-  attribute vec2 aRef;   // where this particle lives in the position texture
+  attribute vec2 aRef;     // where this particle lives in the act textures
   attribute float aSeed;
 
   varying float vDepth;
   varying float vSeed;
 
+  ${NOISE}
+
   void main() {
-    vec3 pos = texture2D(uPositions, aRef).xyz;
+    vec3 p0 = texture2D(uAct0, aRef).xyz;
+    vec3 p1 = texture2D(uAct1, aRef).xyz;
+    vec3 p2 = texture2D(uAct2, aRef).xyz;
+    vec3 p3 = texture2D(uAct3, aRef).xyz;
+
+    float stage = clamp(uStage, 0.0, 3.0);
+    // smoothstep within each act so one settles before the next begins,
+    // rather than the field being in permanent transit.
+    vec3 pos = mix(p0, p1, smoothstep(0.0, 1.0, clamp(stage, 0.0, 1.0)));
+    pos = mix(pos, p2, smoothstep(0.0, 1.0, clamp(stage - 1.0, 0.0, 1.0)));
+    pos = mix(pos, p3, smoothstep(0.0, 1.0, clamp(stage - 2.0, 0.0, 1.0)));
+
+    // Breathing has amplitude only in act 1, where one point is alone on
+    // screen and needs to read as alive rather than as a dead pixel.
+    pos *= 1.0 + uBreath * 0.16 * sin(uTime * 0.7);
+
+    pos += curl(pos * 0.28 + uTime * 0.035) * uDrift;
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
 
-    // Size attenuates with distance so the field has depth without fog.
     float twinkle = 0.85 + 0.15 * sin(uTime * 0.6 + aSeed * 30.0);
     gl_PointSize = uSize * uPixelRatio * twinkle * (10.0 / -mvPosition.z);
 
-    vDepth = clamp(-mvPosition.z / 22.0, 0.0, 1.0);
+    vDepth = clamp((-mvPosition.z - 5.0) / 12.0, 0.0, 1.0);
     vSeed = aSeed;
   }
 `;
 
 /**
- * Fragment. Colour comes only from --signal, --signal-raw and --wash over
- * --paper — light on water, not a sci-fi HUD. The palette tokens are passed
- * in as uniforms so the scene follows the design system rather than hardcoding
- * a second copy of the brand colours.
+ * Colour comes only from --signal, --signal-raw and --wash over --paper —
+ * light on water, not a sci-fi HUD. The palette tokens arrive as uniforms so
+ * the scene follows the design system rather than holding a second copy of
+ * the brand colours.
  */
 export const pointsFragmentShader = /* glsl */ `
   precision highp float;

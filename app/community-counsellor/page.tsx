@@ -58,7 +58,7 @@ export default function CommunityCounsellorPage() {
           </Reveal>
           <Reveal delay={80}>
             <div className="border-t border-ink/15 pt-6">
-              <p className="text-micro mb-4 text-quiet/70">It does not make you</p>
+              <p className="text-micro mb-4 text-quiet">It does not make you</p>
               <ul className="space-y-3 text-quiet">
                 <li>A therapist or psychologist.</li>
                 <li>A crisis responder.</li>

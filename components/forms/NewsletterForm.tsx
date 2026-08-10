@@ -39,7 +39,7 @@ export function NewsletterForm() {
           placeholder="you@example.com"
           aria-invalid={Boolean(error)}
           aria-describedby={error ? errorId : undefined}
-          className="min-h-11 flex-1 rounded-surface border border-paper/25 bg-transparent px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:border-signal-raw focus:outline-none"
+          className="min-h-11 flex-1 rounded-surface border border-paper/25 bg-transparent px-4 py-3 text-base text-paper placeholder:text-paper/70 focus:border-signal-raw"
         />
         <button
           type="submit"

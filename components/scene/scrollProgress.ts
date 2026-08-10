@@ -1,10 +1,14 @@
 /**
- * A single mutable scroll value, written by the scroll driver and read inside
- * R3F's useFrame.
+ * The scroll value handed from the page to the scene.
  *
- * This is the seam that keeps the "one loop" rule intact — BRIEF.md §9. GSAP's
- * ticker drives Lenis, Lenis drives ScrollTrigger, and ScrollTrigger writes
- * here. R3F keeps its own render loop and reads this value. Nothing calls
- * renderer.render() from the GSAP ticker, which is the double-RAF bug.
+ * Deliberately a ref passed as a prop, NOT a module-level singleton.
+ *
+ * Scene.tsx is dynamically imported into its own chunk, and a module shared
+ * between a static chunk and a lazy one can end up duplicated — each copy with
+ * its own state. That happened here: the scale readout (written from the page
+ * chunk) advanced through the acts while the particle field (reading the
+ * scene chunk's copy) stayed frozen at zero. Passing the ref explicitly makes
+ * the single shared instance a fact of the call graph rather than a hope
+ * about how the bundler chose to split chunks.
  */
-export const scrollProgress = { current: 0 };
+export type ScrollProgressRef = { current: number };

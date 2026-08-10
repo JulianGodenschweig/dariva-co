@@ -8,6 +8,7 @@ import {
   partnerEnquirySchema,
   newsletterSchema,
   fieldErrors,
+  submittedValues,
   type FormState,
 } from "@/lib/validation";
 
@@ -71,12 +72,13 @@ export async function submitEnquiry(
       ok: false,
       message: "Some details need fixing before we can send this.",
       errors: fieldErrors(parsed.error),
+      values: submittedValues(formData),
     };
   }
   if (parsed.data.website) return SILENT_OK;
 
   const blocked = await passesGate(formData.get("cf-turnstile-response") as string | undefined);
-  if (blocked) return blocked;
+  if (blocked) return { ...blocked, values: submittedValues(formData) };
 
   const supabase = await createClient();
   const { error } = await supabase.from("enquiries").insert({
@@ -91,7 +93,7 @@ export async function submitEnquiry(
 
   if (error) {
     console.error("[enquiries] insert failed", error);
-    return WRITE_FAILED;
+    return { ...WRITE_FAILED, values: submittedValues(formData) };
   }
 
   await notify(`New enquiry — ${parsed.data.name}`, {
@@ -121,12 +123,13 @@ export async function submitProgrammeInterest(
       ok: false,
       message: "Some details need fixing before we can send this.",
       errors: fieldErrors(parsed.error),
+      values: submittedValues(formData),
     };
   }
   if (parsed.data.website) return SILENT_OK;
 
   const blocked = await passesGate(formData.get("cf-turnstile-response") as string | undefined);
-  if (blocked) return blocked;
+  if (blocked) return { ...blocked, values: submittedValues(formData) };
 
   const supabase = await createClient();
   const { error } = await supabase.from("programme_interest").insert({
@@ -140,7 +143,7 @@ export async function submitProgrammeInterest(
 
   if (error) {
     console.error("[programme_interest] insert failed", error);
-    return WRITE_FAILED;
+    return { ...WRITE_FAILED, values: submittedValues(formData) };
   }
 
   await notify(`Cohort interest — ${parsed.data.name}`, {
@@ -170,12 +173,13 @@ export async function submitPartnerEnquiry(
       ok: false,
       message: "Some details need fixing before we can send this.",
       errors: fieldErrors(parsed.error),
+      values: submittedValues(formData),
     };
   }
   if (parsed.data.website) return SILENT_OK;
 
   const blocked = await passesGate(formData.get("cf-turnstile-response") as string | undefined);
-  if (blocked) return blocked;
+  if (blocked) return { ...blocked, values: submittedValues(formData) };
 
   const supabase = await createClient();
   const { error } = await supabase.from("partner_enquiries").insert({
@@ -189,7 +193,7 @@ export async function submitPartnerEnquiry(
 
   if (error) {
     console.error("[partner_enquiries] insert failed", error);
-    return WRITE_FAILED;
+    return { ...WRITE_FAILED, values: submittedValues(formData) };
   }
 
   await notify(`Partnership enquiry — ${parsed.data.org_name}`, {
@@ -219,12 +223,13 @@ export async function subscribeNewsletter(
       ok: false,
       message: "That email address needs fixing.",
       errors: fieldErrors(parsed.error),
+      values: submittedValues(formData),
     };
   }
   if (parsed.data.website) return SILENT_OK;
 
   const blocked = await passesGate(formData.get("cf-turnstile-response") as string | undefined);
-  if (blocked) return blocked;
+  if (blocked) return { ...blocked, values: submittedValues(formData) };
 
   const supabase = await createClient();
   const { error } = await supabase.from("newsletter").insert({ email: parsed.data.email });
@@ -233,7 +238,7 @@ export async function subscribeNewsletter(
   // visitor is standing, and telling them otherwise leaks who is on the list.
   if (error && error.code !== "23505") {
     console.error("[newsletter] insert failed", error);
-    return WRITE_FAILED;
+    return { ...WRITE_FAILED, values: submittedValues(formData) };
   }
 
   return {

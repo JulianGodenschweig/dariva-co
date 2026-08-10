@@ -15,8 +15,10 @@ import { useId, type ReactNode } from "react";
 
 const inputBase =
   "w-full min-h-11 rounded-surface border bg-paper px-4 py-3 text-base text-ink " +
-  "placeholder:text-quiet/50 transition-colors " +
-  "focus:border-signal focus:outline-none " +
+  "placeholder:text-quiet transition-colors " +
+  // No focus:outline-none here: it overrode the global :focus-visible ring
+  // and left keyboard users with a border tint as their only cue.
+  "focus:border-signal " +
   "aria-[invalid=true]:border-[#B3261E]";
 
 export function Field({
@@ -50,14 +52,19 @@ export function Field({
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="flex items-baseline justify-between gap-3">
-        <span className="text-sm font-medium text-ink">{label}</span>
-        {required ? (
-          <span className="text-micro text-quiet/70">Required</span>
-        ) : (
-          <span className="text-micro text-quiet/50">Optional</span>
-        )}
-      </label>
+      {/* The Required/Optional marker sits OUTSIDE the label and is hidden
+          from assistive technology. Inside it, the field's accessible name
+          became "Email Optional", which is both wrong and what a screen
+          reader would read aloud. Requiredness is already conveyed by the
+          `required` attribute, which AT announces natively. */}
+      <div className="flex items-baseline justify-between gap-3">
+        <label htmlFor={id} className="text-sm font-medium text-ink">
+          {label}
+        </label>
+        <span className="text-micro text-quiet" aria-hidden="true">
+          {required ? "Required" : "Optional"}
+        </span>
+      </div>
 
       {children({
         id,
@@ -69,7 +76,7 @@ export function Field({
       })}
 
       {hint ? (
-        <p id={hintId} className="text-sm text-quiet/80">
+        <p id={hintId} className="text-sm text-quiet">
           {hint}
         </p>
       ) : null}
